@@ -20,20 +20,6 @@
 			<version>3.1.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>openhmis.commons-omod</artifactId>
-			<version>${inventoryCommonVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>openhmis.inventory-omod</artifactId>
-			<version>${inventoryVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		
 	</dependencies>
 
 </project>
