@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+		
+<hibernate-mapping package="org.openmrs.module.pharmacyapi.api.model.stock" auto-import="false">
+
+	<class name="Lot" table="phm_lot">
+		<cache usage="read-write" />
+
+		<id name="id" type="int" column="lot_id">
+			<generator class="native">
+				<param name="sequence">phm_lot_id_seq</param>
+			</generator>
+		</id>
+		
+		<discriminator column="lot_id" insert="false" />
+
+		<property name="code" type="java.lang.String" column="code" length="20" not-null="true" />
+		<property name="description" type="java.lang.String" column="description" length="255" not-null="true" />
+		<many-to-one name="drugItem" class="org.openmrs.module.pharmacyapi.api.model.DrugItem" not-null="true" column="drug_item_id" />
+		<many-to-one name="measureUnit" class="org.openmrs.module.pharmacyapi.api.model.stock.MeasureUnit" not-null="true" column="drug_measure_unit_id" />
+		<property name="manufactureDate" type="java.util.Date" column="manufacture_date" not-null="true" length="19" />
+		<property name="expirationDate" type="java.util.Date" column="expiration_date" not-null="true" length="19" />
+					
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		
+		<many-to-one name="changedBy" class="org.openmrs.User"  column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		
+		<!-- uuid -->
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+			
+	</class>
+	
+	<class name="Supplier" table="phm_supplier">
+		<cache usage="read-write" />
+
+		<id name="id" type="int" column="supplier_id">
+			<generator class="native">
+				<param name="sequence">phm_supplier_id_seq</param>
+			</generator>
+		</id>
+		
+		<discriminator column="supplier_id" insert="false" />
+
+		<property name="name" type="java.lang.String" column="names" length="50" not-null="true" />
+		<property name="address" type="java.lang.String" column="address" length="255" not-null="true" />
+		<property name="registrationDate" type="java.util.Date" column="registration_Date" not-null="true" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<!-- uuid -->
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="location" class="org.openmrs.Location" not-null="true" column="location_id" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<many-to-one name="changedBy" class="org.openmrs.User"  column="changed_by" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		
+			
+	</class>
+	
+	<class name="DrugMeasureUnit" table="phm_drug_measure_unit">
+		<cache usage="read-write" />
+
+		<id name="id" type="int" column="drug_measure_unit_id">
+			<generator class="native">
+				<param name="sequence">phm_drug_measure_unit_id_seq</param>
+			</generator>
+		</id>
+		
+		<discriminator column="drug_measure_unit_id" insert="false" />
+
+		<property name="unity" type="org.openmrs.Concept" column="concept_id" not-null="true" />
+		<property name="quantityPerUnit" type="java.lang.Double" column="quantity_per_unit" not-null="true" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<!-- uuid -->
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+				
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="drugItem" class="org.openmrs.module.pharmacyapi.api.model.DrugItem" not-null="true" column="drug_item_id" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<many-to-one name="changedBy" class="org.openmrs.User"  column="changed_by" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+	</class>
+	
+	<class name="StockEntry" table="phm_stock_entry">
+		<cache usage="read-write" />
+
+		<id name="id" type="int" column="stock_entry_id">
+			<generator class="native">
+				<param name="sequence">phm_stock_entry_id_seq</param>
+			</generator>
+		</id>
+		
+		<discriminator column="stock_entry_id" insert="false" />
+		
+		<property name="quantity" type="java.lang.Double" column="quantity_per_unit" not-null="true" />
+		<property name="receptionDate" type="java.util.Date" column="reception_date" not-null="true" length="19" />      
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<!-- uuid -->
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+			
+		<many-to-one name="lot" class="org.openmrs.module.pharmacyapi.api.model.stock.Lot" not-null="true" column="lot_id" />
+		<many-to-one name="provenance" class="org.openmrs.module.pharmacyapi.api.model.stock.Supplier" not-null="true" column="provenance_id" />
+		<many-to-one name="location" class="org.openmrs.Location" not-null="true" column="location_id" />  
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<many-to-one name="changedBy" class="org.openmrs.User"  column="changed_by" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+			
+	</class>
+	
+		<class name="Dispensation" table="phm_dispensation">
+		<cache usage="read-write" />
+
+		<id name="id" type="int" column="dispensation_id">
+			<generator class="native">
+				<param name="sequence">phm_dispensation_id_seq</param>
+			</generator>
+		</id>
+		
+		<discriminator column="dispensation_id" insert="false" />
+		
+		<property name="quantity" type="java.lang.Double" column="quantity" not-null="true" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<!-- uuid -->
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+			
+		<many-to-one name="order" class="org.openmrs.Order" not-null="true" column="order_id" />
+		<many-to-one name="stockEntry" class="org.openmrs.module.pharmacyapi.api.model.stock.StockEntry" not-null="true" column="stock_entry_id" />
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+			
+	</class>
+		
+</hibernate-mapping>

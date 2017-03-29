@@ -29,4 +29,5 @@ public interface PrescriptionService extends OpenmrsService {
 	void setConceptService(final ConceptService conceptService) throws APIException;
 	
 	Double calculateDrugPikckedUp(final DrugOrder order) throws APIException;
+	
 }

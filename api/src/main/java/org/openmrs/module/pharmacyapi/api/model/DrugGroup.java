@@ -1,4 +1,5 @@
 /**
+ *  UCSF -Global Programs 2017
  * 
  */
 package org.openmrs.module.pharmacyapi.api.model;
@@ -6,7 +7,6 @@ package org.openmrs.module.pharmacyapi.api.model;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Drug;
 
 /**
  * @author Guimino Neves
@@ -15,7 +15,7 @@ public class DrugGroup extends BaseOpenmrsMetadata {
 	
 	private Integer drugGroupId;
 	
-	List<Drug> members;
+	List<DrugGroupMember> members;
 	
 	@Override
 	public Integer getId() {
@@ -28,11 +28,11 @@ public class DrugGroup extends BaseOpenmrsMetadata {
 		this.drugGroupId = drugGroupId;
 	}
 	
-	public List<Drug> getMembers() {
+	public List<DrugGroupMember> getMembers() {
 		return this.members;
 	}
 	
-	public void setMembers(final List<Drug> members) {
+	public void setMembers(final List<DrugGroupMember> members) {
 		this.members = members;
 	}
 }

@@ -12,7 +12,7 @@ import org.openmrs.BaseOpenmrsData;
 /**
  * @author Stélio Moiane
  */
-public class Dispensation extends BaseOpenmrsData implements Serializable {
+public class DispensationWrapper extends BaseOpenmrsData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -24,9 +24,9 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	
 	private String locationUuid;
 	
-	private List<DispensationItem> dispensationItems;
+	private List<DispensationWrapperItem> dispensationItems;
 	
-	public Dispensation() {
+	public DispensationWrapper() {
 		this.dispensationItems = new ArrayList<>();
 	}
 	
@@ -56,11 +56,11 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 		return this.providerUuid;
 	}
 	
-	public List<DispensationItem> getDispensationItems() {
+	public List<DispensationWrapperItem> getDispensationItems() {
 		return this.dispensationItems;
 	}
 	
-	public void setDispensationItems(final List<DispensationItem> dispensationItems) {
+	public void setDispensationItems(final List<DispensationWrapperItem> dispensationItems) {
 		this.dispensationItems = dispensationItems;
 	}
 	

@@ -17,28 +17,12 @@
 			<artifactId>pharmacyapi-api</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.web</groupId>
-			<artifactId>openmrs-web</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.web</groupId>
-			<artifactId>openmrs-web</artifactId>
-			<scope>provided</scope>
-			<classifier>tests</classifier>
-		</dependency>
-
-
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod-common</artifactId>
 			<version>${openMRSWebServicesVersion}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod</artifactId>
@@ -47,6 +31,7 @@
 		</dependency>
 
 	</dependencies>
+
 
 	<build>
 		<finalName>${project.parent.artifactId}-${project.parent.version}</finalName>

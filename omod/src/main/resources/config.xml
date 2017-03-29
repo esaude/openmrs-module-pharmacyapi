@@ -22,8 +22,6 @@
 
 	<require_modules>
 		<require_module version="${openMRSWebServicesVersion}">org.openmrs.module.webservices.rest</require_module>
-		<require_module version="3.4.3">org.openmrs.module.openhmis.commons</require_module>
-		<require_module version="2.3.4">org.openmrs.module.openhmis.inventory</require_module>
 	</require_modules>
 
 	<!-- Extensions -->

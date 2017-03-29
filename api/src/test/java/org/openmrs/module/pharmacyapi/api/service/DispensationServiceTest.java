@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.module.pharmacyapi.api.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.model.DispensationWrapper;
 import org.openmrs.module.pharmacyapi.api.templates.DispensationTemplate;
 import org.openmrs.module.pharmacyapi.api.util.BaseTest;
 import org.openmrs.module.pharmacyapi.api.util.EntityFactory;
@@ -31,9 +31,9 @@ public class DispensationServiceTest extends BaseTest {
 		
 		//TODO I need to get time to do this test........
 		
-		final Dispensation dispensation = EntityFactory.gimme(Dispensation.class, DispensationTemplate.VALID);
+		final DispensationWrapper dispensation = EntityFactory.gimme(DispensationWrapper.class, DispensationTemplate.VALID);
 		
-		final Dispensation createdDispensation = this.dispensationService.dispense(dispensation);
+		final DispensationWrapper createdDispensation = this.dispensationService.dispense(dispensation);
 		
 		assertNull(createdDispensation);
 	}

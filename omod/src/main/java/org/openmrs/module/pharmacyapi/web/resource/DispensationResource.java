@@ -1,7 +1,7 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.model.DispensationWrapper;
 import org.openmrs.module.pharmacyapi.api.service.DispensationService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -18,9 +18,9 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 /**
  * @author Stélio Moiane
  */
-@Resource(name = RestConstants.VERSION_1 + "/dispensation", order = 1, supportedClass = Dispensation.class, supportedOpenmrsVersions = {
+@Resource(name = RestConstants.VERSION_1 + "/dispensation", order = 1, supportedClass = DispensationWrapper.class, supportedOpenmrsVersions = {
         "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-public class DispensationResource extends DataDelegatingCrudResource<Dispensation> {
+public class DispensationResource extends DataDelegatingCrudResource<DispensationWrapper> {
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
@@ -47,13 +47,13 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	}
 	
 	@Override
-	public Dispensation newDelegate() {
-		final Dispensation dispensation = new Dispensation();
+	public DispensationWrapper newDelegate() {
+		final DispensationWrapper dispensation = new DispensationWrapper();
 		return dispensation;
 	}
 	
 	@Override
-	public Dispensation save(final Dispensation dispensation) {
+	public DispensationWrapper save(final DispensationWrapper dispensation) {
 		
 		final DispensationService dispensationService = Context.getService(DispensationService.class);
 		
@@ -63,18 +63,18 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	}
 	
 	@Override
-	public Dispensation getByUniqueId(final String uniqueId) {
+	public DispensationWrapper getByUniqueId(final String uniqueId) {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	protected void delete(final Dispensation dispensation, final String reason, final RequestContext context)
+	protected void delete(final DispensationWrapper dispensation, final String reason, final RequestContext context)
 	        throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public void purge(final Dispensation dispensation, final RequestContext context) throws ResponseException {
+	public void purge(final DispensationWrapper dispensation, final RequestContext context) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	

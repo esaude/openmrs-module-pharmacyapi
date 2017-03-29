@@ -3,7 +3,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.templates;
 
-import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.model.DispensationWrapperItem;
 import org.openmrs.module.pharmacyapi.api.util.BaseTemplateLoader;
 
 import br.com.six2six.fixturefactory.Fixture;
@@ -20,7 +20,7 @@ public class DispensationItemTemplate implements BaseTemplateLoader {
 	
 	@Override
 	public void load() {
-		Fixture.of(DispensationItem.class).addTemplate(VALID, new Rule() {
+		Fixture.of(DispensationWrapperItem.class).addTemplate(VALID, new Rule() {
 			
 			{
 				this.add("orderUuid", this.random("1b92a25c-5747-471c-8275-3d150243d9c9",
@@ -31,7 +31,7 @@ public class DispensationItemTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(DispensationItem.class).addTemplate(NON_ARV).inherits(VALID, new Rule() {
+		Fixture.of(DispensationWrapperItem.class).addTemplate(NON_ARV).inherits(VALID, new Rule() {
 			
 			{
 				this.add("dateOfNextPickUp", null);

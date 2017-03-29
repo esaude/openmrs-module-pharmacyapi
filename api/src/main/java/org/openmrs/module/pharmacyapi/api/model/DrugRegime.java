@@ -1,21 +1,21 @@
 /**
- * 
+ *  UCSF -Global Programs 2017
+ *  
  */
 package org.openmrs.module.pharmacyapi.api.model;
 
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Drug;
 
 /**
  * @author Guimino Neves
  */
-public class DrugRegimen extends BaseOpenmrsMetadata {
+public class DrugRegime extends BaseOpenmrsMetadata {
 	
 	private Integer drugRegimenId;
 	
-	private Drug drug;
+	private DrugItem drugItem;
 	
 	List<DrugGroup> drugGroups;
 	
@@ -29,12 +29,12 @@ public class DrugRegimen extends BaseOpenmrsMetadata {
 		this.drugRegimenId = drugRegimenId;
 	}
 	
-	public Drug getDrug() {
-		return this.drug;
+	public DrugItem getDrugItem() {
+		return this.drugItem;
 	}
 	
-	public void setDrug(final Drug drug) {
-		this.drug = drug;
+	public void setDrugItem(final DrugItem drugItem) {
+		this.drugItem = drugItem;
 	}
 	
 	public List<DrugGroup> getDrugGroups() {

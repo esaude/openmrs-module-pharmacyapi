@@ -14,6 +14,7 @@
 		<!-- <property name="hbm2ddl.auto">update</property> -->
 
 		<mapping file="PhmDrug.hbm.xml" />
+		<mapping file="PhmStock.hbm.xml" />
 
 	</session-factory>
 </hibernate-configuration>

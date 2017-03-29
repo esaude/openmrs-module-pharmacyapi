@@ -22,7 +22,6 @@
 
 		<!-- Associations -->
 		<many-to-one name="drug" class="org.openmrs.Drug" column="drug_id" />
-		<many-to-one name="item" class="org.openmrs.module.openhmis.inventory.api.model.Item" column="item_id" />
 		<many-to-one name="drugUnits" class="org.openmrs.Concept" column="drug_units_id" />
 
 		<!-- bi-directional many-to-one association to User -->

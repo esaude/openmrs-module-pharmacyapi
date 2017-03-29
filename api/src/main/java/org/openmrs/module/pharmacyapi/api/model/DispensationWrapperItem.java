@@ -11,7 +11,7 @@ import org.openmrs.BaseOpenmrsData;
 /**
  * @author Stélio Moiane
  */
-public class DispensationItem extends BaseOpenmrsData implements Serializable {
+public class DispensationWrapperItem extends BaseOpenmrsData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.CareSetting;
 import org.openmrs.Concept;
 import org.openmrs.ConceptSearchResult;
@@ -29,10 +31,12 @@ import org.openmrs.module.pharmacyapi.api.adapter.ObsOrderAdapter;
 import org.openmrs.module.pharmacyapi.api.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.util.MappedOrders;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Stélio Moiane
  */
+@Transactional
 public class PrescriptionServiceImpl extends BaseOpenmrsService implements PrescriptionService {
 	
 	private ObsOrderAdapter obsOrderAdapter;
@@ -40,6 +44,8 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	private OrderService orderService;
 	
 	private ConceptService conceptService;
+	
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	@Override
 	public void parseObsToOrders(final Patient patient) throws APIException {
@@ -213,4 +219,5 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
 		        && order.getConcept().getUuid().equals(observation.getOrder().getConcept().getUuid());
 	}
+	
 }

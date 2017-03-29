@@ -1,7 +1,7 @@
 package org.openmrs.module.pharmacyapi.converter;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.model.DispensationWrapperItem;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingConverter;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
@@ -9,16 +9,16 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 /**
  * @author Stélio Moiane
  */
-@Handler(supports = DispensationItem.class, order = 0)
-public class DispensationItemConverter extends BaseDelegatingConverter<DispensationItem> {
+@Handler(supports = DispensationWrapperItem.class, order = 0)
+public class DispensationItemConverter extends BaseDelegatingConverter<DispensationWrapperItem> {
 	
 	@Override
-	public DispensationItem newInstance(final String type) {
-		return new DispensationItem();
+	public DispensationWrapperItem newInstance(final String type) {
+		return new DispensationWrapperItem();
 	}
 	
 	@Override
-	public DispensationItem getByUniqueId(final String string) {
+	public DispensationWrapperItem getByUniqueId(final String string) {
 		return null;
 	}
 	
