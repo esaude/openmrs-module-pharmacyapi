@@ -38,10 +38,6 @@
 				<constraints nullable="false" />
 			</column>
 
-			<column name="item_id" type="int">
-				<constraints nullable="false" />
-			</column>
-
 			<column name="drug_units_id" type="int">
 				<constraints nullable="false" />
 			</column>
@@ -75,10 +71,6 @@
 		<addForeignKeyConstraint constraintName="phm_drug_items_drug_fk"
 			baseTableName="phm_drug_items" baseColumnNames="drug_id"
 			referencedTableName="drug" referencedColumnNames="drug_id" />
-
-		<addForeignKeyConstraint constraintName="phm_drug_items_item_fk"
-			baseTableName="phm_drug_items" baseColumnNames="item_id"
-			referencedTableName="inv_item" referencedColumnNames="item_id" />
 
 		<addForeignKeyConstraint constraintName="phm_drug_items_drug_unit_fk"
 			baseTableName="phm_drug_items" baseColumnNames="drug_units_id"
