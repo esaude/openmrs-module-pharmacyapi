@@ -30,8 +30,6 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	private Date prescriptionDate;
 	
-	private String conceptParentUuid;
-	
 	private DrugRegime drugRegime;
 	
 	public Prescription(final DrugOrder drugOrder) {
@@ -88,14 +86,6 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	public void setPrescriptionDate(final Date prescriptionDate) {
 		this.prescriptionDate = prescriptionDate;
-	}
-	
-	public void setConceptParentUuid(final String conceptParentUuid) {
-		this.conceptParentUuid = conceptParentUuid;
-	}
-	
-	public String getConceptParentUuid() {
-		return this.conceptParentUuid;
 	}
 	
 	public DrugOrder getDrugOrder() {

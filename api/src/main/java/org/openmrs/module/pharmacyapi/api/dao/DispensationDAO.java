@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.openmrs.DrugOrder;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
 
 /**
- * @author Guimino Neves
  */
 public interface DispensationDAO {
 	
@@ -18,5 +18,9 @@ public interface DispensationDAO {
 	
 	List<DrugOrder> findLastDrugOrdersByLastPatientEncounter(final Patient patient);
 	
-	void updateDrugOrder(DrugOrder drugOrder);
+	List<DrugOrder> findDrugOrderByEncounter(final Encounter encounter);
+	
+	void updateDrugOrderSetQuantity(DrugOrder drugOrder);
+	
+	void updateDrugOrderSetQuantityAndDispenseAsWritten(DrugOrder drugOrder);
 }

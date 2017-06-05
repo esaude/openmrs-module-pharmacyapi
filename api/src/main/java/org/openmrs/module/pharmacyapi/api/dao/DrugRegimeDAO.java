@@ -36,6 +36,8 @@ public interface DrugRegimeDAO {
 	
 	void setSessionFactory(SessionFactory sessionFactory);
 	
+	SessionFactory getSessionFctory();
+	
 	List<DrugRegime> findByRegime(Concept regime, boolean retired);
 	
 	List<DrugRegime> findAll(boolean retired);

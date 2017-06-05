@@ -80,4 +80,9 @@ public class DrugRegimeDAOImpl implements DrugRegimeDAO {
 		
 		return query.list();
 	}
+	
+	@Override
+	public SessionFactory getSessionFctory() {
+		return this.sessionFactory;
+	}
 }

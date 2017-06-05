@@ -91,16 +91,13 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				
 				final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
 				Order orderProcess = order.cloneForRevision();
-				// ((DrugOrder)
-				// (orderProcess)).setQuantity(this.calculateDrugQuantity(((DrugOrder)
-				// (orderProcess))));
 				
 				if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
 					orderProcess = order.cloneForDiscontinuing();
 				}
 				((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
 				
-				if (dispensationItem.getDrugRegime() != null) {
+				if ((dispensationItem.getRegimeId() != null) && (dispensationItem.getRegimeId().intValue() != 0)) {
 					arvOrder = order;
 					arvDispensationItem = dispensationItem;
 				}
@@ -109,7 +106,6 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				
 				this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
 				    nextPickUpConcept, dispensationItem);
-				this.dispensationDAO.updateDrugOrder((DrugOrder) orderProcess);
 			}
 			
 			this.encounterService.saveEncounter(dispensationEncounter);

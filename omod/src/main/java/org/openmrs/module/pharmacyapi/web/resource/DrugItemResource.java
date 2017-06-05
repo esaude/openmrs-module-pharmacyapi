@@ -30,7 +30,7 @@ public class DrugItemResource extends MetadataDelegatingCrudResource<DrugItem> {
 		if ((rep instanceof RefRepresentation) || (rep instanceof FullRepresentation)) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("drug", Representation.REF);
+			description.addProperty("drug");
 			description.addProperty("pharmaceuticalForm", Representation.REF);
 			description.addProperty("therapeuticGroup", Representation.REF);
 			description.addProperty("therapeuticClass", Representation.REF);
@@ -40,7 +40,7 @@ public class DrugItemResource extends MetadataDelegatingCrudResource<DrugItem> {
 		} else if (rep instanceof DefaultRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("drug", Representation.REF);
+			description.addProperty("drug");
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else {

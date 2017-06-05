@@ -40,7 +40,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
 			description.addProperty("drugToPickUp");
 			description.addProperty("drugPickedUp");
 			description.addProperty("drugRegime");
@@ -53,7 +52,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
 			description.addProperty("drugToPickUp");
 			description.addProperty("drugPickedUp");
 			description.addProperty("drugRegime");
@@ -67,7 +65,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
 			description.addProperty("drugToPickUp");
 			description.addProperty("drugPickedUp");
 			description.addProperty("drugRegime");

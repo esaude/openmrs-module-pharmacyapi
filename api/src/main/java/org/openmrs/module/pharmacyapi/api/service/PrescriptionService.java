@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface PrescriptionService extends OpenmrsService {
 	
-	void parseObsToOrders(final Patient patient) throws APIException;
+	// void parseObsToOrders(final Patient patient) throws APIException;
 	
 	List<Prescription> findPrescriptionsByPatient(final Patient patient) throws PharmacyBusinessException;
 	

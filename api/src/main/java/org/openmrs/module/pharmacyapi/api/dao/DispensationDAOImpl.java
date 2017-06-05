@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.DrugOrder;
+import org.openmrs.Encounter;
 import org.openmrs.Patient;
 
 /**
@@ -39,8 +40,33 @@ public class DispensationDAOImpl implements DispensationDAO {
 	}
 	
 	@Override
-	public void updateDrugOrder(final DrugOrder drugOrder) {
+	public void updateDrugOrderSetQuantity(final DrugOrder drugOrder) {
+		final Query query = this.sessionFactory.getCurrentSession().createSQLQuery(
+		    " update drug_order set quantity = '" + drugOrder.getQuantity().doubleValue() + "' where order_id = '"
+		            + drugOrder.getOrderId() + "'");
+		query.executeUpdate();
+	}
+	
+	@Override
+	public void updateDrugOrderSetQuantityAndDispenseAsWritten(final DrugOrder drugOrder) {
 		
-		this.sessionFactory.getCurrentSession().update(drugOrder);
+		final Query query = this.sessionFactory.getCurrentSession().createSQLQuery(
+		    " update drug_order set dispense_as_written = 'true', quantity = '" + drugOrder.getQuantity().doubleValue()
+		            + "' where order_id = '" + drugOrder.getOrderId() + "'");
+		query.executeUpdate();
+		
+		System.out.println("Update executado para drugOrder :" + drugOrder.getOrderId());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DrugOrder> findDrugOrderByEncounter(final Encounter encounter) {
+		
+		final String hql = "select distinct drugOrder from DrugOrder drugOrder where drugOrder.encounter = :encounter ";
+		
+		final Query query = this.sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("encounter", encounter);
+		
+		return query.list();
 	}
 }

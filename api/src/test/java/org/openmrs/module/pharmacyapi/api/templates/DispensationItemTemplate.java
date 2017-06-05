@@ -20,22 +20,24 @@ public class DispensationItemTemplate implements BaseTemplateLoader {
 	
 	@Override
 	public void load() {
-		Fixture.of(DispensationItem.class).addTemplate(VALID, new Rule() {
+		Fixture.of(DispensationItem.class).addTemplate(DispensationItemTemplate.VALID, new Rule() {
 			
 			{
 				this.add("orderUuid", this.random("1b92a25c-5747-471c-8275-3d150243d9c9",
 				    "ed35ed32-bf2c-4cf4-ab7c-38c83a37c548", "0120ed22-f2e9-4818-b9bd-536ac9aec13a"));
 				this.add("quantityDispensed", this.random(Double.class, this.range(1.0, 100.0)));
 				this.add("dateOfNextPickUp", this.instant("now"));
-				this.add("conceptParentUuid", this.random("e1d83d4a-1d5f-11e0-b929-000c29ad1d07", null));
+				// this.add("conceptParentUuid",
+				// this.random("e1d83d4a-1d5f-11e0-b929-000c29ad1d07", null));
 			}
 		});
 		
-		Fixture.of(DispensationItem.class).addTemplate(NON_ARV).inherits(VALID, new Rule() {
-			
-			{
-				this.add("dateOfNextPickUp", null);
-			}
-		});
+		Fixture.of(DispensationItem.class).addTemplate(DispensationItemTemplate.NON_ARV)
+		        .inherits(DispensationItemTemplate.VALID, new Rule() {
+			        
+			        {
+				        this.add("dateOfNextPickUp", null);
+			        }
+		        });
 	}
 }
