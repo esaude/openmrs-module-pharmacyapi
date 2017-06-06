@@ -26,6 +26,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
@@ -54,6 +55,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	private PersonService personService;
 	
 	private DbSessionManager dbSessionManager;
+	
+	private DispensationDAO dispensationDAO;
 	
 	@Override
 	public Dispensation dispense(final Dispensation dispensation) throws APIException {
@@ -88,12 +91,16 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				
 				final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
 				Order orderProcess = order.cloneForRevision();
+				// ((DrugOrder)
+				// (orderProcess)).setQuantity(this.calculateDrugQuantity(((DrugOrder)
+				// (orderProcess))));
 				
 				if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
 					orderProcess = order.cloneForDiscontinuing();
 				}
+				((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
 				
-				if (dispensationItem.getConceptParentUuid() != null) {
+				if (dispensationItem.getDrugRegime() != null) {
 					arvOrder = order;
 					arvDispensationItem = dispensationItem;
 				}
@@ -102,6 +109,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				
 				this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
 				    nextPickUpConcept, dispensationItem);
+				this.dispensationDAO.updateDrugOrder((DrugOrder) orderProcess);
 			}
 			
 			this.encounterService.saveEncounter(dispensationEncounter);
@@ -238,5 +246,10 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	@Override
 	public void setDbSessionManager(final DbSessionManager dbSessionManager) {
 		this.dbSessionManager = dbSessionManager;
+	}
+	
+	@Override
+	public void setDispensationDAO(final DispensationDAO dispensationDAO) {
+		this.dispensationDAO = dispensationDAO;
 	}
 }

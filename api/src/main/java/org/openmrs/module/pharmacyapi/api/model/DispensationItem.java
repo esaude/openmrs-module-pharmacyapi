@@ -25,7 +25,7 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	
 	private Date dateOfNextPickUp;
 	
-	private String conceptParentUuid;
+	private DrugRegime drugRegime;
 	
 	@Override
 	public Integer getId() {
@@ -77,12 +77,12 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 		this.dateOfNextPickUp = dateOfNextPickUp;
 	}
 	
-	public String getConceptParentUuid() {
-		return this.conceptParentUuid;
+	public DrugRegime getDrugRegime() {
+		return this.drugRegime;
 	}
 	
-	public void setConceptParentUuid(final String conceptParentUuid) {
-		this.conceptParentUuid = conceptParentUuid;
+	public void setDrugRegime(final DrugRegime drugRegime) {
+		this.drugRegime = drugRegime;
 	}
 	
 	public Double getTotalDispensed() {

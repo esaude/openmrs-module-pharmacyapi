@@ -30,28 +30,28 @@ public class ObsOrderAdapter extends BaseOpenmrsService {
 	public List<Order> adaptPatientObsPrescriptionToOrders(final Patient patient, final Encounter encounter) {
 		final List<Order> orders = new ArrayList<>();
 		final List<Obs> convSetObservations = new ArrayList<>();
-
+		
 		final Set<Obs> allObservations = encounter.getAllObs();
-
+		
 		for (final Obs obs : allObservations) {
-
+			
 			if (this.isConSetObs(obs)) {
 				convSetObservations.add(obs);
 			}
 		}
-
+		
 		if (!convSetObservations.isEmpty()) {
-
+			
 			for (final Obs convSetObservation : convSetObservations) {
-
+				
 				final Order order = this.prepareDrugOrder(convSetObservation, allObservations);
-
+				
 				order.setPatient(patient);
 				order.setEncounter(encounter);
 				orders.add(order);
 			}
 		}
-
+		
 		return orders;
 	}
 	

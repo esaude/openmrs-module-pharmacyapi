@@ -68,7 +68,6 @@
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-		PhmDrug.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

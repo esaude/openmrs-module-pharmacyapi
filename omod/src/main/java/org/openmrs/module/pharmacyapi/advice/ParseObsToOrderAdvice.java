@@ -23,7 +23,7 @@ public class ParseObsToOrderAdvice implements MethodBeforeAdvice {
 			final Patient patient = (Patient) args[0];
 			final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
 			
-			prescriptionService.parseObsToOrders(patient);
+			// prescriptionService.parseObsToOrders(patient);
 		}
 	}
 }

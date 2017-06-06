@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.Order;
+import org.openmrs.DrugOrder;
 
 /**
  * @author Stélio Moiane This class is basically an order wrapper.
@@ -18,7 +18,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	private Integer prescriptionId;
 	
-	private Order order;
+	private DrugOrder drugOrder;
 	
 	private Double drugToPickUp;
 	
@@ -32,18 +32,12 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	private String conceptParentUuid;
 	
-	public Prescription(final Order order) {
+	private DrugRegime drugRegime;
+	
+	public Prescription(final DrugOrder drugOrder) {
 		this.drugPickedUp = 0.0;
 		this.drugToPickUp = 0.0;
-		this.order = order;
-	}
-	
-	public Order getOrder() {
-		return this.order;
-	}
-	
-	public void setOrder(final Order order) {
-		this.order = order;
+		this.drugOrder = drugOrder;
 	}
 	
 	public Double getDrugToPickUp() {
@@ -102,5 +96,21 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	public String getConceptParentUuid() {
 		return this.conceptParentUuid;
+	}
+	
+	public DrugOrder getDrugOrder() {
+		return this.drugOrder;
+	}
+	
+	public void setDrugOrder(final DrugOrder drugOrder) {
+		this.drugOrder = drugOrder;
+	}
+	
+	public DrugRegime getDrugRegime() {
+		return this.drugRegime;
+	}
+	
+	public void setDrugRegime(final DrugRegime drugRegime) {
+		this.drugRegime = drugRegime;
 	}
 }

@@ -40,6 +40,12 @@
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
+				<property name="dispensationDAO">
+					<ref bean="dispensationDAO" />
+				</property>
+				<property name="dbSessionManager">
+					<ref bean="dbSessionManager" />
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -82,6 +88,9 @@
 				<property name="dbSessionManager">
 					<ref bean="dbSessionManager" />
 				</property>
+				<property name="dispensationDAO">
+					<ref bean="dispensationDAO" />
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -91,7 +100,55 @@
 			<ref bean="transactionAttributeSource" />
 		</property>
 	</bean>
-
+	
+	<bean id="drugRegimeService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="org.openmrs.module.pharmacyapi.api.service.DrugRegimeServiceImpl">
+				<property name="drugRegimeDAO">
+					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugRegimeDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="drugItemService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="org.openmrs.module.pharmacyapi.api.service.DrugItemServiceImpl">
+				<property name="drugItemDAO">
+					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugItemDAOImpl" >
+						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
@@ -110,8 +167,33 @@
 		</property>
 	</bean>
 	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.pharmacyapi.api.service.DrugItemService</value>
+				<ref local="drugItemService" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.pharmacyapi.api.service.DrugRegimeService</value>
+				<ref local="drugRegimeService" />
+			</list>
+		</property>
+	</bean>
+	
+		
 	<bean id="dbSessionManager" class="org.openmrs.module.pharmacyapi.db.DbSessionManagerImpl">
         <property name="sessionFactory"><ref bean="dbSessionFactory"/></property>
-    </bean>    
+    </bean> 
     
+    <bean id="dispensationDAO" class="org.openmrs.module.pharmacyapi.api.dao.DispensationDAOImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
 </beans>
