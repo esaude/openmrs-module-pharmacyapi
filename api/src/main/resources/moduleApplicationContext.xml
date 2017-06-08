@@ -101,6 +101,29 @@
 		</property>
 	</bean>
 	
+	<bean id="drugItemService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="org.openmrs.module.pharmacyapi.api.service.DrugItemServiceImpl">
+				<property name="drugItemDAO">
+					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugItemDAOImpl" >
+						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
 	<bean id="drugRegimeService"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -126,17 +149,19 @@
 		</property>
 	</bean>
 	
-	<bean id="drugItemService"
+	<bean id="prescriptionDispensationService"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref bean="transactionManager" />
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DrugItemServiceImpl">
-				<property name="drugItemDAO">
-					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugItemDAOImpl" >
-						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
+				class="org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationServiceImpl">
+				<property name="prescriptionDispensationDAO">
+					<bean class="org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
 					</bean>
 				</property>
 			</bean>
@@ -175,12 +200,19 @@
 			</list>
 		</property>
 	</bean>
-	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.pharmacyapi.api.service.DrugRegimeService</value>
 				<ref local="drugRegimeService" />
+			</list>
+		</property>
+	</bean>
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService</value>
+				<ref local="prescriptionDispensationService" />
 			</list>
 		</property>
 	</bean>

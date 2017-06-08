@@ -25,6 +25,8 @@ public class ServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private DrugRegimeService drugRegimeService;
 	
+	private PrescriptionDispensationService prescriptionDispensationService;
+	
 	@Before
 	public void before() throws Exception {
 		
@@ -40,14 +42,13 @@ public class ServiceTest extends BaseModuleContextSensitiveTest {
 		this.patientService = Context.getService(PatientService.class);
 		this.drugItemService = Context.getService(DrugItemService.class);
 		this.drugRegimeService = Context.getService(DrugRegimeService.class);
+		this.prescriptionDispensationService = Context.getService(PrescriptionDispensationService.class);
 		
 		Assert.assertNotNull(this.prescriptionService);
 		Assert.assertNotNull(this.dispensationService);
 		Assert.assertNotNull(this.patientService);
 		Assert.assertNotNull(this.drugItemService);
 		Assert.assertNotNull(this.drugRegimeService);
-		
-		System.out.println("Servico DrugRegime : " + this.drugRegimeService);
-		System.out.println("Servico DrugItem: " + this.drugItemService);
+		Assert.assertNotNull(this.prescriptionDispensationService);
 	}
 }
