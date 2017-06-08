@@ -4,9 +4,12 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.module.pharmacyapi.api.model.DrugItem;
 import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
 import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
@@ -19,8 +22,10 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 /**
  *
  */
+@Resource(name = RestConstants.VERSION_1 + "/prescriptiondispensation", order = 1, supportedClass = DrugItem.class, supportedOpenmrsVersions = {
+        "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class PrescriptionDispensationResource extends BaseDelegatingResource<PrescriptionDispensation> {
-
+	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = null;
@@ -33,35 +38,35 @@ public class PrescriptionDispensationResource extends BaseDelegatingResource<Pre
 			description.addProperty("prescription", Representation.REF);
 			description.addProperty("dispensation", Representation.REF);
 		}
-
+		
 		return description;
 	}
-
+	
 	@Override
 	public PrescriptionDispensation newDelegate() {
 		throw new ResourceDoesNotSupportOperationException();
 	}
-
+	
 	@Override
 	public PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation) {
-
-		return Context.getService(PrescriptionDispensationService.class)
-				.savePrescriptionDispensation(prescriptionDispensation);
+		
+		return Context.getService(PrescriptionDispensationService.class).savePrescriptionDispensation(
+		    prescriptionDispensation);
 	}
-
+	
 	@Override
 	protected void delete(PrescriptionDispensation arg0, String arg1, RequestContext arg2) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
-
+		
 	}
-
+	
 	@Override
 	public PrescriptionDispensation getByUniqueId(String uniqueId) {
-
+		
 		return Context.getService(PrescriptionDispensationService.class).findByUuid(uniqueId);
-
+		
 	}
-
+	
 	@Override
 	public void purge(PrescriptionDispensation arg0, RequestContext arg1) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
