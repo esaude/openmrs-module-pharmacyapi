@@ -178,6 +178,10 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 
+		    <column name="patient_id" type="int">
+				<constraints nullable="false" />
+			</column> 
+
 			<column name="prescription_id" type="int">
 				<constraints nullable="false" />
 			</column>
@@ -189,7 +193,25 @@
 			<column name="uuid" type="char(38)">
 				<constraints nullable="false" unique="true" />
 			</column>
+			
+			<column name="creator" defaultValueNumeric="0" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
 
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+
+			<column defaultValueBoolean="false" name="retired" type="boolean">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" />
+			
 		</createTable>
 
 		<addForeignKeyConstraint
@@ -201,6 +223,22 @@
 			constraintName="phm_prescription_dispensation_dispensation_fk"
 			baseTableName="phm_prescription_dispensation" baseColumnNames="dispensation_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+		
+	   <addForeignKeyConstraint constraintName="phm_prescription_dispensation_creator_fk"
+			baseTableName="phm_prescription_dispensation" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_changed_by_fk"
+			baseTableName="phm_prescription_dispensation" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_retired_by_fk"
+			baseTableName="phm_prescription_dispensation" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+			
+		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_patient_fk"
+			baseTableName="phm_prescription_dispensation" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
 
 		<addUniqueConstraint tableName="phm_prescription_dispensation"
 			columnNames="prescription_id, dispensation_id" constraintName="phm_prescription_dispensation_presdisp_unique" />

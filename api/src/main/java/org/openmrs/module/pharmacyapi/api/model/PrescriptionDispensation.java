@@ -14,15 +14,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.openmrs.Encounter;
+import org.openmrs.Patient;
 import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
 
 /**
  *
  */
-@NamedQueries(value = { @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByUuid, query = PrescriptionDispensationDAO.QUERY.findByUuid) })
+@NamedQueries(value = {
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByUuid, query = PrescriptionDispensationDAO.QUERY.findByUuid),
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPrescription, query = PrescriptionDispensationDAO.QUERY.findByPrescription),
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPatientUuid, query = PrescriptionDispensationDAO.QUERY.findByPatientUuid) })
 @Entity
 @Table(name = "phm_prescription_dispensation")
-public class PrescriptionDispensation extends BaseOpenmrsObjectWrapper {
+public class PrescriptionDispensation extends BaseOpenmrsMetadataWrapper {
 	
 	private static final long serialVersionUID = 5970480895598422427L;
 	
@@ -38,6 +42,21 @@ public class PrescriptionDispensation extends BaseOpenmrsObjectWrapper {
 	@ManyToOne
 	@JoinColumn(name = "dispensation_id")
 	private Encounter dispensation;
+	
+	@ManyToOne
+	@JoinColumn(name = "patient_id")
+	private Patient patient;
+	
+	public PrescriptionDispensation(Patient patient, Encounter prescription, Encounter dispensation) {
+		
+		this.patient = patient;
+		this.prescription = prescription;
+		this.dispensation = dispensation;
+	}
+	
+	public PrescriptionDispensation() {
+		
+	}
 	
 	@Override
 	public Integer getId() {
@@ -64,5 +83,13 @@ public class PrescriptionDispensation extends BaseOpenmrsObjectWrapper {
 	
 	public void setDispensation(Encounter dispensation) {
 		this.dispensation = dispensation;
+	}
+	
+	public Patient getPatient() {
+		return patient;
+	}
+	
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 }

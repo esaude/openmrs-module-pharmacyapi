@@ -3,9 +3,14 @@
  */
 package org.openmrs.module.pharmacyapi.api.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
@@ -25,8 +30,8 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
@@ -56,7 +61,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	private DbSessionManager dbSessionManager;
 	
-	private DispensationDAO dispensationDAO;
+	private PrescriptionDispensationService prescriptionDispensationService;
 	
 	@Override
 	public Dispensation dispense(final Dispensation dispensation) throws APIException {
@@ -87,50 +92,74 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		this.dbSessionManager.setManualFlushMode();
 		try {
 			
-			for (final DispensationItem dispensationItem : dispensation.getDispensationItems()) {
-				
-				final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
-				Order orderProcess = order.cloneForRevision();
-				// ((DrugOrder)
-				// (orderProcess)).setQuantity(this.calculateDrugQuantity(((DrugOrder)
-				// (orderProcess))));
-				
-				if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
-					orderProcess = order.cloneForDiscontinuing();
-				}
-				((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
-				
-				if (dispensationItem.getDrugRegime() != null) {
-					arvOrder = order;
-					arvDispensationItem = dispensationItem;
-				}
-				
-				orderProcess.setOrderer(provider);
-				
-				this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
-				    nextPickUpConcept, dispensationItem);
-				this.dispensationDAO.updateDrugOrder((DrugOrder) orderProcess);
-			}
+			Map<String, List<DispensationItem>> dispensesByEncounters = toMapByEncounters(dispensation);
 			
-			this.encounterService.saveEncounter(dispensationEncounter);
-			
-			if (arvOrder != null) {
+			for (String prescriptionUuid : dispensesByEncounters.keySet()) {
 				
-				final EncounterType filaEncounterType = this.encounterService
-				        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
+				List<DispensationItem> dispenseItems = dispensesByEncounters.get(prescriptionUuid);
 				
-				final Encounter filaEncounter = this.createEncounter(provider, patient, encounterRole, filaEncounterType,
-				    location);
+				for (DispensationItem dispensationItem : dispenseItems) {
+					
+					final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
+					Order orderProcess = order.cloneForRevision();
+					
+					if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
+						orderProcess = order.cloneForDiscontinuing();
+						((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
+					}
+					
+					if (StringUtils.isNotEmpty(dispensationItem.getRegimeUuid())) {
+						arvOrder = order;
+						arvDispensationItem = dispensationItem;
+					}
+					
+					orderProcess.setOrderer(provider);
+					
+					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
+					    nextPickUpConcept, dispensationItem);
+				}
 				
-				this.processFila(filaEncounter, arvOrder, arvDispensationItem, quantityConcept, nextPickUpConcept);
+				this.encounterService.saveEncounter(dispensationEncounter);
+				
+				Encounter prescription = Context.getEncounterService().getEncounterByUuid(prescriptionUuid);
+				
+				this.prescriptionDispensationService.savePrescriptionDispensation(patient, prescription,
+				    dispensationEncounter);
+				
+				if (arvOrder != null) {
+					
+					final EncounterType filaEncounterType = this.encounterService
+					        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
+					
+					final Encounter filaEncounter = this.createEncounter(provider, patient, encounterRole,
+					    filaEncounterType, location);
+					
+					this.processFila(filaEncounter, arvOrder, arvDispensationItem, quantityConcept, nextPickUpConcept);
+				}
 			}
 			
 		}
 		finally {
 			this.dbSessionManager.setAutoFlushMode();
+			Context.flushSession();
 		}
 		
 		return dispensation;
+	}
+	
+	private Map<String, List<DispensationItem>> toMapByEncounters(Dispensation dispensation) {
+		Map<String, List<DispensationItem>> result = new HashMap<>();
+
+		for (DispensationItem dispensationItem : dispensation.getDispensationItems()) {
+
+			List<DispensationItem> lst = result.get(dispensationItem.getPrescriptionUuid());
+
+			if (lst == null) {
+				result.put(dispensationItem.getPrescriptionUuid(), lst = new ArrayList<>());
+			}
+			lst.add(dispensationItem);
+		}
+		return result;
 	}
 	
 	private Encounter createEncounter(final Provider provider, final Patient patient, final EncounterRole encounterRole,
@@ -168,6 +197,17 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		
 		encounter.addObs(obsGroup);
 		encounter.addOrder(order);
+		
+		System.out.println("Order: " + order);
+		System.out.println("OBS: " + obsGroup);
+		System.out.println("encounter: " + encounter);
+		System.out.println("Dispensation Concept: " + dispensationConceptSet);
+		System.out.println("Quantity Concept: " + quantityConcept);
+		System.out.println("NExt pickUp Concept: " + nextPickUpConcept);
+		System.out.println("dispensation Item: " + dispensationItem);
+		System.out.println("Drug : " + ((DrugOrder) order).getDrug());
+		System.out.println("Drug Concept : " + ((DrugOrder) order).getDrug().getConcept());
+		
 	}
 	
 	private void processFila(final Encounter enconter, final Order arvOrder, final DispensationItem dispensationItem,
@@ -175,6 +215,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		
 		final Concept posologyConcept = this.conceptService.getConceptByUuid(MappedConcepts.POSOLOGY);
 		final Concept regimenConcept = this.conceptService.getConceptByUuid(MappedConcepts.REGIMEN);
+		Concept regime = this.conceptService.getConceptByUuid(dispensationItem.getRegimeUuid());
 		
 		final Obs obsQuantity = new Obs();
 		obsQuantity.setConcept(quantityConcept);
@@ -198,7 +239,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		
 		final Obs regimenObs = new Obs();
 		regimenObs.setConcept(regimenConcept);
-		regimenObs.setValueCoded(arvOrder.getConcept());
+		regimenObs.setValueCoded(regime);
 		
 		enconter.addObs(obsQuantity);
 		enconter.addObs(obsNextPickUp);
@@ -249,7 +290,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	@Override
-	public void setDispensationDAO(final DispensationDAO dispensationDAO) {
-		this.dispensationDAO = dispensationDAO;
+	public void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService) {
+		
+		this.prescriptionDispensationService = prescriptionDispensationService;
 	}
 }

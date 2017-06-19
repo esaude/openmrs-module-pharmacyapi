@@ -12,7 +12,6 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
-import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.model.Dispensation;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +40,5 @@ public interface DispensationService extends OpenmrsService {
 	
 	void setDbSessionManager(final DbSessionManager dbSessionManager);
 	
-	void setDispensationDAO(DispensationDAO dispensationDAO);
+	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
 }

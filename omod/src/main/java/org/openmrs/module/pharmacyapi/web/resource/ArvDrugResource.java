@@ -24,6 +24,8 @@ public class ArvDrugResource extends DrugResource1_11 {
 	@Override
 	public Drug getByUniqueId(final String uniqueId) {
 		
+		System.out.println("ARVDRUG_RESOURCE: " + uniqueId);
+		
 		final List<DrugRegime> drugRegime = Context.getService(DrugRegimeService.class).findDrugRegimeByDrugUuid(uniqueId);
 		
 		return drugRegime.isEmpty() ? null : drugRegime.get(0).getDrugItem().getDrug();

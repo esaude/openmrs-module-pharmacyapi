@@ -6,7 +6,6 @@ package org.openmrs.module.pharmacyapi.api.dao;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-import org.openmrs.Drug;
 import org.openmrs.module.pharmacyapi.api.exception.EntityNotFoundException;
 import org.openmrs.module.pharmacyapi.api.model.DrugItem;
 
@@ -19,14 +18,14 @@ public interface DrugItemDAO {
 		
 		String findByUUID = "DrugItem.findByUUID";
 		
-		String findByDrug = "DrugItem.findByDrug";
+		String findByDrugId = "DrugItem.findByDrugId";
 	}
 	
 	public interface QUERY {
 		
 		String findByUUID = "select di from DrugItem di where di.uuid = :uuid";
 		
-		String findByDrug = "select di from DrugItem di where di.drug = :drug";
+		String findByDrugId = "select di from DrugItem di where di.drugId = :drugId";
 	}
 	
 	void setSessionFactory(SessionFactory sessionFactory);
@@ -37,7 +36,7 @@ public interface DrugItemDAO {
 	
 	void save(DrugItem drugItem);
 	
-	DrugItem findByDrug(Drug drug) throws EntityNotFoundException;
+	DrugItem findByDrugId(Integer drugId) throws EntityNotFoundException;
 	
 	List<DrugItem> findAll(Boolean retired);
 	

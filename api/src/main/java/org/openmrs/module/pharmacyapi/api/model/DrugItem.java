@@ -25,7 +25,7 @@ import org.openmrs.module.pharmacyapi.api.dao.DrugItemDAO;
 /**
  *
  */
-@NamedQueries(value = { @NamedQuery(name = DrugItemDAO.QUERY_NAME.findByDrug, query = DrugItemDAO.QUERY.findByDrug),
+@NamedQueries(value = { @NamedQuery(name = DrugItemDAO.QUERY_NAME.findByDrugId, query = DrugItemDAO.QUERY.findByDrugId),
         @NamedQuery(name = DrugItemDAO.QUERY_NAME.findByUUID, query = DrugItemDAO.QUERY.findByUUID) })
 @Entity
 @Table(name = "phm_drug_items", uniqueConstraints = { @UniqueConstraint(columnNames = { "fnm_code" }) })

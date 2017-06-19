@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.Encounter;
 
 /**
  * @author Stélio Moiane

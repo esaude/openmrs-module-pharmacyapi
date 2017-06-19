@@ -28,12 +28,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.adapter.ObsOrderAdapter;
 import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
-import org.openmrs.module.pharmacyapi.api.exception.EntityNotFoundException;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.model.DrugItem;
+import org.openmrs.module.pharmacyapi.api.model.DrugRegime;
 import org.openmrs.module.pharmacyapi.api.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
-import org.openmrs.module.pharmacyapi.api.util.MappedDurationUnits;
 import org.openmrs.module.pharmacyapi.api.util.MappedOrders;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -170,29 +168,31 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 
 		final List<Prescription> prescriptions = new ArrayList<>();
 
-		this.dbSessionManager.setManualFlushMode();
-		final List<DrugOrder> drugOrders = this.dispensationDAO.findLastDrugOrdersByLastPatientEncounter(patient);
+		try {
 
-		for (final DrugOrder drugOrder : drugOrders) {
-			final Prescription prescription = new Prescription(drugOrder);
+			this.dbSessionManager.setManualFlushMode();
 
-			if ((drugOrder.getQuantity() == null) || (drugOrder.getQuantity().doubleValue() == 0.0)) {
-				drugOrder.setQuantity(this.calculateDrugQuantity(drugOrder));
-				this.dispensationDAO.updateDrugOrder(drugOrder);
+			final List<DrugOrder> drugOrders = this.dispensationDAO
+					.findDrugOrdersByPatientAndNotDispensedAndPartialDispensed(patient);
+
+			for (DrugOrder drugOrder : drugOrders) {
+				final Prescription prescription = new Prescription(drugOrder);
+
+				this.setPrescriptionInstructions(drugOrder, prescription);
+				prescription.setProvider(drugOrder.getOrderer().getName());
+				prescription.setPrescriptionDate(drugOrder.getEncounter().getEncounterDatetime());
+				prescription.setDrugToPickUp(drugOrder.getQuantity());
+
+				if (this.isArvDrug(prescription, drugOrder)) {
+					prescription.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
+					prescription.setDrugToPickUp((drugOrder.getQuantity() - prescription.getDrugPickedUp()));
+				}
+
+				prescriptions.add(prescription);
 			}
 
-			this.setPrescriptionInstructions(drugOrder, prescription);
-			prescription.setProvider(drugOrder.getOrderer().getName());
-			prescription.setPrescriptionDate(drugOrder.getEncounter().getEncounterDatetime());
-			prescription.setDrugToPickUp(drugOrder.getQuantity());
-
-			if (this.isArvDrug(prescription, drugOrder)) {
-				prescription.setConceptParentUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-				prescription.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
-				prescription.setDrugToPickUp((drugOrder.getQuantity() - prescription.getDrugPickedUp()));
-			}
-
-			prescriptions.add(prescription);
+		} finally {
+			this.dbSessionManager.getCurrentFlushMode();
 		}
 
 		return prescriptions;
@@ -200,31 +200,13 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	
 	private boolean isArvDrug(final Prescription prescription, final DrugOrder drugOrder) throws PharmacyBusinessException {
 		
-		final DrugRegimeService drugRegimeService = Context.getService(DrugRegimeService.class);
-		final DrugItemService drugItemService = Context.getService(DrugItemService.class);
-		
-		final Concept regime = Context.getConceptService().getConceptByUuid("e1de8966-1d5f-11e0-b929-000c29ad1d07");
-		
-		final DrugItem drugItem;
-		try {
-			drugItem = drugItemService.findDrugItemByDrug(drugOrder.getDrug());
-			
-		}
-		catch (final EntityNotFoundException e) {
-			
-			throw new IllegalArgumentException("Drug_Item not found for Drug " + drugOrder.getDrug());
-			
-			// return false;
-		}
-		
-		try {
-			prescription.setDrugRegime(drugRegimeService.findDrugRegimeByRegimeAndDrugItem(regime, drugItem));
+		List<DrugRegime> result = Context.getService(DrugRegimeService.class).findDrugRegimeByDrugUuid(
+		    drugOrder.getDrug().getUuid());
+		if (!result.isEmpty()) {
+			prescription.setDrugRegime(result.iterator().next());
 			return Boolean.TRUE;
-			
 		}
-		catch (final EntityNotFoundException e) {
-			return Boolean.FALSE;
-		}
+		return Boolean.FALSE;
 	}
 	
 	private void setPrescriptionInstructions(final DrugOrder drugOrder, final Prescription prescription) {
@@ -255,14 +237,12 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		return quantity;
 	}
 	
-	private boolean isTheSameConceptAndSameDrug(final DrugOrder order, final Obs observation) {
+	private boolean isTheSameConceptAndSameDrug(final DrugOrder order, Obs observation) {
+		
+		Drug obsDrug = this.dispensationDAO.findDrugByOrderUuid(observation.getOrder().getUuid());
+		
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
-		        && order.getConcept().getUuid().equals(observation.getOrder().getConcept().getUuid());
+		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
 	}
 	
-	private Double calculateDrugQuantity(final DrugOrder drugOrder) {
-		final int durationUnitsDays = MappedDurationUnits.getDurationDays(drugOrder.getDurationUnits().getUuid());
-		
-		return drugOrder.getDose() * drugOrder.getDuration() * durationUnitsDays;
-	}
 }

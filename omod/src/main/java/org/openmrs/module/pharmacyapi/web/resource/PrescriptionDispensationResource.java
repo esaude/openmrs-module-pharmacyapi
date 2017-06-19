@@ -3,10 +3,9 @@
  */
 package org.openmrs.module.pharmacyapi.web.resource;
 
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.model.DrugItem;
 import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
-import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -14,17 +13,19 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 /**
  *
  */
-@Resource(name = RestConstants.VERSION_1 + "/prescriptiondispensation", order = 1, supportedClass = DrugItem.class, supportedOpenmrsVersions = {
+@Resource(name = RestConstants.VERSION_1 + "/prescriptiondispensation", order = 1, supportedClass = PrescriptionDispensation.class, supportedOpenmrsVersions = {
         "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-public class PrescriptionDispensationResource extends BaseDelegatingResource<PrescriptionDispensation> {
+public class PrescriptionDispensationResource extends MetadataDelegatingCrudResource<PrescriptionDispensation> {
 	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -50,21 +51,41 @@ public class PrescriptionDispensationResource extends BaseDelegatingResource<Pre
 	@Override
 	public PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation) {
 		
-		return Context.getService(PrescriptionDispensationService.class).savePrescriptionDispensation(
-		    prescriptionDispensation);
-	}
-	
-	@Override
-	protected void delete(PrescriptionDispensation arg0, String arg1, RequestContext arg2) throws ResponseException {
-		throw new ResourceDoesNotSupportOperationException();
+		// return Context.getService(PrescriptionDispensationService.class)
+		// .savePrescriptionDispensation(prescriptionDispensation);
 		
+		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
 	public PrescriptionDispensation getByUniqueId(String uniqueId) {
 		
-		return Context.getService(PrescriptionDispensationService.class).findByUuid(uniqueId);
+		return null;// Context.getService(PrescriptionDispensationService.class).findPrescriptionDispensationByUuid(uniqueId);
 		
+	}
+	
+	@Override
+	protected PageableResult doGetAll(final RequestContext context) throws ResponseException {
+		
+		return new EmptySearchResult();
+	}
+	
+	@Override
+	protected PageableResult doSearch(final RequestContext context) {
+		
+		final String patientUuid = context.getRequest().getParameter("patient");
+		
+		if (patientUuid != null) {
+			
+			final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+			
+			// List<PrescriptionDispensation> result =
+			// Context.getService(PrescriptionDispensationService.class)
+			// .findPrescriptionDispensationByPatientUuid(patientUuid);
+			
+			// return new NeedsPaging<>(result, context);
+		}
+		return new EmptySearchResult();
 	}
 	
 	@Override

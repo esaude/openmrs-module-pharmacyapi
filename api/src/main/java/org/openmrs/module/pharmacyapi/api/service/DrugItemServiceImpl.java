@@ -2,7 +2,6 @@ package org.openmrs.module.pharmacyapi.api.service;
 
 import java.util.List;
 
-import org.openmrs.Drug;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.DrugItemDAO;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
@@ -40,7 +39,7 @@ public class DrugItemServiceImpl extends BaseOpenmrsService implements DrugItemS
 	}
 	
 	@Override
-	public DrugItem findDrugItemByDrug(final Drug drug) throws PharmacyBusinessException {
-		return this.drugItemDAO.findByDrug(drug);
+	public DrugItem findDrugItemByDrugId(Integer drugId) throws PharmacyBusinessException {
+		return this.drugItemDAO.findByDrugId(drugId);
 	}
 }
