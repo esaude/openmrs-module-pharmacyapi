@@ -9,7 +9,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.Drug;
 import org.openmrs.module.pharmacyapi.api.exception.EntityNotFoundException;
 import org.openmrs.module.pharmacyapi.api.model.DrugItem;
 
@@ -51,10 +50,10 @@ public class DrugItemDAOImpl implements DrugItemDAO {
 	}
 	
 	@Override
-	public DrugItem findByDrug(final Drug drug) throws EntityNotFoundException {
+	public DrugItem findByDrugId(Integer drugId) throws EntityNotFoundException {
 		
-		final Query query = this.sessionFactory.getCurrentSession().getNamedQuery(DrugItemDAO.QUERY_NAME.findByDrug)
-		        .setParameter("drug", drug);
+		final Query query = this.sessionFactory.getCurrentSession().getNamedQuery(DrugItemDAO.QUERY_NAME.findByDrugId)
+		        .setParameter("drugId", drugId);
 		
 		final DrugItem drugItem = (DrugItem) query.uniqueResult();
 		

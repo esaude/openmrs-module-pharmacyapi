@@ -8,12 +8,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.search.annotations.Field;
-import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.OpenmrsMetadata;
 import org.openmrs.User;
 
 @MappedSuperclass
-public abstract class BaseOpenmrsMetadataWrapper extends BaseOpenmrsObject implements OpenmrsMetadata {
+public abstract class BaseOpenmrsMetadataWrapper extends BaseOpenmrsObjectWrapper implements OpenmrsMetadata {
+	
+	private static final long serialVersionUID = -4725993486523697297L;
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "creator")

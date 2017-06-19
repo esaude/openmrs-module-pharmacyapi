@@ -5,7 +5,6 @@ package org.openmrs.module.pharmacyapi.api.service;
 
 import java.util.List;
 
-import org.openmrs.Drug;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.DrugItemDAO;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
@@ -21,7 +20,7 @@ public interface DrugItemService extends OpenmrsService {
 	
 	List<DrugItem> findAllDrugItem(Boolean retired);
 	
-	DrugItem findDrugItemByDrug(Drug drug) throws PharmacyBusinessException;
+	DrugItem findDrugItemByDrugId(Integer drugId) throws PharmacyBusinessException;
 	
 	void saveDrugItem(DrugItem drugItem);
 	
