@@ -17,20 +17,19 @@ import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_11.DrugRes
 
 /**
  */
-@Resource(name = RestConstants.VERSION_1 + "/arvdrug", order = 2, supportedClass = Drug.class, supportedOpenmrsVersions = {
-        "1.11.*", "1.12.*" })
+@Resource(name = RestConstants.VERSION_1
+		+ "/arvdrug", order = 2, supportedClass = Drug.class, supportedOpenmrsVersions = { "1.11.*", "1.12.*" })
 public class ArvDrugResource extends DrugResource1_11 {
-	
+
 	@Override
 	public Drug getByUniqueId(final String uniqueId) {
-		
-		System.out.println("ARVDRUG_RESOURCE: " + uniqueId);
-		
-		final List<DrugRegime> drugRegime = Context.getService(DrugRegimeService.class).findDrugRegimeByDrugUuid(uniqueId);
-		
+
+		final List<DrugRegime> drugRegime = Context.getService(DrugRegimeService.class)
+				.findDrugRegimeByDrugUuid(uniqueId);
+
 		return drugRegime.isEmpty() ? null : drugRegime.get(0).getDrugItem().getDrug();
 	}
-	
+
 	@Override
 	protected NeedsPaging<Drug> doGetAll(final RequestContext context) {
 
