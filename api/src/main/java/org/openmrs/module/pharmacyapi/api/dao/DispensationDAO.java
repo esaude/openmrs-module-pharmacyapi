@@ -11,12 +11,11 @@ import org.openmrs.DrugOrder;
 import org.openmrs.Patient;
 
 /**
+ * s
  */
 public interface DispensationDAO {
 	
 	void setSessionFactory(SessionFactory sessionFactory);
-	
-	List<DrugOrder> findLastDrugOrdersByLastPatientEncounter(final Patient patient);
 	
 	List<DrugOrder> findDrugOrdersByPatientAndNotDispensedAndPartialDispensed(Patient patient);
 	

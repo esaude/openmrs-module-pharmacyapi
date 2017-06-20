@@ -13,9 +13,5 @@
 		<!-- DB schema will be updated if needed -->
 		<!-- <property name="hbm2ddl.auto">update</property> -->
 
-<!-- 
-		<mapping resource="PhmDrugRegime.hbm.xml" />
-		<mapping resource="PhmDrug.hbm.xml" />
- -->
 	</session-factory>
 </hibernate-configuration>
