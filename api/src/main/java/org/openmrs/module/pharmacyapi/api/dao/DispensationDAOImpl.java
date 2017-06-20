@@ -4,6 +4,7 @@
 package org.openmrs.module.pharmacyapi.api.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,30 +56,38 @@ public class DispensationDAOImpl implements DispensationDAO {
 	@Override
 	public List<DrugOrder> findDrugOrdersByPatientAndNotDispensedAndPartialDispensed(Patient patient) {
 
-		final String sql = "select distinct * from " + "           (select distinct orders.order_id from orders "
-				+ "					join drug_order on drug_order.order_id = orders.order_id "
-				+ "					join encounter on encounter.encounter_id = orders.encounter_id "
-				+ "					join patient on patient.patient_id = encounter.patient_id "
-				+ "					join person on person.person_id = patient.patient_id "
-				+ "	   			where person.uuid = :patientUuid "
-				+ "            		and orders.encounter_id not in ( "
-				+ "   				    select phm_prescription_dispensation.dispensation_id from phm_prescription_dispensation "
-				+ "   			  	 ) "
-				+ "		       	 	and orders.date_stopped is null order by orders.order_id desc "
-				+ " 		  ) ORDER_WITHOUT_PRESCRIPTION " + "      union " + "         select distinct * from "
-				+ "			 (select distinct dispensed_order.order_id from orders dispensed_order "
-				+ "  				join drug_order dispensed_drug on dispensed_drug.order_id = dispensed_order.order_id "
-				+ "   				join encounter on encounter.encounter_id = dispensed_order.encounter_id "
-				+ "   				join patient on patient.patient_id = encounter.patient_id "
-				+ "   				join person on person.person_id = patient.patient_id "
-				+ "    				join phm_prescription_dispensation on phm_prescription_dispensation.dispensation_id = encounter.encounter_id "
-				+ "   			where person.uuid = :patientUuid "
-				+ "   				and dispensed_order.order_action in ('REVISE') "
-				+ "   	     		and dispensed_drug.order_id  in ( "
-				+ "   					select max(b.order_id) from drug_order b "
-				+ "   					where b.drug_inventory_id = dispensed_drug.drug_inventory_id and dispensed_order.previous_order_id is not null and b.dispense_as_written is false "
-				+ "    	     	     ) " + "   	     	    order by dispensed_order.order_id desc "
-				+ "          ) ORDER_WITH_PARTIAL_DISPENSED_PRESCRIPTION ";
+		final String sql = "select distinct * from " 
+		      + " (select distinct orders.order_id from orders     "
+				+ "	 join drug_order on drug_order.order_id = orders.order_id "
+				+ "	 join encounter on encounter.encounter_id = orders.encounter_id "
+				+ "	 join patient on patient.patient_id = encounter.patient_id "
+				+ "	 join person on person.person_id = patient.patient_id "
+				+ "	where person.uuid = :patientUuid "
+				+ "    and orders.encounter_id not in ( "
+				+ "   	  select phm_prescription_dispensation.dispensation_id from phm_prescription_dispensation) "
+				+ "	   and orders.date_stopped is null order by orders.order_id desc "
+				+ " ) ORDER_WITHOUT_PRESCRIPTION " 
+				+ " union " 
+				+ " select distinct * from "
+				+ " (select distinct dispensed_order.order_id from orders dispensed_order "
+				+ "     join drug_order dispensed_drug on dispensed_drug.order_id = dispensed_order.order_id "
+				+ "     join encounter on encounter.encounter_id = dispensed_order.encounter_id "
+				+ "     join patient on patient.patient_id = encounter.patient_id "
+				+ "   	join person on person.person_id = patient.patient_id "
+				+ "     join phm_prescription_dispensation on phm_prescription_dispensation.dispensation_id = encounter.encounter_id "
+				+ "     join encounter prescribed_drug on prescribed_drug.encounter_id = phm_prescription_dispensation.prescription_id"
+				+ "     join orders prescribed_order on prescribed_order.encounter_id = prescribed_drug.encounter_id"
+				+ "     join drug_order prescribed_drug_order on prescribed_drug_order.order_id = prescribed_drug_order.order_id"
+				+ "   where person.uuid = :patientUuid "
+				+ "   	and dispensed_order.order_action in ('REVISE') "
+				+ "   	and dispensed_drug.order_id  in ( "
+				+ "   		 select max(b.order_id) from drug_order b "
+				+ "   		 where b.drug_inventory_id = dispensed_drug.drug_inventory_id "
+				+ "             and dispensed_order.previous_order_id is not null "
+				+ "             and b.dispense_as_written is false) "
+				+ "   	group by dispensed_drug.drug_inventory_id having sum(prescribed_drug_order.quantity) > sum(dispensed_drug.quantity) "
+				+ "     order by dispensed_order.order_id desc "
+				+ "    ) ORDER_WITH_PARTIAL_DISPENSED_PRESCRIPTION ";
 
 		final Query query = this.sessionFactory.getCurrentSession().createSQLQuery(sql)
 				.setParameter("patientUuid", patient.getUuid()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -91,11 +100,13 @@ public class DispensationDAOImpl implements DispensationDAO {
 
 			orderIds.add((Integer) row.get("order_id"));
 		}
+		if (!orderIds.isEmpty()) {
+			Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(Order.class, "order");
+			criteria.add(Restrictions.in("order.orderId", orderIds));
 
-		Criteria criteria = this.sessionFactory.getCurrentSession().createCriteria(Order.class, "order");
-		criteria.add(Restrictions.in("order.orderId", orderIds));
-
-		return criteria.list();
+			return criteria.list();
+		}
+		return Collections.emptyList();
 	}
 	
 	@Override
