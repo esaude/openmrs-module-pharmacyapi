@@ -16,6 +16,7 @@ import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.Order.Action;
 import org.openmrs.OrderFrequency;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
@@ -176,19 +177,23 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 					.findDrugOrdersByPatientAndNotDispensedAndPartialDispensed(patient);
 
 			for (DrugOrder drugOrder : drugOrders) {
-				final Prescription prescription = new Prescription(drugOrder);
 
-				this.setPrescriptionInstructions(drugOrder, prescription);
-				prescription.setProvider(drugOrder.getOrderer().getName());
-				prescription.setPrescriptionDate(drugOrder.getEncounter().getEncounterDatetime());
-				prescription.setDrugToPickUp(drugOrder.getQuantity());
+				if (!Action.DISCONTINUE.equals(drugOrder.getAction())) {
 
-				if (this.isArvDrug(prescription, drugOrder)) {
-					prescription.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
-					prescription.setDrugToPickUp((drugOrder.getQuantity() - prescription.getDrugPickedUp()));
+					final Prescription prescription = new Prescription(drugOrder);
+
+					this.setPrescriptionInstructions(drugOrder, prescription);
+					prescription.setProvider(drugOrder.getOrderer().getName());
+					prescription.setPrescriptionDate(drugOrder.getEncounter().getEncounterDatetime());
+					prescription.setDrugToPickUp(drugOrder.getQuantity());
+
+					if (this.isArvDrug(prescription, drugOrder)) {
+						prescription.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
+						prescription.setDrugToPickUp((drugOrder.getQuantity() - prescription.getDrugPickedUp()));
+					}
+
+					prescriptions.add(prescription);
 				}
-
-				prescriptions.add(prescription);
 			}
 
 		} finally {
