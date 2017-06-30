@@ -98,16 +98,16 @@
 
 	</changeSet>
 
-	<changeSet id="1234567890" author="Guimino">
+	<changeSet id="pharmacyapi-v1.0.0-table-drug_regime" author="Guimino">
 
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="phm_drug_regime, phm_prescription_dispensation" />
+				<tableExists tableName="phm_drug_regime" />
 			</not>
 		</preConditions>
 
 		<comment>
-			Creating phm_drug_regime, phm_prescription_dispensation tables
+			Creating phm_drug_regime
 		</comment>
 
 		<createTable tableName="phm_drug_regime">
@@ -170,6 +170,21 @@
 		<addUniqueConstraint tableName="phm_drug_regime"
 			columnNames="drug_item_id, regime_id" constraintName="phm_drug_regime_drug_item_regime_unique" />
 
+
+	</changeSet>
+	
+	
+	<changeSet id="pharmacyapi-v1.0.0-table-prescription-dispensation" author="Guimino">
+
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="phm_prescription_dispensation" />
+			</not>
+		</preConditions>
+
+		<comment>
+			Creating phm_prescription_dispensation table
+		</comment>
 
 		<createTable tableName="phm_prescription_dispensation">
 
