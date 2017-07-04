@@ -36,4 +36,6 @@ public interface PrescriptionService extends OpenmrsService {
 	void setDispensationDAO(DispensationDAO dispensationDAO);
 	
 	void setDbSessionManager(final DbSessionManager dbSessionManager);
+	
+	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
 }

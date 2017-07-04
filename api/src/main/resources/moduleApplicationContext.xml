@@ -46,6 +46,11 @@
 				<property name="dbSessionManager">
 					<ref bean="dbSessionManager" />
 				</property>
+				
+				<property name="prescriptionDispensationService">
+					<ref bean="prescriptionDispensationService" />
+				</property>
+				
 			</bean>
 		</property>
 		<property name="preInterceptors">

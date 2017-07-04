@@ -30,7 +30,6 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.adapter.ObsOrderAdapter;
 import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.model.DrugRegime;
 import org.openmrs.module.pharmacyapi.api.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.util.MappedOrders;
@@ -52,6 +51,8 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	private DispensationDAO dispensationDAO;
 	
 	private DbSessionManager dbSessionManager;
+	
+	private PrescriptionDispensationService prescriptionDispensationService;
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
@@ -187,7 +188,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 					prescription.setPrescriptionDate(drugOrder.getEncounter().getEncounterDatetime());
 					prescription.setDrugToPickUp(drugOrder.getQuantity());
 
-					if (this.isArvDrug(prescription, drugOrder)) {
+					if (this.prescriptionDispensationService.isArvDrug(prescription, drugOrder)) {
 						prescription.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
 						prescription.setDrugToPickUp((drugOrder.getQuantity() - prescription.getDrugPickedUp()));
 					}
@@ -201,17 +202,6 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		}
 
 		return prescriptions;
-	}
-	
-	private boolean isArvDrug(final Prescription prescription, final DrugOrder drugOrder) throws PharmacyBusinessException {
-		
-		List<DrugRegime> result = Context.getService(DrugRegimeService.class).findDrugRegimeByDrugUuid(
-		    drugOrder.getDrug().getUuid());
-		if (!result.isEmpty()) {
-			prescription.setDrugRegime(result.iterator().next());
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
 	}
 	
 	private void setPrescriptionInstructions(final DrugOrder drugOrder, final Prescription prescription) {
@@ -248,6 +238,11 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
 		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
+	}
+	
+	@Override
+	public void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService) {
+		this.prescriptionDispensationService = prescriptionDispensationService;
 	}
 	
 }

@@ -3,11 +3,23 @@
  */
 package org.openmrs.module.pharmacyapi.api.service;
 
+import java.util.Set;
+
+import org.openmrs.Concept;
+import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
+import org.openmrs.module.pharmacyapi.api.exception.EntityNotFoundException;
+import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.model.DrugItem;
+import org.openmrs.module.pharmacyapi.api.model.DrugRegime;
+import org.openmrs.module.pharmacyapi.api.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
+import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -46,4 +58,48 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 		
 		return prescriptionDispensation;
 	}
+	
+	@Override
+	public boolean isArvDrug(final Prescription prescription, final DrugOrder drugOrder) throws PharmacyBusinessException {
+		
+		Concept regime = getArvRegimeByEncounterDrugOrder(drugOrder);
+		
+		if (regime != null) {
+			
+			DrugItem drugItem = Context.getService(DrugItemService.class).findDrugItemByDrugId(
+			    drugOrder.getDrug().getDrugId());
+			
+			try {
+				DrugRegime drugRegime = Context.getService(DrugRegimeService.class).findDrugRegimeByRegimeAndDrugItem(
+				    regime, drugItem);
+				
+				prescription.setDrugRegime(drugRegime);
+				return Boolean.TRUE;
+				
+			}
+			catch (EntityNotFoundException e) {}
+		}
+		return Boolean.FALSE;
+	}
+	
+	private Concept getArvRegimeByEncounterDrugOrder(DrugOrder drugOrder) {
+		
+		Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
+		    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+		
+		Encounter encounter = Context.getEncounterService().getEncounter(drugOrder.getEncounter().getEncounterId());
+		
+		Set<Obs> allObs = encounter.getAllObs();
+		
+		for (Obs obs : allObs) {
+			
+			if (arvConceptQuestion.equals(obs.getConcept())) {
+				
+				return obs.getValueCoded();
+			}
+		}
+		
+		return null;
+	}
+	
 }
