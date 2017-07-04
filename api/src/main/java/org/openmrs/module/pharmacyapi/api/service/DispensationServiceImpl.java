@@ -84,6 +84,9 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		Order arvOrder = null;
 		DispensationItem arvDispensationItem = null;
 		
+		Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
+		    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+		
 		final Concept dispensationConceptSet = this.conceptService.getConceptByUuid(MappedConcepts.DISPENSATION_SET);
 		final Concept quantityConcept = this.conceptService.getConceptByUuid(MappedConcepts.MEDICATION_QUANTITY);
 		final Concept nextPickUpConcept = this.conceptService.getConceptByUuid(MappedConcepts.DATE_OF_NEXT_PICK_UP);
@@ -116,7 +119,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 					orderProcess.setOrderer(provider);
 					
 					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
-					    nextPickUpConcept, dispensationItem);
+					    nextPickUpConcept, dispensationItem, arvConceptQuestion);
 				}
 				
 				this.encounterService.saveEncounter(dispensationEncounter);
@@ -176,7 +179,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	private void prepareDispensation(final Order order, final Encounter encounter, final Concept dispensationConceptSet,
-	        final Concept quantityConcept, final Concept nextPickUpConcept, final DispensationItem dispensationItem) {
+	        final Concept quantityConcept, final Concept nextPickUpConcept, final DispensationItem dispensationItem,
+	        Concept arvConceptQuestion) {
 		
 		final Obs obsGroup = new Obs();
 		obsGroup.setConcept(dispensationConceptSet);
@@ -194,6 +198,15 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		
 		obsGroup.addGroupMember(obsQuantity);
 		obsGroup.addGroupMember(obsNextPickUp);
+		
+		if (StringUtils.isNotEmpty(dispensationItem.getRegimeUuid())) {
+			Concept valueCoded = Context.getConceptService().getConceptByUuid(dispensationItem.getRegimeUuid());
+			final Obs obsRegime = new Obs();
+			obsRegime.setConcept(arvConceptQuestion);
+			obsRegime.setValueCoded(valueCoded);
+			obsRegime.setOrder(order);
+			encounter.addObs(obsRegime);
+		}
 		
 		encounter.addObs(obsGroup);
 		encounter.addOrder(order);
