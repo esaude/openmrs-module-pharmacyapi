@@ -4,10 +4,16 @@
 package org.openmrs.module.pharmacyapi.api.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.DrugOrder;
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Location;
+import org.openmrs.Patient;
+import org.openmrs.Provider;
 
 /**
  * @author Stélio Moiane This class is basically an order wrapper.
@@ -16,69 +22,35 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Integer prescriptionId;
-	
-	private DrugOrder drugOrder;
-	
-	private Double drugToPickUp;
-	
-	private Double drugPickedUp;
-	
-	private String dosingInstructions;
-	
-	private String provider;
-	
 	private Date prescriptionDate;
 	
-	private String conceptParentUuid;
+	private Patient patient;
 	
-	private DrugRegime drugRegime;
+	private Provider provider;
 	
-	public Prescription(final DrugOrder drugOrder) {
-		this.drugPickedUp = 0.0;
-		this.drugToPickUp = 0.0;
-		this.drugOrder = drugOrder;
+	private Location location;
+	
+	private Encounter encounter;
+	
+	private Concept arvPlan;
+	
+	private Concept regime;
+	
+	private String changeReason;
+	
+	private String interruptionReason;
+	
+	private List<PrescriptionItem> prescriptionItems;
+	
+	public Prescription() {
+		this.prescriptionItems = new ArrayList<>();
 	}
 	
-	public Double getDrugToPickUp() {
-		return this.drugToPickUp;
-	}
-	
-	public void setDrugToPickUp(final Double drugToPickUp) {
-		this.drugToPickUp = drugToPickUp;
-	}
-	
-	public Double getDrugPickedUp() {
-		return this.drugPickedUp;
-	}
-	
-	public void setDrugPickedUp(final Double drugPickedUp) {
-		this.drugPickedUp = drugPickedUp;
-	}
-	
-	@Override
-	public Integer getId() {
-		return this.prescriptionId;
-	}
-	
-	@Override
-	public void setId(final Integer prescriptionId) {
-		this.prescriptionId = prescriptionId;
-	}
-	
-	public void setDosingInstructions(final String dosingInstructions) {
-		this.dosingInstructions = dosingInstructions;
-	}
-	
-	public String getDosingInstructions() {
-		return this.dosingInstructions;
-	}
-	
-	public String getProvider() {
+	public Provider getProvider() {
 		return this.provider;
 	}
 	
-	public void setProvider(final String provider) {
+	public void setProvider(final Provider provider) {
 		this.provider = provider;
 	}
 	
@@ -90,27 +62,85 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 		this.prescriptionDate = prescriptionDate;
 	}
 	
-	public void setConceptParentUuid(final String conceptParentUuid) {
-		this.conceptParentUuid = conceptParentUuid;
+	public List<PrescriptionItem> getPrescriptionItems() {
+		return prescriptionItems;
 	}
 	
-	public String getConceptParentUuid() {
-		return this.conceptParentUuid;
+	public void setPrescriptionItems(List<PrescriptionItem> prescriptionItems) {
+		this.prescriptionItems = prescriptionItems;
 	}
 	
-	public DrugOrder getDrugOrder() {
-		return this.drugOrder;
+	public Encounter getEncounter() {
+		return encounter;
 	}
 	
-	public void setDrugOrder(final DrugOrder drugOrder) {
-		this.drugOrder = drugOrder;
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
 	}
 	
-	public DrugRegime getDrugRegime() {
-		return this.drugRegime;
+	public Patient getPatient() {
+		return patient;
 	}
 	
-	public void setDrugRegime(final DrugRegime drugRegime) {
-		this.drugRegime = drugRegime;
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	public Concept getRegime() {
+		return regime;
+	}
+	
+	public void setRegime(Concept regime) {
+		this.regime = regime;
+	}
+	
+	public Concept getArvPlan() {
+		return arvPlan;
+	}
+	
+	public void setArvPlan(Concept arvPlan) {
+		this.arvPlan = arvPlan;
+	}
+	
+	public String getChangeReason() {
+		return changeReason;
+	}
+	
+	public void setChangeReason(String changeReason) {
+		this.changeReason = changeReason;
+	}
+	
+	public String getInterruptionReason() {
+		return interruptionReason;
+	}
+	
+	public void setInterruptionReason(String interruptionReason) {
+		this.interruptionReason = interruptionReason;
+	}
+	
+	// public String getProviderName() {
+	// return providerName;
+	// }
+	//
+	// public void setProviderName(String providerName) {
+	// this.providerName = providerName;
+	// }
+	
+	@Override
+	public Integer getId() {
+		return null;
+	}
+	
+	@Override
+	public void setId(final Integer prescriptionId) {
+		
 	}
 }

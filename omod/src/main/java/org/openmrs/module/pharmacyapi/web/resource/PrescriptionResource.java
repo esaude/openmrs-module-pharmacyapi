@@ -1,15 +1,18 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.openmrs.DrugOrder;
 import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.service.PrescriptionService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
@@ -22,6 +25,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_11.RestConstants1_11;
 
 /**
  * @author Stélio Moiane
@@ -36,41 +40,47 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		if (rep instanceof RefRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("drugOrder");
-			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
+			description.addProperty("patient", Representation.REF);
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
-			description.addProperty("drugToPickUp");
-			description.addProperty("drugPickedUp");
-			description.addProperty("drugRegime");
+			description.addProperty("prescriptionItems");
+			description.addProperty("encounter", Representation.REF);
+			description.addProperty("location", Representation.REF);
+			description.addProperty("regime", Representation.REF);
+			description.addProperty("arvPlan", Representation.REF);
+			description.addProperty("changeReason");
+			description.addProperty("interruptionReason");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("drugOrder");
-			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
+			description.addProperty("patient", Representation.REF);
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
-			description.addProperty("drugToPickUp");
-			description.addProperty("drugPickedUp");
-			description.addProperty("drugRegime");
+			description.addProperty("prescriptionItems");
+			description.addProperty("encounter", Representation.REF);
+			description.addProperty("location", Representation.REF);
+			description.addProperty("regime", Representation.REF);
+			description.addProperty("arvPlan", Representation.REF);
+			description.addProperty("changeReason");
+			description.addProperty("interruptionReason");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (rep instanceof FullRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("drugOrder");
-			description.addProperty("dosingInstructions");
 			description.addProperty("provider");
+			description.addProperty("patient");
 			description.addProperty("prescriptionDate");
-			description.addProperty("conceptParentUuid");
-			description.addProperty("drugToPickUp");
-			description.addProperty("drugPickedUp");
-			description.addProperty("drugRegime");
+			description.addProperty("prescriptionItems");
+			description.addProperty("encounter");
+			description.addProperty("location");
+			description.addProperty("regime");
+			description.addProperty("arvPlan");
+			description.addProperty("changeReason");
+			description.addProperty("interruptionReason");
 			description.addSelfLink();
 			return description;
 		} else {
@@ -80,12 +90,20 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	
 	@Override
 	public Prescription newDelegate() {
-		throw new ResourceDoesNotSupportOperationException();
+		return new Prescription();
 	}
 	
 	@Override
 	public Prescription save(final Prescription delegate) {
-		throw new ResourceDoesNotSupportOperationException();
+		
+		try {
+			Context.getService(PrescriptionService.class).createPrescription(delegate);
+		}
+		catch (PharmacyBusinessException e) {
+			
+			throw new APIException(e);
+		}
+		return delegate;
 	}
 	
 	@Override
@@ -101,9 +119,8 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	
 	@Override
 	public Prescription getByUniqueId(final String uniqueId) {
-		final DrugOrder drugOrder = (DrugOrder) Context.getOrderService().getOrderByUuid(uniqueId);
 		
-		return new Prescription(drugOrder);
+		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
@@ -131,5 +148,45 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		}
 
 		return new EmptySearchResult();
+	}
+	
+	@PropertySetter("prescriptionItems")
+	public static void prescriptionItems(Prescription instance, List<PrescriptionItem> items) {
+		for (PrescriptionItem item : items) {
+			item.setPrescription(instance);
+		}
+		instance.setPrescriptionItems(items);
+	}
+	
+	/**
+	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getCreatableProperties()
+	 */
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() {
+		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("prescriptionDate");
+		description.addProperty("prescriptionItems");
+		description.addProperty("encounter");
+		description.addProperty("provider");
+		description.addProperty("patient");
+		description.addProperty("regime");
+		description.addProperty("arvPlan");
+		description.addProperty("changeReason");
+		description.addProperty("interruptionReason");
+		description.addProperty("location");
+		return description;
+	}
+	
+	/**
+	 * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getPropertiesToExposeAsSubResources()
+	 */
+	@Override
+	public List<String> getPropertiesToExposeAsSubResources() {
+		return Arrays.asList("prescriptionItems");
+	}
+	
+	@Override
+	public String getResourceVersion() {
+		return RestConstants1_11.RESOURCE_VERSION;
 	}
 }
