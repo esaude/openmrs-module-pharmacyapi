@@ -16,9 +16,8 @@ import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.exception.EntityNotFoundException;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.model.DrugItem;
-import org.openmrs.module.pharmacyapi.api.model.DrugRegime;
-import org.openmrs.module.pharmacyapi.api.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
+import org.openmrs.module.pharmacyapi.api.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +59,8 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	}
 	
 	@Override
-	public boolean isArvDrug(final Prescription prescription, final DrugOrder drugOrder) throws PharmacyBusinessException {
+	public boolean isArvDrug(final PrescriptionItem prescriptionItem, final DrugOrder drugOrder)
+	        throws PharmacyBusinessException {
 		
 		Concept regime = getArvRegimeByEncounterDrugOrder(drugOrder);
 		
@@ -70,10 +70,9 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 			    drugOrder.getDrug().getDrugId());
 			
 			try {
-				DrugRegime drugRegime = Context.getService(DrugRegimeService.class).findDrugRegimeByRegimeAndDrugItem(
-				    regime, drugItem);
+				Context.getService(DrugRegimeService.class).findDrugRegimeByRegimeAndDrugItem(regime, drugItem);
 				
-				prescription.setDrugRegime(drugRegime);
+				prescriptionItem.setRegime(regime);
 				return Boolean.TRUE;
 				
 			}

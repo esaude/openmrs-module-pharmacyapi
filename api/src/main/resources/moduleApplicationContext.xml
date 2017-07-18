@@ -30,13 +30,6 @@
 		<property name="target">
 			<bean
 				class="org.openmrs.module.pharmacyapi.api.service.PrescriptionServiceImpl">
-				<property name="obsOrderAdapter">
-					<bean id="obsOrderAdapter"
-						class="org.openmrs.module.pharmacyapi.api.adapter.ObsOrderAdapter" />
-				</property>
-				<property name="orderService">
-					<ref bean="orderService" />
-				</property>
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
