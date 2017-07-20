@@ -36,7 +36,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 
 	private Concept regime;
 
-	private Concept therapeuticLine;
+	private Concept arvPlan;
 
 	private Concept changeReason;
 
@@ -139,13 +139,13 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 		return null;
 	}
 
-	public Concept getTherapeuticLine() {
+	public Concept getArvPlan() {
 
 		for (PrescriptionItem prescriptionItem : prescriptionItems) {
 
-			if (prescriptionItem.getTherapeuticLine() != null) {
+			if (prescriptionItem.getArvPlan() != null) {
 
-				return this.therapeuticLine = prescriptionItem.getTherapeuticLine();
+				return this.arvPlan = prescriptionItem.getArvPlan();
 			}
 		}
 		return null;

@@ -121,7 +121,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 							prescriptionItem.setDrugPickedUp(this.calculateDrugPikckedUp(drugOrder));
 							prescriptionItem
 									.setDrugToPickUp((drugOrder.getQuantity() - prescriptionItem.getDrugPickedUp()));
-							prescriptionItem.setTherapeuticLine(findArvPlan(firstPrescription));
+							prescriptionItem.setArvPlan(findArvPlan(firstPrescription));
 						}
 
 						prescriptionItems.add(prescriptionItem);
@@ -375,9 +375,9 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		
 		Concept arvPlan = null;
 		
-		if (prescription.getTherapeuticLine() != null) {
+		if (prescription.getArvPlan() != null) {
 			
-			arvPlan = this.conceptService.getConceptByUuid(prescription.getTherapeuticLine().getUuid());
+			arvPlan = this.conceptService.getConceptByUuid(prescription.getArvPlan().getUuid());
 			
 			if (arvPlan != null) {
 				return arvPlan;
@@ -521,7 +521,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 
 				if (this.prescriptionDispensationService.isArvDrug(prescriptionItem, drugOrderToUse)) {
 
-					prescriptionItem.setTherapeuticLine(findArvPlan(firstPrescription));
+					prescriptionItem.setArvPlan(findArvPlan(firstPrescription));
 				}
 
 				prescriptionItems.add(prescriptionItem);
@@ -664,7 +664,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 
 					try {
 						if (this.prescriptionDispensationService.isArvDrug(prescriptionItem, (DrugOrder) drugOrder)) {
-							prescriptionItem.setTherapeuticLine(findArvPlan(encounter));
+							prescriptionItem.setArvPlan(findArvPlan(encounter));
 						}
 					} catch (PharmacyBusinessException e) {
 					}

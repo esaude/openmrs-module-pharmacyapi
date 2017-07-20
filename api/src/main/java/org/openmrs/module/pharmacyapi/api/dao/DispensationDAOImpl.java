@@ -121,7 +121,7 @@ public class DispensationDAOImpl implements DispensationDAO {
 		Query query = this.sessionFactory
 		        .getCurrentSession()
 		        .createQuery(
-		            " select distinct enc from Encounter enc inner join fetch enc.orders o where enc.patient = :patient and enc.encounterType = :encounterType and o.voided is false order by enc.encounterId, enc.dateCreated desc");
+		            " select distinct enc from Encounter enc inner join fetch enc.orders o where enc.patient = :patient and enc.encounterType = :encounterType and o.voided is false order by enc.encounterId desc");
 		
 		query.setParameter("patient", patient);
 		query.setParameter("encounterType", encounterType);
