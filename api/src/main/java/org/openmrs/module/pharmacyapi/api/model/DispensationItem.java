@@ -27,8 +27,6 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	
 	private String regimeUuid;
 	
-	private String prescriptionUuid;
-	
 	@Override
 	public Integer getId() {
 		return this.dispensationItemId;
@@ -91,11 +89,4 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 		this.regimeUuid = regimeUuid;
 	}
 	
-	public String getPrescriptionUuid() {
-		return prescriptionUuid;
-	}
-	
-	public void setPrescriptionUuid(String prescriptionUuid) {
-		this.prescriptionUuid = prescriptionUuid;
-	}
 }

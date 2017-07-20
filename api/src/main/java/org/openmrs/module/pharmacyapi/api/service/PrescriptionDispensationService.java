@@ -24,4 +24,6 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	public boolean isArvDrug(final PrescriptionItem prescription, final DrugOrder drugOrder)
 	        throws PharmacyBusinessException;
 	
+	PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
+	        throws PharmacyBusinessException;
 }

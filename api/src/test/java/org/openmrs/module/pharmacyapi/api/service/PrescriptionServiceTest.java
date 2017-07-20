@@ -52,7 +52,7 @@ public class PrescriptionServiceTest extends BaseTest {
 		    EntityFactory.gimme(Concept.class, ConceptTemplate.BEFORE_MEALS));
 		this.prescriptionService.setConceptService(conceptService);
 		
-		final List<Prescription> prescriptions = this.prescriptionService.findPrescriptionsByPatient(patient);
+		final List<Prescription> prescriptions = this.prescriptionService.findPrescriptionsByPatientAndActiveStatus(patient);
 		
 		Assert.assertFalse(prescriptions.isEmpty());
 		Assert.assertEquals(5, prescriptions.size());

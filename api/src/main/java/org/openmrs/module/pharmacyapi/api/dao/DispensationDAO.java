@@ -8,6 +8,8 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Patient;
 
 /**
@@ -19,7 +21,7 @@ public interface DispensationDAO {
 	
 	List<DrugOrder> findDrugOrdersByPatientAndNotDispensedAndPartialDispensed(Patient patient);
 	
-	Drug findDrugByOrderUuid(String uuid);
+	List<Encounter> findEncountersByPatientAndEnconterType(Patient patient, EncounterType encounterType);
 	
-	void updateDrugOrder(DrugOrder drugOrder);
+	Drug findDrugByOrderUuid(String uuid);
 }

@@ -25,6 +25,8 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	
 	private String locationUuid;
 	
+	private Encounter prescriptionEncounter;
+	
 	private List<DispensationItem> dispensationItems;
 	
 	public Dispensation() {
@@ -79,5 +81,13 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	
 	public String getLocationUuid() {
 		return this.locationUuid;
+	}
+	
+	public Encounter getPrescriptionEncounter() {
+		return prescriptionEncounter;
+	}
+	
+	public void setPrescriptionEncounter(Encounter prescriptionEncounter) {
+		this.prescriptionEncounter = prescriptionEncounter;
 	}
 }

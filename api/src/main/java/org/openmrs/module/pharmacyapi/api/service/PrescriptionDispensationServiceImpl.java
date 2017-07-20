@@ -101,4 +101,10 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 		return null;
 	}
 	
+	@Override
+	public PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
+	        throws PharmacyBusinessException {
+		
+		return this.prescriptionDispensationDAO.findByDispensationEncounter(dispensation);
+	}
 }

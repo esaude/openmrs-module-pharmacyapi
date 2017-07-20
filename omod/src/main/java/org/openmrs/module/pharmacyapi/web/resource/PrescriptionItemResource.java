@@ -40,7 +40,9 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
 			description.addProperty("regime", Representation.REF);
-			
+			description.addProperty("therapeuticLine", Representation.REF);
+			description.addProperty("changeReason", Representation.REF);
+			description.addProperty("interruptionReason", Representation.REF);
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
@@ -52,6 +54,10 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
 			description.addProperty("regime");
+			description.addProperty("therapeuticLine");
+			description.addProperty("changeReason");
+			description.addProperty("interruptionReason");
+			
 			return description;
 		}
 		return null;
