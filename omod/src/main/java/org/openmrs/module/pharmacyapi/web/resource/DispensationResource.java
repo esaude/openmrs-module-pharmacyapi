@@ -28,17 +28,20 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		if (rep instanceof RefRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
+			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
+			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (rep instanceof FullRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
+			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			return description;
 		} else {
@@ -88,6 +91,7 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		description.addProperty("patientUuid");
 		description.addProperty("locationUuid");
 		description.addProperty("dispensationItems");
+		description.addProperty("prescriptionEncounter");
 		
 		return description;
 		

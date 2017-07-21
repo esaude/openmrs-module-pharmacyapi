@@ -1,8 +1,10 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -44,7 +46,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("prescriptionDate");
 			description.addProperty("prescriptionItems");
-			description.addProperty("encounter", Representation.REF);
+			description.addProperty("prescriptionEncounter", Representation.REF);
 			description.addProperty("location", Representation.REF);
 			description.addProperty("regime", Representation.REF);
 			description.addProperty("arvPlan", Representation.REF);
@@ -59,12 +61,13 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("prescriptionDate");
 			description.addProperty("prescriptionItems");
-			description.addProperty("encounter", Representation.REF);
+			description.addProperty("prescriptionEncounter", Representation.REF);
 			description.addProperty("location", Representation.REF);
 			description.addProperty("regime", Representation.REF);
 			description.addProperty("arvPlan", Representation.REF);
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
+			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
@@ -75,12 +78,13 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("patient");
 			description.addProperty("prescriptionDate");
 			description.addProperty("prescriptionItems");
-			description.addProperty("encounter");
+			description.addProperty("prescriptionEncounter");
 			description.addProperty("location");
 			description.addProperty("regime");
 			description.addProperty("arvPlan");
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
+			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			return description;
 		} else {
@@ -109,7 +113,14 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	@Override
 	protected void delete(final Prescription delegate, final String reason, final RequestContext context)
 	        throws ResponseException {
-		throw new ResourceDoesNotSupportOperationException();
+		
+		try {
+			Context.getService(PrescriptionService.class).cancelPrescription(delegate, reason);
+		}
+		catch (PharmacyBusinessException e) {
+			
+			throw new APIException(e);
+		}
 	}
 	
 	@Override
@@ -120,13 +131,23 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	@Override
 	public Prescription getByUniqueId(final String uniqueId) {
 		
-		throw new ResourceDoesNotSupportOperationException();
+		Patient patient = Context.getPatientService().getPatientByUuid(uniqueId);
+		
+		try {
+			return Context.getService(PrescriptionService.class).findLastActivePrescriptionByPatient(patient);
+			
+		}
+		catch (PharmacyBusinessException e) {
+			throw new APIException(e);
+		}
 	}
 	
 	@Override
 	protected PageableResult doSearch(final RequestContext context) {
 
 		final String patientUuid = context.getRequest().getParameter("patient");
+		String findLast = context.getRequest().getParameter("findLast");
+		String findAllPrescribed = context.getRequest().getParameter("findAllPrescribed");
 
 		if (patientUuid == null) {
 			return new EmptySearchResult();
@@ -138,9 +159,26 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			return new EmptySearchResult();
 		}
 
+		if (StringUtils.isNotBlank(findLast)) {
+
+			try {
+				return findLastPrescription(context, patient, findLast);
+
+			} catch (PharmacyBusinessException e) {
+
+				throw new APIException(e);
+			}
+		}
+
+		if (StringUtils.isNotBlank(findAllPrescribed)) {
+
+			return findAllPrescribed(context, patient, findAllPrescribed);
+		}
+
 		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
 		try {
-			final List<Prescription> prescriptions = prescriptionService.findPrescriptionsByPatient(patient);
+			final List<Prescription> prescriptions = prescriptionService
+					.findPrescriptionsByPatientAndActiveStatus(patient);
 			return new NeedsPaging<>(prescriptions, context);
 
 		} catch (final PharmacyBusinessException e) {
@@ -166,7 +204,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("prescriptionDate");
 		description.addProperty("prescriptionItems");
-		description.addProperty("encounter");
+		description.addProperty("prescriptionEncounter");
 		description.addProperty("provider");
 		description.addProperty("patient");
 		description.addProperty("regime");
@@ -174,6 +212,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		description.addProperty("changeReason");
 		description.addProperty("interruptionReason");
 		description.addProperty("location");
+		description.addProperty("prescriptionStatus");
 		return description;
 	}
 	
@@ -188,5 +227,46 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	@Override
 	public String getResourceVersion() {
 		return RestConstants1_11.RESOURCE_VERSION;
+	}
+	
+	private PageableResult findLastPrescription(RequestContext context, Patient patient, String findLast)
+			throws PharmacyBusinessException {
+
+		Boolean doSearchLast = Boolean.FALSE;
+
+		try {
+			doSearchLast = Boolean.valueOf(findLast).booleanValue();
+
+		} catch (Exception e) {
+		}
+
+		if (doSearchLast) {
+			Prescription prescription = Context.getService(PrescriptionService.class)
+					.findLastActivePrescriptionByPatient(patient);
+
+			return new NeedsPaging<>(Collections.singletonList(prescription), context);
+		}
+
+		return new EmptySearchResult();
+	}
+	
+	private PageableResult findAllPrescribed(RequestContext context, Patient patient, String findAllPrescribed) {
+
+		Boolean doSearchAllPrecribed = Boolean.FALSE;
+
+		try {
+			doSearchAllPrecribed = Boolean.valueOf(findAllPrescribed).booleanValue();
+
+		} catch (Exception e) {
+		}
+
+		if (doSearchAllPrecribed) {
+			List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
+					.findAllPrescriptionsByPatient(patient);
+
+			return new NeedsPaging<>(prescriptions, context);
+		}
+
+		return new EmptySearchResult();
 	}
 }

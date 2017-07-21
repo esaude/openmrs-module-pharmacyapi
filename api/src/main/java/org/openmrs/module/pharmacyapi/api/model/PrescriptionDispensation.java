@@ -23,7 +23,8 @@ import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
 @NamedQueries(value = {
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByUuid, query = PrescriptionDispensationDAO.QUERY.findByUuid),
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPrescription, query = PrescriptionDispensationDAO.QUERY.findByPrescription),
-        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPatientUuid, query = PrescriptionDispensationDAO.QUERY.findByPatientUuid) })
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPatientUuid, query = PrescriptionDispensationDAO.QUERY.findByPatientUuid),
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByDispensationEncounter, query = PrescriptionDispensationDAO.QUERY.findByDispensationEncounter) })
 @Entity
 @Table(name = "phm_prescription_dispensation")
 public class PrescriptionDispensation extends BaseOpenmrsMetadataWrapper {
