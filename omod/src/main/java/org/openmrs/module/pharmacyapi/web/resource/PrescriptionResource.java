@@ -50,6 +50,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("location", Representation.REF);
 			description.addProperty("regime", Representation.REF);
 			description.addProperty("arvPlan", Representation.REF);
+			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
 			description.addSelfLink();
@@ -65,6 +66,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("location", Representation.REF);
 			description.addProperty("regime", Representation.REF);
 			description.addProperty("arvPlan", Representation.REF);
+			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
 			description.addProperty("prescriptionStatus");
@@ -82,6 +84,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("location");
 			description.addProperty("regime");
 			description.addProperty("arvPlan");
+			description.addProperty("therapeuticLine");
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
 			description.addProperty("prescriptionStatus");
@@ -209,6 +212,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		description.addProperty("patient");
 		description.addProperty("regime");
 		description.addProperty("arvPlan");
+		description.addProperty("therapeuticLine");
 		description.addProperty("changeReason");
 		description.addProperty("interruptionReason");
 		description.addProperty("location");

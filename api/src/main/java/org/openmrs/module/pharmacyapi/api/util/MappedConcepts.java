@@ -10,6 +10,8 @@ public class MappedConcepts {
 	
 	public static final String ARV_PLAN = "e1d9ee10-1d5f-11e0-b929-000c29ad1d07";
 	
+	public static final String ARV_THERAPEUTIC_LINE = "fdff0637-b36f-4dce-90c7-fe9f1ec586f0";
+	
 	public static final String DOSAGE_AMOUNT = "e1de8966-1d5f-11e0-b929-000c29ad1d07";
 	
 	public static final String DOSING_UNITS = "9d66a447-10e8-11e5-9009-0242ac110012";
