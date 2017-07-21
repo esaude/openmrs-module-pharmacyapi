@@ -38,6 +38,8 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 
 	private Concept arvPlan;
 
+	private Concept therapeuticLine;
+
 	private Concept changeReason;
 
 	private Concept interruptionReason;
@@ -146,6 +148,16 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 			if (prescriptionItem.getArvPlan() != null) {
 
 				return this.arvPlan = prescriptionItem.getArvPlan();
+			}
+		}
+		return null;
+	}
+
+	public Concept getTherapeuticLine() {
+
+		for (PrescriptionItem prescriptionItem : prescriptionItems) {
+			if (prescriptionItem.getTherapeuticLine() != null) {
+				return this.therapeuticLine = prescriptionItem.getTherapeuticLine();
 			}
 		}
 		return null;

@@ -122,6 +122,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 							prescriptionItem
 									.setDrugToPickUp((drugOrder.getQuantity() - prescriptionItem.getDrugPickedUp()));
 							prescriptionItem.setArvPlan(findArvPlan(firstPrescription));
+							prescriptionItem.setTherapeuticLine(findArvTherapeuticPlan(firstPrescription));
 						}
 
 						prescriptionItems.add(prescriptionItem);
@@ -254,6 +255,11 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 			obsPlan.setValueCoded(this.getArvPlan(prescription));
 			encounter.addObs(obsPlan);
 			
+			final Obs obsTherapeuticLine = new Obs();
+			obsTherapeuticLine.setConcept(this.conceptService.getConceptByUuid(MappedConcepts.ARV_THERAPEUTIC_LINE));
+			obsTherapeuticLine.setValueCoded(this.getArvTherapeuticLine(prescription));
+			encounter.addObs(obsTherapeuticLine);
+			
 			if (prescription.getInterruptionReason() != null) {
 				
 				final Obs obsInterruptionReason = new Obs();
@@ -293,6 +299,20 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		Set<Obs> allObs = encounter.getAllObs();
 		
 		Concept arvPlan = this.conceptService.getConceptByUuid(MappedConcepts.ARV_PLAN);
+		
+		for (Obs obs : allObs) {
+			if (arvPlan.equals(obs.getConcept())) {
+				return obs.getValueCoded();
+			}
+		}
+		return null;
+	}
+	
+	private Concept findArvTherapeuticPlan(Encounter encounter) {
+		
+		Set<Obs> allObs = encounter.getAllObs();
+		
+		Concept arvPlan = this.conceptService.getConceptByUuid(MappedConcepts.ARV_THERAPEUTIC_LINE);
 		
 		for (Obs obs : allObs) {
 			if (arvPlan.equals(obs.getConcept())) {
@@ -385,6 +405,23 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		}
 		
 		throw new PharmacyBusinessException("Prescription wWith ARV Drug without ARV Plan  cannot be created "
+		        + prescription);
+	}
+	
+	private Concept getArvTherapeuticLine(Prescription prescription) throws PharmacyBusinessException {
+		
+		Concept therapeuticLine = null;
+		
+		if (prescription.getTherapeuticLine() != null) {
+			
+			therapeuticLine = this.conceptService.getConceptByUuid(prescription.getTherapeuticLine().getUuid());
+			
+			if (therapeuticLine != null) {
+				return therapeuticLine;
+			}
+		}
+		
+		throw new PharmacyBusinessException("Prescription with ARV Drug without therapeutic line cannot be created "
 		        + prescription);
 	}
 	
@@ -522,6 +559,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 				if (this.prescriptionDispensationService.isArvDrug(prescriptionItem, drugOrderToUse)) {
 
 					prescriptionItem.setArvPlan(findArvPlan(firstPrescription));
+					prescriptionItem.setTherapeuticLine(findArvTherapeuticPlan(firstPrescription));
 				}
 
 				prescriptionItems.add(prescriptionItem);
@@ -665,6 +703,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 					try {
 						if (this.prescriptionDispensationService.isArvDrug(prescriptionItem, (DrugOrder) drugOrder)) {
 							prescriptionItem.setArvPlan(findArvPlan(encounter));
+							prescriptionItem.setTherapeuticLine(findArvTherapeuticPlan(encounter));
 						}
 					} catch (PharmacyBusinessException e) {
 					}

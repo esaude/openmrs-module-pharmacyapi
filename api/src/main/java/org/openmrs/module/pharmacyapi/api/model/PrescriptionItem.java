@@ -28,6 +28,8 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	private Concept regime;
 	
+	private Concept therapeuticLine;
+	
 	private Concept changeReason;
 	
 	private Concept interruptionReason;
@@ -105,6 +107,14 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setChangeReason(Concept changeReason) {
 		this.changeReason = changeReason;
+	}
+	
+	public Concept getTherapeuticLine() {
+		return therapeuticLine;
+	}
+	
+	public void setTherapeuticLine(Concept therapeuticLine) {
+		this.therapeuticLine = therapeuticLine;
 	}
 	
 	public Concept getInterruptionReason() {
