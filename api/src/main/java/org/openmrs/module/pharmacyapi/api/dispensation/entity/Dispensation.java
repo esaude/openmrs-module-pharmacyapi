@@ -1,14 +1,13 @@
 /*
  * Friends in Global Health - FGH © 2017
  */
-package org.openmrs.module.pharmacyapi.api.model;
+package org.openmrs.module.pharmacyapi.api.dispensation.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.Encounter;
 
 /**
  * @author Stélio Moiane
@@ -24,8 +23,6 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	private String patientUuid;
 	
 	private String locationUuid;
-	
-	private Encounter prescriptionEncounter;
 	
 	private List<DispensationItem> dispensationItems;
 	
@@ -81,13 +78,5 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	
 	public String getLocationUuid() {
 		return this.locationUuid;
-	}
-	
-	public Encounter getPrescriptionEncounter() {
-		return prescriptionEncounter;
-	}
-	
-	public void setPrescriptionEncounter(Encounter prescriptionEncounter) {
-		this.prescriptionEncounter = prescriptionEncounter;
 	}
 }

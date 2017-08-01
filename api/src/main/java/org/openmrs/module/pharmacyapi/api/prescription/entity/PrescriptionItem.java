@@ -1,4 +1,4 @@
-package org.openmrs.module.pharmacyapi.api.model;
+package org.openmrs.module.pharmacyapi.api.prescription.entity;
 
 import java.io.Serializable;
 
@@ -13,6 +13,10 @@ import org.openmrs.DrugOrder;
 public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+	public enum PrescriptionItemStatus {
+		NEW, ACTIVE, FINALIZED
+	}
 	
 	private DrugOrder drugOrder;
 	
@@ -33,6 +37,8 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	private Concept changeReason;
 	
 	private Concept interruptionReason;
+	
+	private PrescriptionItemStatus status = PrescriptionItemStatus.NEW;
 	
 	public PrescriptionItem() {
 		this.drugPickedUp = 0.0;
@@ -123,6 +129,14 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setInterruptionReason(Concept interruptionReason) {
 		this.interruptionReason = interruptionReason;
+	}
+	
+	public PrescriptionItemStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(PrescriptionItemStatus status) {
+		this.status = status;
 	}
 	
 	@Override

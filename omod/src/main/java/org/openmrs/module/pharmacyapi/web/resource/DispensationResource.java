@@ -1,8 +1,13 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
+import java.util.Arrays;
+
+import org.openmrs.Order;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.model.Dispensation;
-import org.openmrs.module.pharmacyapi.api.service.DispensationService;
+import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
+import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -28,20 +33,17 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		if (rep instanceof RefRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (rep instanceof FullRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
-			description.addProperty("prescriptionEncounter");
 			description.addSelfLink();
 			return description;
 		} else {
@@ -58,22 +60,59 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	@Override
 	public Dispensation save(final Dispensation dispensation) {
 		
-		final DispensationService dispensationService = Context.getService(DispensationService.class);
-		
-		dispensationService.dispense(dispensation);
-		
+		try {
+			final DispensationService dispensationService = Context.getService(DispensationService.class);
+			
+			dispensationService.dispense(dispensation);
+			
+		}
+		catch (Exception e) {
+			throw new APIException(e);
+		}
 		return dispensation;
 	}
 	
+	/**
+	 * Has the Approach for cancelation a dispensation will be made canceling each DrugOrder for a
+	 * especific Dispensation, the getByUniqueId will return a specific DrugOrder so will be
+	 * possible to make a cancelation for the found drugOrder
+	 * 
+	 * @param orderUuid the uuid of specific DrugOrder
+	 * @return {@Dispensation} a dispensation with a @Collection<DispensationItem>
+	 *         containing one @DispensationItem with the found DrugOrder
+	 */
 	@Override
-	public Dispensation getByUniqueId(final String uniqueId) {
-		throw new ResourceDoesNotSupportOperationException();
+	public Dispensation getByUniqueId(final String orderUuid) {
+		
+		Order order = Context.getOrderService().getOrderByUuid(orderUuid);
+		if (order != null) {
+			Dispensation dispensation = new Dispensation();
+			DispensationItem dispensationItem = new DispensationItem();
+			dispensationItem.setOrderUuid(order.getUuid());
+			dispensation.setDispensationItems(Arrays.asList(dispensationItem));
+			dispensation.setPatientUuid(order.getPatient().getUuid());
+			dispensation.setLocationUuid(order.getEncounter().getLocation().getUuid());
+			dispensation.setProviderUuid(order.getEncounter().getProvider().getUuid());
+			
+			return dispensation;
+		}
+		
+		throw new APIException("Order with uuid: " + orderUuid + " not found");
+		
 	}
 	
 	@Override
 	protected void delete(final Dispensation dispensation, final String reason, final RequestContext context)
 	        throws ResponseException {
-		throw new ResourceDoesNotSupportOperationException();
+		
+		try {
+			Context.getService(DispensationService.class).cancelDispensationItems(dispensation, reason);
+		}
+		catch (Exception e) {
+			
+			throw new APIException(e);
+		}
+		
 	}
 	
 	@Override
@@ -91,7 +130,6 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		description.addProperty("patientUuid");
 		description.addProperty("locationUuid");
 		description.addProperty("dispensationItems");
-		description.addProperty("prescriptionEncounter");
 		
 		return description;
 		

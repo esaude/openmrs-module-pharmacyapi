@@ -1,10 +1,14 @@
 /*
  * Friends in Global Health - FGH © 2017
  */
-package org.openmrs.module.pharmacyapi.api.service;
+package org.openmrs.module.pharmacyapi.api.dispensation.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
@@ -18,7 +22,6 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Provider;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
@@ -28,11 +31,15 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.pharmacyapi.api.model.Dispensation;
-import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
+import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.dispensation.validation.DispensationValidator;
+import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.util.MappedEncounters;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -59,74 +66,86 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	private PrescriptionDispensationService prescriptionDispensationService;
 	
+	@Autowired
+	private DispensationValidator dispensationValidator;
+	
 	@Override
-	public Dispensation dispense(final Dispensation dispensation) throws APIException {
-		
-		final Person person = this.personService.getPersonByUuid(dispensation.getProviderUuid());
-		final Collection<Provider> providers = this.providerService.getProvidersByPerson(person);
-		final Provider provider = providers.iterator().next();
-		final Patient patient = this.patientService.getPatientByUuid(dispensation.getPatientUuid());
-		
-		final EncounterRole encounterRole = this.encounterService
-		        .getEncounterRoleByUuid(MappedEncounters.DEFAULT_ENCONTER_ROLE);
-		final EncounterType encounterType = this.encounterService
-		        .getEncounterTypeByUuid(MappedEncounters.DISPENSATION_ENCOUNTER_TYPE);
-		
-		final Location location = this.locationService.getLocationByUuid(dispensation.getLocationUuid());
-		
-		final Encounter dispensationEncounter = this.createEncounter(provider, patient, encounterRole, encounterType,
-		    location);
-		
-		Order arvOrder = null;
-		DispensationItem arvDispensationItem = null;
-		
-		Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
-		    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-		
-		final Concept dispensationConceptSet = this.conceptService.getConceptByUuid(MappedConcepts.DISPENSATION_SET);
-		final Concept quantityConcept = this.conceptService.getConceptByUuid(MappedConcepts.MEDICATION_QUANTITY);
-		final Concept nextPickUpConcept = this.conceptService.getConceptByUuid(MappedConcepts.DATE_OF_NEXT_PICK_UP);
+	public Dispensation dispense(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		try {
 			
 			// workaround to controll the hibernate sessions commits
 			this.dbSessionManager.setManualFlushMode();
 			
-			for (DispensationItem dispensationItem : dispensation.getDispensationItems()) {
+			dispensationValidator.validateCreation(dispensation);
+			
+			final Person person = this.personService.getPersonByUuid(dispensation.getProviderUuid());
+			final Collection<Provider> providers = this.providerService.getProvidersByPerson(person);
+			final Provider provider = providers.iterator().next();
+			final Patient patient = this.patientService.getPatientByUuid(dispensation.getPatientUuid());
+			
+			final EncounterRole encounterRole = this.encounterService
+			        .getEncounterRoleByUuid(MappedEncounters.DEFAULT_ENCONTER_ROLE);
+			final EncounterType encounterType = this.encounterService
+			        .getEncounterTypeByUuid(MappedEncounters.DISPENSATION_ENCOUNTER_TYPE);
+			
+			final Location location = this.locationService.getLocationByUuid(dispensation.getLocationUuid());
+			
+			Order arvOrder = null;
+			DispensationItem arvDispensationItem = null;
+			
+			Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
+			    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+			
+			final Concept dispensationConceptSet = this.conceptService.getConceptByUuid(MappedConcepts.DISPENSATION_SET);
+			final Concept quantityConcept = this.conceptService.getConceptByUuid(MappedConcepts.MEDICATION_QUANTITY);
+			final Concept nextPickUpConcept = this.conceptService.getConceptByUuid(MappedConcepts.DATE_OF_NEXT_PICK_UP);
+			
+			Map<Encounter, List<DispensationItem>> mapDispensationItemByPrescription = groupDispensationItemsByPrescription(dispensation);
+			
+			for (Encounter prescription : mapDispensationItemByPrescription.keySet()) {
 				
-				final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
-				Order orderProcess = order.cloneForRevision();
+				final Encounter dispensationEncounter = this.createEncounter(provider, patient, encounterRole,
+				    encounterType, location);
 				
-				if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
-					orderProcess = order.cloneForDiscontinuing();
-					((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
+				List<DispensationItem> dispensationItems = mapDispensationItemByPrescription.get(prescription);
+				
+				for (DispensationItem dispensationItem : dispensationItems) {
+					
+					final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
+					Order orderProcess = order.cloneForRevision();
+					
+					if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
+						orderProcess = order.cloneForDiscontinuing();
+						((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
+					}
+					
+					if (StringUtils.isNotEmpty(dispensationItem.getRegimeUuid())) {
+						arvOrder = order;
+						arvDispensationItem = dispensationItem;
+					}
+					
+					orderProcess.setOrderer(provider);
+					
+					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
+					    nextPickUpConcept, dispensationItem, arvConceptQuestion);
 				}
 				
-				if (StringUtils.isNotEmpty(dispensationItem.getRegimeUuid())) {
-					arvOrder = order;
-					arvDispensationItem = dispensationItem;
+				this.encounterService.saveEncounter(dispensationEncounter);
+				
+				this.prescriptionDispensationService.savePrescriptionDispensation(patient, prescription,
+				    dispensationEncounter);
+				
+				if (arvOrder != null) {
+					
+					final EncounterType filaEncounterType = this.encounterService
+					        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
+					
+					final Encounter filaEncounter = this.createEncounter(provider, patient, encounterRole,
+					    filaEncounterType, location);
+					
+					this.processFila(filaEncounter, arvOrder, arvDispensationItem, quantityConcept, nextPickUpConcept);
 				}
-				
-				orderProcess.setOrderer(provider);
-				
-				this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet, quantityConcept,
-				    nextPickUpConcept, dispensationItem, arvConceptQuestion);
-			}
-			
-			this.encounterService.saveEncounter(dispensationEncounter);
-			
-			this.prescriptionDispensationService.savePrescriptionDispensation(patient,
-			    dispensation.getPrescriptionEncounter(), dispensationEncounter);
-			
-			if (arvOrder != null) {
-				
-				final EncounterType filaEncounterType = this.encounterService
-				        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
-				
-				final Encounter filaEncounter = this.createEncounter(provider, patient, encounterRole, filaEncounterType,
-				    location);
-				
-				this.processFila(filaEncounter, arvOrder, arvDispensationItem, quantityConcept, nextPickUpConcept);
 			}
 			
 		}
@@ -268,5 +287,42 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	public void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService) {
 		
 		this.prescriptionDispensationService = prescriptionDispensationService;
+	}
+	
+	@Override
+	public void cancelDispensationItems(Dispensation dispensation, String cancelationReason)
+	        throws PharmacyBusinessException {
+		
+		dispensationValidator.validateCancellation(dispensation);
+		
+		for (DispensationItem dispensationItem : dispensation.getDispensationItems()) {
+			
+			Order order = Context.getOrderService().getOrderByUuid(dispensationItem.getOrderUuid());
+			
+			Context.getOrderService().voidOrder(order, cancelationReason);
+		}
+	}
+	
+	private Map<Encounter, List<DispensationItem>> groupDispensationItemsByPrescription(Dispensation dispensation) {
+
+		Map<Encounter, List<DispensationItem>> mapPrescription = new HashMap<>();
+
+		Map<String, Encounter> mapCachedPrescription = new HashMap<>();
+
+		for (DispensationItem dispensationItem : dispensation.getDispensationItems()) {
+
+			Encounter prescription = mapCachedPrescription.get(dispensationItem.getPrescriptionUuid()) != null
+					? mapCachedPrescription.get(dispensationItem.getPrescriptionUuid())
+					: Context.getEncounterService().getEncounterByUuid(dispensationItem.getPrescriptionUuid());
+
+			List<DispensationItem> list = mapPrescription.get(prescription);
+
+			if (list == null) {
+				mapPrescription.put(prescription, list = new ArrayList<>());
+			}
+			list.add(dispensationItem);
+		}
+
+		return mapPrescription;
 	}
 }

@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**

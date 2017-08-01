@@ -1,7 +1,7 @@
 /*
  * Friends in Global Health - FGH © 2017
  */
-package org.openmrs.module.pharmacyapi.api.model;
+package org.openmrs.module.pharmacyapi.api.dispensation.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +26,8 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	private Date dateOfNextPickUp;
 	
 	private String regimeUuid;
+	
+	private String prescriptionUuid;
 	
 	@Override
 	public Integer getId() {
@@ -89,4 +91,11 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 		this.regimeUuid = regimeUuid;
 	}
 	
+	public String getPrescriptionUuid() {
+		return prescriptionUuid;
+	}
+	
+	public void setPrescriptionUuid(String prescriptionUuid) {
+		this.prescriptionUuid = prescriptionUuid;
+	}
 }

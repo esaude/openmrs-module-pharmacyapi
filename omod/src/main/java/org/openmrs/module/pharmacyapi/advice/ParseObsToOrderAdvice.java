@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.service.PrescriptionService;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.springframework.aop.MethodBeforeAdvice;
 
 /**

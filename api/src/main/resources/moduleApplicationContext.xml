@@ -29,7 +29,7 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.PrescriptionServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServiceImpl">
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
@@ -59,7 +59,7 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DispensationServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationServiceImpl">
 				<property name="providerService">
 					<ref bean="providerService" />
 				</property>
@@ -194,7 +194,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.PrescriptionService</value>
+				<value>org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService</value>
 				<ref local="prescriptionService" />
 			</list>
 		</property>
@@ -203,7 +203,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.DispensationService</value>
+				<value>org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService</value>
 				<ref local="dispensationService" />
 			</list>
 		</property>

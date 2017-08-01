@@ -1,7 +1,6 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,9 +8,9 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.model.Prescription;
-import org.openmrs.module.pharmacyapi.api.model.PrescriptionItem;
-import org.openmrs.module.pharmacyapi.api.service.PrescriptionService;
+import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
@@ -53,6 +52,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
+			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
@@ -116,14 +116,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	@Override
 	protected void delete(final Prescription delegate, final String reason, final RequestContext context)
 	        throws ResponseException {
-		
-		try {
-			Context.getService(PrescriptionService.class).cancelPrescription(delegate, reason);
-		}
-		catch (PharmacyBusinessException e) {
-			
-			throw new APIException(e);
-		}
+		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
@@ -134,60 +127,36 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	@Override
 	public Prescription getByUniqueId(final String uniqueId) {
 		
-		Patient patient = Context.getPatientService().getPatientByUuid(uniqueId);
-		
-		try {
-			return Context.getService(PrescriptionService.class).findLastActivePrescriptionByPatient(patient);
-			
-		}
-		catch (PharmacyBusinessException e) {
-			throw new APIException(e);
-		}
+		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
 	protected PageableResult doSearch(final RequestContext context) {
-
+		
 		final String patientUuid = context.getRequest().getParameter("patient");
-		String findLast = context.getRequest().getParameter("findLast");
 		String findAllPrescribed = context.getRequest().getParameter("findAllPrescribed");
-
+		String findAllActive = context.getRequest().getParameter("findAllActive");
+		
 		if (patientUuid == null) {
 			return new EmptySearchResult();
 		}
-
+		
 		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-
+		
 		if (patient == null) {
 			return new EmptySearchResult();
 		}
-
-		if (StringUtils.isNotBlank(findLast)) {
-
-			try {
-				return findLastPrescription(context, patient, findLast);
-
-			} catch (PharmacyBusinessException e) {
-
-				throw new APIException(e);
-			}
-		}
-
+		
 		if (StringUtils.isNotBlank(findAllPrescribed)) {
-
+			
 			return findAllPrescribed(context, patient, findAllPrescribed);
 		}
-
-		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
-		try {
-			final List<Prescription> prescriptions = prescriptionService
-					.findPrescriptionsByPatientAndActiveStatus(patient);
-			return new NeedsPaging<>(prescriptions, context);
-
-		} catch (final PharmacyBusinessException e) {
-
+		
+		if (StringUtils.isNotBlank(findAllActive)) {
+			
+			return findAllActive(context, patient, findAllActive);
 		}
-
+		
 		return new EmptySearchResult();
 	}
 	
@@ -233,27 +202,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		return RestConstants1_11.RESOURCE_VERSION;
 	}
 	
-	private PageableResult findLastPrescription(RequestContext context, Patient patient, String findLast)
-			throws PharmacyBusinessException {
-
-		Boolean doSearchLast = Boolean.FALSE;
-
-		try {
-			doSearchLast = Boolean.valueOf(findLast).booleanValue();
-
-		} catch (Exception e) {
-		}
-
-		if (doSearchLast) {
-			Prescription prescription = Context.getService(PrescriptionService.class)
-					.findLastActivePrescriptionByPatient(patient);
-
-			return new NeedsPaging<>(Collections.singletonList(prescription), context);
-		}
-
-		return new EmptySearchResult();
-	}
-	
 	private PageableResult findAllPrescribed(RequestContext context, Patient patient, String findAllPrescribed) {
 
 		Boolean doSearchAllPrecribed = Boolean.FALSE;
@@ -267,6 +215,26 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		if (doSearchAllPrecribed) {
 			List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
 					.findAllPrescriptionsByPatient(patient);
+
+			return new NeedsPaging<>(prescriptions, context);
+		}
+
+		return new EmptySearchResult();
+	}
+	
+	private PageableResult findAllActive(RequestContext context, Patient patient, String findAllActive) {
+
+		Boolean doSearchAllActive = Boolean.FALSE;
+
+		try {
+			doSearchAllActive = Boolean.valueOf(findAllActive).booleanValue();
+
+		} catch (Exception e) {
+		}
+
+		if (doSearchAllActive) {
+			List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
+					.findPrescriptionsByPatientAndActiveStatus(patient);
 
 			return new NeedsPaging<>(prescriptions, context);
 		}

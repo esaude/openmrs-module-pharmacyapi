@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.service;
 
+import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
@@ -10,7 +11,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
-import org.openmrs.module.pharmacyapi.api.model.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
 
 /**
  *
@@ -26,4 +27,6 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	
 	PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
 	        throws PharmacyBusinessException;
+	
+	Drug findDrugByOrderUuid(String uuid);
 }

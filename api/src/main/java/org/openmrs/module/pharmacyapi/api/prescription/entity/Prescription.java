@@ -1,7 +1,7 @@
 /*
  * Friends in Global Health - FGH © 2016
  */
-package org.openmrs.module.pharmacyapi.api.model;
+package org.openmrs.module.pharmacyapi.api.prescription.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +20,10 @@ import org.openmrs.Provider;
  */
 public class Prescription extends BaseOpenmrsData implements Serializable {
 
+	public enum PrescriptionStatus {
+		NEW, ACTIVE, FINALIZED
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	private Date prescriptionDate;
@@ -32,7 +36,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 
 	private Encounter prescriptionEncounter;
 
-	private boolean prescriptionStatus;
+	private PrescriptionStatus prescriptionStatus = PrescriptionStatus.NEW;
 
 	private Concept regime;
 
@@ -98,11 +102,11 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 		this.location = location;
 	}
 
-	public boolean isPrescriptionStatus() {
+	public PrescriptionStatus getPrescriptionStatus() {
 		return prescriptionStatus;
 	}
 
-	public void setPrescriptionStatus(boolean prescriptionStatus) {
+	public void setPrescriptionStatus(PrescriptionStatus prescriptionStatus) {
 		this.prescriptionStatus = prescriptionStatus;
 	}
 
@@ -172,4 +176,30 @@ public class Prescription extends BaseOpenmrsData implements Serializable {
 	public void setId(final Integer prescriptionId) {
 
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((prescriptionEncounter == null) ? 0 : prescriptionEncounter.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Prescription other = (Prescription) obj;
+		if (prescriptionEncounter == null) {
+			if (other.prescriptionEncounter != null)
+				return false;
+		} else if (!prescriptionEncounter.equals(other.prescriptionEncounter))
+			return false;
+		return true;
+	}
+
 }

@@ -6,8 +6,8 @@ package org.openmrs.module.pharmacyapi.web.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmrs.module.pharmacyapi.api.model.Prescription;
-import org.openmrs.module.pharmacyapi.api.model.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -44,6 +44,7 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason", Representation.REF);
 			description.addProperty("interruptionReason", Representation.REF);
+			description.addProperty("status");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
@@ -59,7 +60,7 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("therapeuticLine");
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
-			
+			description.addProperty("status");
 			return description;
 		}
 		return null;
