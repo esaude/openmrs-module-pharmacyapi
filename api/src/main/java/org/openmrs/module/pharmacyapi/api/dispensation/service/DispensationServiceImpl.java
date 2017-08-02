@@ -4,7 +4,6 @@
 package org.openmrs.module.pharmacyapi.api.dispensation.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,6 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
@@ -79,9 +77,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			
 			dispensationValidator.validateCreation(dispensation);
 			
-			final Person person = this.personService.getPersonByUuid(dispensation.getProviderUuid());
-			final Collection<Provider> providers = this.providerService.getProvidersByPerson(person);
-			final Provider provider = providers.iterator().next();
+			Provider provider = Context.getProviderService().getProviderByUuid(dispensation.getProviderUuid());
 			final Patient patient = this.patientService.getPatientByUuid(dispensation.getPatientUuid());
 			
 			final EncounterRole encounterRole = this.encounterService

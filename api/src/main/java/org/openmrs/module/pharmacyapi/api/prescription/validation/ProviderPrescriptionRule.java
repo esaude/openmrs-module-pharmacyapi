@@ -3,9 +3,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
-import java.util.Collection;
-
-import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
@@ -31,13 +28,9 @@ public class ProviderPrescriptionRule implements IPrescriptionValidationRule {
 			throw new PharmacyBusinessException("Invalid prescriprion provider argument " + prescription);
 		}
 		
-		Person person = Context.getPersonService().getPersonByUuid(provider.getUuid());
-		if (person == null) {
-			throw new PharmacyBusinessException(" Person Provider not found for given uuid " + provider.getUuid());
-		}
-		Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(person);
+		Provider providerFound = Context.getProviderService().getProviderByUuid(provider.getUuid());
 		
-		if (providers == null || providers.isEmpty()) {
+		if (providerFound == null) {
 			throw new PharmacyBusinessException("Provider not found for given uuid " + provider.getUuid());
 		}
 	}

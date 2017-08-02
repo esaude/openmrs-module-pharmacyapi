@@ -5,7 +5,6 @@ package org.openmrs.module.pharmacyapi.api.prescription.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.Patient;
-import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
@@ -194,12 +192,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		prescriptionValidator.validateCreation(prescription);
 		
 		Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
-		
-		Person person = Context.getPersonService().getPersonByUuid(prescription.getProvider().getUuid());
-		
-		Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(person);
-		Provider provider = providers.iterator().next();
-		
+		Provider provider = Context.getProviderService().getProviderByUuid(prescription.getProvider().getUuid());
 		prescription.setPatient(patient);
 		prescription.setProvider(provider);
 		
