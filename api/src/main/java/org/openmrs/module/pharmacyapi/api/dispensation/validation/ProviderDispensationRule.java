@@ -3,6 +3,9 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
+import java.util.Collection;
+
+import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
@@ -21,10 +24,10 @@ public class ProviderDispensationRule implements IDispensationRuleValidation {
 		if (dispensation == null) {
 			throw new PharmacyBusinessException(" Invalid Dispensation argument");
 		}
+		Person person = Context.getPersonService().getPersonByUuid(dispensation.getProviderUuid());
+		Collection<Provider> providers = Context.getProviderService().getProvidersByPerson(person);
 		
-		Provider provider = Context.getProviderService().getProviderByUuid(dispensation.getProviderUuid());
-		
-		if (provider == null) {
+		if (providers == null || providers.isEmpty()) {
 			throw new PharmacyBusinessException("Provider not found for given uuid " + dispensation.getProviderUuid());
 		}
 	}

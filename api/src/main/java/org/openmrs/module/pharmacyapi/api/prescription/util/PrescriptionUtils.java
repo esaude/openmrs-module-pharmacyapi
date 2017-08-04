@@ -312,7 +312,7 @@ public class PrescriptionUtils {
 		DrugOrder tempOrder = order;
 		while (tempOrder.getPreviousOrder() != null) {
 
-			if (tempOrder.getOrderReason() == null) {
+			if (tempOrder.getOrderReason() == null && !tempOrder.getVoided()) {
 				observations.addAll(tempOrder.getEncounter().getObs());
 			}
 			tempOrder = (DrugOrder) tempOrder.getPreviousOrder();
@@ -320,7 +320,7 @@ public class PrescriptionUtils {
 
 		for (final Obs observation : observations) {
 
-			if (this.isTheSameConceptAndSameDrug(order, observation)) {
+			if (!observation.getVoided() && this.isTheSameConceptAndSameDrug(order, observation)) {
 				quantity += observation.getValueNumeric();
 			}
 		}

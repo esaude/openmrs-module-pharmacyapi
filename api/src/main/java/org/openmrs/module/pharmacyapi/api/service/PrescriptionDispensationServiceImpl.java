@@ -3,13 +3,16 @@
  */
 package org.openmrs.module.pharmacyapi.api.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -121,5 +124,18 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	public Drug findDrugByOrderUuid(String uuid) {
 		
 		return this.prescriptionDispensationDAO.findDrugByOrderUuid(uuid);
+	}
+	
+	@Override
+	public Encounter findEncounterByPatientAndEncounterTypeAndOrder(Patient patient, EncounterType encounterType, Order order) {
+		
+		return this.prescriptionDispensationDAO
+		        .findEncounterByPatientAndEncounterTypeAndOrder(patient, encounterType, order);
+	}
+	
+	@Override
+	public List<Obs> findObsByOrder(Order order) {
+		
+		return this.prescriptionDispensationDAO.findObsByOrder(order);
 	}
 }

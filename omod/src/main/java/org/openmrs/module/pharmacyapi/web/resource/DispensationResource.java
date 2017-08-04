@@ -1,13 +1,17 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.util.Arrays;
+import java.util.Set;
 
+import org.openmrs.Concept;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
+import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -94,6 +98,19 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 			dispensation.setLocationUuid(order.getEncounter().getLocation().getUuid());
 			dispensation.setProviderUuid(order.getEncounter().getProvider().getUuid());
 			
+			Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
+			    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+			
+			Set<Obs> allObs = order.getEncounter().getAllObs(isRetirable());
+			
+			for (Obs obs : allObs) {
+				
+				if (obs.getConcept().equals(arvConceptQuestion)) {
+					
+					dispensationItem.setRegimeUuid(obs.getValueCoded().getUuid());
+					break;
+				}
+			}
 			return dispensation;
 		}
 		
