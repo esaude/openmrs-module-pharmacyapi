@@ -12,6 +12,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.User;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
@@ -26,6 +27,9 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	void setPrescriptionDispensationDAO(PrescriptionDispensationDAO prescriptionDispensationDAO);
 	
 	PrescriptionDispensation savePrescriptionDispensation(Patient patient, Encounter prescription, Encounter dispensation);
+	
+	void retire(User user, PrescriptionDispensation prescriptionDispensation, String reason)
+	        throws PharmacyBusinessException;
 	
 	public boolean isArvDrug(final PrescriptionItem prescription, final DrugOrder drugOrder)
 	        throws PharmacyBusinessException;

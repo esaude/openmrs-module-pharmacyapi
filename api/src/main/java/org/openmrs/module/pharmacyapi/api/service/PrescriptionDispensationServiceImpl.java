@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAO;
@@ -137,5 +139,19 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	public List<Obs> findObsByOrder(Order order) {
 		
 		return this.prescriptionDispensationDAO.findObsByOrder(order);
+	}
+	
+	@Override
+	public void retire(User user, PrescriptionDispensation prescriptionDispensation, String reason)
+	        throws PharmacyBusinessException {
+		
+		PrescriptionDispensation found = this.prescriptionDispensationDAO.findByUuid(prescriptionDispensation.getUuid());
+		
+		found.setRetired(true);
+		found.setRetireReason(reason);
+		found.setRetiredBy(user);
+		found.setDateRetired(new Date());
+		
+		this.prescriptionDispensationDAO.retire(found);
 	}
 }

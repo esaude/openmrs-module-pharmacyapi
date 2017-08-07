@@ -50,6 +50,8 @@ public interface PrescriptionDispensationDAO {
 	
 	PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation);
 	
+	void retire(PrescriptionDispensation prescriptionDispensation);
+	
 	PrescriptionDispensation findByUuid(String uuid);
 	
 	List<PrescriptionDispensation> findByPrescription(Encounter prescription);

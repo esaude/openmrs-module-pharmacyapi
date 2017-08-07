@@ -121,4 +121,10 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		        .createQuery("select distinct o from Obs o where o.order = :order").setParameter("order", order);
 		return query.list();
 	}
+	
+	@Override
+	public void retire(PrescriptionDispensation prescriptionDispensation) {
+		
+		this.sessionFactory.getCurrentSession().saveOrUpdate(prescriptionDispensation);
+	}
 }

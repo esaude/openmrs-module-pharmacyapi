@@ -36,6 +36,7 @@ import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.validation.DispensationValidator;
 import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.model.PrescriptionDispensation;
 import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.util.MappedEncounters;
@@ -354,7 +355,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	private void removeDrugOrderObsFromFilaEncounter(Dispensation dispensation, DispensationItem dispensationItem,
-	        DrugOrder drugOrder) {
+	        DrugOrder drugOrder) throws PharmacyBusinessException {
 		
 		Patient patient = Context.getPatientService().getPatientByUuid(dispensation.getPatientUuid());
 		
@@ -389,6 +390,12 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			if (obsQuantity.getValueNumeric().doubleValue() == 0) {
 				Context.getEncounterService().voidEncounter(filaEncounter,
 				    "retired resulting from cancellation of regimen Dispensation");
+				
+				PrescriptionDispensation prescriptionDispensation = Context
+				        .getService(PrescriptionDispensationService.class).findPrescriptionDispensationByDispensation(
+				            drugOrder.getEncounter());
+				Context.getService(PrescriptionDispensationService.class).retire(drugOrder.getCreator(),
+				    prescriptionDispensation, "retired resulting from cancellation of regimen Dispensation");
 			}
 		}
 	}
