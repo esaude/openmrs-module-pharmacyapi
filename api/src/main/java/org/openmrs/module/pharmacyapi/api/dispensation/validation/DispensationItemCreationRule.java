@@ -62,6 +62,10 @@ public class DispensationItemCreationRule implements IDispensationRuleValidation
 				                + " Quantity passed: " + dispensationItem.getQuantityToDispense());
 			}
 			
+			if (order.isVoided()) {
+				throw new PharmacyBusinessException("Cannot Dispense A voided Item" + order);
+			}
+			
 			Encounter prescriptionEncounter = Context.getEncounterService().getEncounterByUuid(
 			    dispensationItem.getPrescriptionUuid());
 			

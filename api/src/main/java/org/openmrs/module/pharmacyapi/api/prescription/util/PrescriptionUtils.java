@@ -92,7 +92,7 @@ public class PrescriptionUtils {
 
 				} else if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
 
-					prescriptionItem = new PrescriptionItem(cloneDrugOrder((DrugOrder) drugOrder.getPreviousOrder()));
+					prescriptionItem = new PrescriptionItem(cloneDrugOrder(drugOrder));
 					this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
 
 				} else {
@@ -105,15 +105,8 @@ public class PrescriptionUtils {
 						prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
 				prescriptionItem.setPrescription(prescription);
 
-				PrescriptionItemStatus status;
-
-				if (Action.NEW.equals(drugOrder.getAction())) {
-					status = PrescriptionItemStatus.NEW;
-				} else if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
-					status = PrescriptionItemStatus.FINALIZED;
-				} else {
-					status = PrescriptionItemStatus.ACTIVE;
-				}
+				PrescriptionItemStatus status = Action.DISCONTINUE.equals(drugOrder.getAction())
+						? PrescriptionItemStatus.FINALIZED : PrescriptionItemStatus.ACTIVE;
 				prescriptionItem.setStatus(status);
 			}
 
@@ -371,25 +364,33 @@ public class PrescriptionUtils {
 	}
 	
 	private DrugOrder cloneDrugOrder(DrugOrder drugOrder) {
+		
+		DrugOrder tempDrugOrder = drugOrder;
+		while (Action.DISCONTINUE.equals(tempDrugOrder.getAction())) {
+			
+			tempDrugOrder = (DrugOrder) drugOrder.getPreviousOrder();
+		}
 		DrugOrder clone = new DrugOrder();
 		
-		clone.setDose(drugOrder.getDose());
-		clone.setQuantity(drugOrder.getQuantity());
-		clone.setDosingInstructions(drugOrder.getDosingInstructions());
-		clone.setDuration(drugOrder.getDuration());
-		clone.setDurationUnits(drugOrder.getDurationUnits());
-		clone.setQuantityUnits(drugOrder.getQuantityUnits());
-		clone.setRoute(drugOrder.getRoute());
-		clone.setDoseUnits(drugOrder.getDoseUnits());
-		clone.setFrequency(drugOrder.getFrequency());
-		clone.setAction(drugOrder.getAction());
-		clone.setUuid(drugOrder.getUuid());
-		clone.setEncounter(drugOrder.getEncounter());
-		clone.setConcept(drugOrder.getConcept());
-		clone.setOrderer(drugOrder.getOrderer());
-		clone.setPatient(drugOrder.getPatient());
-		clone.setCareSetting(drugOrder.getCareSetting());
-		clone.setDrug(drugOrder.getDrug());
+		clone.setDose(tempDrugOrder.getDose());
+		clone.setQuantity(tempDrugOrder.getQuantity());
+		clone.setDosingInstructions(tempDrugOrder.getDosingInstructions());
+		clone.setDuration(tempDrugOrder.getDuration());
+		clone.setDurationUnits(tempDrugOrder.getDurationUnits());
+		clone.setQuantityUnits(tempDrugOrder.getQuantityUnits());
+		clone.setRoute(tempDrugOrder.getRoute());
+		clone.setDoseUnits(tempDrugOrder.getDoseUnits());
+		clone.setFrequency(tempDrugOrder.getFrequency());
+		// Since we are cloning All atributs but must remain the Action to
+		// represents this Order as Stopped
+		clone.setAction(Action.DISCONTINUE);
+		clone.setUuid(tempDrugOrder.getUuid());
+		clone.setEncounter(tempDrugOrder.getEncounter());
+		clone.setConcept(tempDrugOrder.getConcept());
+		clone.setOrderer(tempDrugOrder.getOrderer());
+		clone.setPatient(tempDrugOrder.getPatient());
+		clone.setCareSetting(tempDrugOrder.getCareSetting());
+		clone.setDrug(tempDrugOrder.getDrug());
 		return clone;
 	}
 	

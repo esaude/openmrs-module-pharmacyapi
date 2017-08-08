@@ -154,8 +154,10 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	private List<PrescriptionItem> getNotDispensedPrescriptionItems(Patient patient) {
 
 		final List<PrescriptionItem> prescriptionItems = new ArrayList<>();
+		EncounterType encounterType = this.getEncounterTypeByPatientAge(patient);
 
-		List<DrugOrder> ordersNotDispensed = this.dispensationDAO.findNotDispensedDrugOrdersByPatient(patient);
+		List<DrugOrder> ordersNotDispensed = this.dispensationDAO.findNotDispensedDrugOrdersByPatient(patient,
+				encounterType);
 
 		if (!ordersNotDispensed.isEmpty()) {
 
@@ -163,10 +165,13 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 
 			for (Encounter prescriptionEncounter : mapDrugOrdersByPrescription.keySet()) {
 
-				Prescription prescription = preparePrescription(prescriptionEncounter);
+				if (encounterType.equals(prescriptionEncounter.getEncounterType())) {
 
-				prescriptionItems.addAll(prescriptionUtils.preparePrescriptionItems(prescription, prescriptionEncounter,
-						mapDrugOrdersByPrescription.get(prescriptionEncounter)));
+					Prescription prescription = preparePrescription(prescriptionEncounter);
+
+					prescriptionItems.addAll(prescriptionUtils.preparePrescriptionItems(prescription,
+							prescriptionEncounter, mapDrugOrdersByPrescription.get(prescriptionEncounter)));
+				}
 			}
 		}
 		return prescriptionItems;
@@ -221,10 +226,8 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 			Concept discountinueReason = Context.getConceptService().getConceptByUuid(cancelationReason);
 			
 			try {
-				
 				Context.getOrderService().discontinueOrder(order, discountinueReason, new Date(), order.getOrderer(),
 				    order.getEncounter());
-				
 			}
 			catch (Exception e) {
 				
@@ -237,7 +240,6 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	public List<Prescription> findAllPrescriptionsByPatient(Patient patient) {
 
 		List<PrescriptionItem> prescriptionItems = getNotDispensedPrescriptionItems(patient);
-
 		prescriptionItems.addAll(getDispensedPrescriptionItems(patient));
 
 		Map<Encounter, List<PrescriptionItem>> mapPrescriptionItemsByPrescriptionEncounter = new HashMap<>();

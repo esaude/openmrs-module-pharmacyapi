@@ -127,7 +127,6 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 					}
 
 					orderProcess.setOrderer(provider);
-
 					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet,
 							quantityConcept, nextPickUpConcept, dispensationItem, arvConceptQuestion);
 				}
@@ -151,7 +150,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			}
 
 		} finally {
-			this.dbSessionManager.setAutoFlushMode();
+			// this.dbSessionManager.setAutoFlushMode();
 			Context.flushSession();
 		}
 
