@@ -5,8 +5,8 @@ package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.springframework.stereotype.Component;
 
 @Component

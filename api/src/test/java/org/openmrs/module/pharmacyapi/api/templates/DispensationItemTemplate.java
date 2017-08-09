@@ -3,7 +3,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.templates;
 
-import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.util.BaseTemplateLoader;
 
 import br.com.six2six.fixturefactory.Fixture;

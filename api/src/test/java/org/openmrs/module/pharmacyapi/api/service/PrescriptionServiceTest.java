@@ -17,7 +17,7 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.OrderService;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServiceImpl;
 import org.openmrs.module.pharmacyapi.api.templates.ConceptTemplate;

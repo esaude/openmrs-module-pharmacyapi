@@ -10,11 +10,11 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.pharmacyapi.api.dao.DispensationDAO;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
-import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 
 /**

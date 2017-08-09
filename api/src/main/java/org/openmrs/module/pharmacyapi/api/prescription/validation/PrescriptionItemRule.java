@@ -11,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.springframework.stereotype.Component;
 

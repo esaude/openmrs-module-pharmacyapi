@@ -20,16 +20,16 @@ import org.openmrs.Order.Action;
 import org.openmrs.OrderFrequency;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription.PrescriptionStatus;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem.PrescriptionItemStatus;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
+import org.openmrs.module.pharmacyapi.api.common.util.MappedDurationUnits;
+import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription.PrescriptionStatus;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem.PrescriptionItemStatus;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
-import org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService;
-import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
-import org.openmrs.module.pharmacyapi.api.util.MappedDurationUnits;
-import org.openmrs.module.pharmacyapi.api.util.MappedEncounters;
+import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.springframework.stereotype.Component;
 
 @Component

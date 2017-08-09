@@ -8,8 +8,8 @@ import java.util.Collection;
 import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.springframework.stereotype.Component;
 
 /**

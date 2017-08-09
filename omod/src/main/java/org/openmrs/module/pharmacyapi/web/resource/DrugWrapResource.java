@@ -2,7 +2,7 @@ package org.openmrs.module.pharmacyapi.web.resource;
 
 import org.openmrs.Drug;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.service.DrugWrapperService;
+import org.openmrs.module.pharmacyapi.api.drugitem.service.DrugWrapperService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;

@@ -6,8 +6,8 @@ package org.openmrs.module.pharmacyapi.web.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmrs.module.pharmacyapi.api.prescription.entity.Prescription;
-import org.openmrs.module.pharmacyapi.api.prescription.entity.PrescriptionItem;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;

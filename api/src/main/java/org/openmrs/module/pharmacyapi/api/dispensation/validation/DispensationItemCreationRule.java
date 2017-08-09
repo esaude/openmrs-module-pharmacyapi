@@ -6,12 +6,12 @@ package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
-import org.openmrs.Patient;
 import org.openmrs.Order.Action;
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.dispensation.entity.Dispensation;
-import org.openmrs.module.pharmacyapi.api.dispensation.entity.DispensationItem;
-import org.openmrs.module.pharmacyapi.api.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.springframework.stereotype.Component;
 
