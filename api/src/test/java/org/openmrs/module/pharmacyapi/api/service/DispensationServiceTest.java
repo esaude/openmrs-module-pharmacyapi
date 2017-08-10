@@ -8,7 +8,10 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.module.pharmacyapi.api.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
+import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationServiceImpl;
 import org.openmrs.module.pharmacyapi.api.templates.DispensationTemplate;
 import org.openmrs.module.pharmacyapi.api.util.BaseTest;
 import org.openmrs.module.pharmacyapi.api.util.EntityFactory;
@@ -27,9 +30,9 @@ public class DispensationServiceTest extends BaseTest {
 	
 	@Test
 	@Ignore
-	public void shouldDispenseOrders() {
+	public void shouldDispenseOrders() throws PharmacyBusinessException {
 		
-		//TODO I need to get time to do this test........
+		// TODO I need to get time to do this test........
 		
 		final Dispensation dispensation = EntityFactory.gimme(Dispensation.class, DispensationTemplate.VALID);
 		

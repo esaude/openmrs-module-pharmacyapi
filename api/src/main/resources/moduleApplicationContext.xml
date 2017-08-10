@@ -29,7 +29,7 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.PrescriptionServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServiceImpl">
 				<property name="conceptService">
 					<ref bean="conceptService" />
 				</property>
@@ -59,7 +59,7 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DispensationServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationServiceImpl">
 				<property name="providerService">
 					<ref bean="providerService" />
 				</property>
@@ -106,9 +106,9 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DrugRegimeServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeServiceImpl">
 				<property name="drugRegimeDAO">
-					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugRegimeDAOImpl">
+					<bean class="org.openmrs.module.pharmacyapi.api.drugregime.dao.DrugRegimeDAOImpl">
 						<property name="sessionFactory">
 							<ref bean="sessionFactory" />
 						</property>
@@ -131,9 +131,9 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DrugItemServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.drugitem.service.DrugItemServiceImpl">
 				<property name="drugItemDAO">
-					<bean class="org.openmrs.module.pharmacyapi.api.dao.DrugItemDAOImpl" >
+					<bean class="org.openmrs.module.pharmacyapi.api.drugitem.dao.DrugItemDAOImpl" >
 						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
 					</bean>
 				</property>
@@ -154,9 +154,9 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationServiceImpl">
 				<property name="prescriptionDispensationDAO">
-					<bean class="org.openmrs.module.pharmacyapi.api.dao.PrescriptionDispensationDAOImpl" >
+					<bean class="org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao.PrescriptionDispensationDAOImpl" >
 						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
 					</bean>
 				</property>
@@ -177,7 +177,7 @@
 		</property>
 		<property name="target">
 			<bean
-				class="org.openmrs.module.pharmacyapi.api.service.DrugWrapperServiceImpl">
+				class="org.openmrs.module.pharmacyapi.api.drugitem.service.DrugWrapperServiceImpl">
 				<property name="sessionFactory">
 					<ref bean="sessionFactory" />
 				</property>
@@ -194,7 +194,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.PrescriptionService</value>
+				<value>org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService</value>
 				<ref local="prescriptionService" />
 			</list>
 		</property>
@@ -203,7 +203,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.DispensationService</value>
+				<value>org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService</value>
 				<ref local="dispensationService" />
 			</list>
 		</property>
@@ -212,7 +212,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.DrugItemService</value>
+				<value>org.openmrs.module.pharmacyapi.api.drugitem.service.DrugItemService</value>
 				<ref local="drugItemService" />
 			</list>
 		</property>
@@ -221,7 +221,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.DrugRegimeService</value>
+				<value>org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService</value>
 				<ref local="drugRegimeService" />
 			</list>
 		</property>
@@ -230,7 +230,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.PrescriptionDispensationService</value>
+				<value>org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService</value>
 				<ref local="prescriptionDispensationService" />
 			</list>
 		</property>
@@ -239,7 +239,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.pharmacyapi.api.service.DrugWrapperService</value>
+				<value>org.openmrs.module.pharmacyapi.api.drugitem.service.DrugWrapperService</value>
 				<ref local="drugWrapperService" />
 			</list>
 		</property>
@@ -250,7 +250,7 @@
         <property name="sessionFactory"><ref bean="dbSessionFactory"/></property>
     </bean> 
     
-    <bean id="dispensationDAO" class="org.openmrs.module.pharmacyapi.api.dao.DispensationDAOImpl">
+    <bean id="dispensationDAO" class="org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAOImpl">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>

@@ -17,9 +17,10 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.OrderService;
-import org.openmrs.module.pharmacyapi.api.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServiceImpl;
 import org.openmrs.module.pharmacyapi.api.templates.ConceptTemplate;
-import org.openmrs.module.pharmacyapi.api.templates.OrderProcessor;
 import org.openmrs.module.pharmacyapi.api.templates.OrderTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PatientTemplate;
 import org.openmrs.module.pharmacyapi.api.util.BaseTest;
@@ -67,10 +68,12 @@ public class PrescriptionServiceTest extends BaseTest {
 	@Ignore
 	public void shouldCalculateDrugPickedUpAmountByOrder() {
 		
-		final DrugOrder order = EntityFactory.gimme(DrugOrder.class, OrderTemplate.REVISED, new OrderProcessor());
+		// final DrugOrder order = EntityFactory.gimme(DrugOrder.class,
+		// OrderTemplate.REVISED, new OrderProcessor());
 		
-		final Double amount = this.prescriptionService.calculateDrugPikckedUp(order);
+		// final Double amount =
+		// this.prescriptionService.calculateDrugPikckedUp(order);
 		
-		Assert.assertEquals(20.0, amount, 0);
+		// Assert.assertEquals(20.0, amount, 0);
 	}
 }

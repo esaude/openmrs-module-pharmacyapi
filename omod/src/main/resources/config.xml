@@ -34,13 +34,6 @@
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
 
-
-	<advice>
-		<point>org.openmrs.module.pharmacyapi.api.service.PrescriptionService</point>
-		<class>org.openmrs.module.pharmacyapi.advice.ParseObsToOrderAdvice</class>
-	</advice>
-
-
 	<!-- Required Privileges <privilege> <name>Form Entry</name> <description>Allows 
 		user to access Form Entry pages/functions</description> </privilege> /Required 
 		Privileges -->
@@ -83,6 +76,10 @@
 	<messages>
 		<lang>es</lang>
 		<file>messages_es.properties</file>
+	</messages>
+	<messages>
+		<lang>pt</lang>
+		<file>messages_pt.properties</file>
 	</messages>
 	<!-- /Internationalization -->
 

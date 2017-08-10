@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.openmrs.Drug;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.model.DrugRegime;
-import org.openmrs.module.pharmacyapi.api.service.DrugRegimeService;
+import org.openmrs.module.pharmacyapi.api.drugregime.model.DrugRegime;
+import org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;

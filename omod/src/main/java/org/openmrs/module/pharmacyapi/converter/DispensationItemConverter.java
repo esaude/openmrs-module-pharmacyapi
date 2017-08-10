@@ -1,7 +1,7 @@
 package org.openmrs.module.pharmacyapi.converter;
 
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.pharmacyapi.api.model.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingConverter;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;

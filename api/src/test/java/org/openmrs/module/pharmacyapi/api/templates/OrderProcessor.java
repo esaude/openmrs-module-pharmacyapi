@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.openmrs.DrugOrder;
 import org.openmrs.Obs;
-import org.openmrs.module.pharmacyapi.api.util.MappedConcepts;
+import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 
 import br.com.six2six.fixturefactory.processor.Processor;
 
