@@ -38,6 +38,7 @@ import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.validation.DispensationValidator;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
@@ -340,7 +341,9 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		
 		if (StringUtils.isNotBlank(dispensationItem.getRegimeUuid())) {
 			
-			removeDrugOrderObsFromFilaEncounter(dispensation, dispensationItem, drugOrder);
+			if (this.prescriptionDispensationService.isArvDrug(new PrescriptionItem(), drugOrder)) {
+				removeDrugOrderObsFromFilaEncounter(dispensation, dispensationItem, drugOrder);
+			}
 		}
 		Context.getOrderService().voidOrder(drugOrder, cancelationReason);
 		
