@@ -156,4 +156,15 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 		
 		this.prescriptionDispensationDAO.retire(found);
 	}
+	
+	@Override
+	public void updatePrescriptionDispensation(PrescriptionDispensation prescriptionDispensation) {
+		this.prescriptionDispensationDAO.update(prescriptionDispensation);
+	}
+	
+	@Override
+	public PrescriptionDispensation findPrescriptionDispensationByFila(Encounter fila) throws PharmacyBusinessException {
+		
+		return this.prescriptionDispensationDAO.findByFila(fila);
+	}
 }

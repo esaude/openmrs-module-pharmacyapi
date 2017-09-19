@@ -26,6 +26,7 @@ import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao.Prescript
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPrescription, query = PrescriptionDispensationDAO.QUERY.findByPrescription),
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByPatientUuid, query = PrescriptionDispensationDAO.QUERY.findByPatientUuid),
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByDispensationEncounter, query = PrescriptionDispensationDAO.QUERY.findByDispensationEncounter),
+        @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findByFila, query = PrescriptionDispensationDAO.QUERY.findByFila),
         @NamedQuery(name = PrescriptionDispensationDAO.QUERY_NAME.findLastByPrescription, query = PrescriptionDispensationDAO.QUERY.findLastByPrescription) })
 @Entity
 @Table(name = "phm_prescription_dispensation")
@@ -45,6 +46,10 @@ public class PrescriptionDispensation extends BaseOpenmrsMetadataWrapper {
 	@ManyToOne
 	@JoinColumn(name = "dispensation_id")
 	private Encounter dispensation;
+	
+	@ManyToOne
+	@JoinColumn(name = "fila_id")
+	private Encounter fila;
 	
 	@ManyToOne
 	@JoinColumn(name = "patient_id")
@@ -94,5 +99,13 @@ public class PrescriptionDispensation extends BaseOpenmrsMetadataWrapper {
 	
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+	
+	public Encounter getFila() {
+		return fila;
+	}
+	
+	public void setFila(Encounter fila) {
+		this.fila = fila;
 	}
 }

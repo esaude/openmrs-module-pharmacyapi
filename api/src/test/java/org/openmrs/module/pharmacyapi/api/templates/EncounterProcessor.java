@@ -41,7 +41,7 @@ public class EncounterProcessor implements Processor {
 			}
 			
 			if (MappedConcepts.DURATION_UNITS.equals(obs.getConcept().getUuid())) {
-				obs.setValueCoded(EntityFactory.gimme(Concept.class, ConceptTemplate.WEEKS));
+				obs.setValueCoded(EntityFactory.gimme(Concept.class, ConceptTemplate.DURATION_WEEKS));
 			}
 			
 			if (MappedConcepts.DOSAGE_AMOUNT.equals(obs.getConcept().getUuid())) {

@@ -1,11 +1,9 @@
 /**
  * 
  */
-package org.openmrs.module.pharmacyapi.api.prescription.util;
+package org.openmrs.module.pharmacyapi.api.dispensation.util;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +33,7 @@ import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.Presc
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrescriptionUtils {
+public class DispensationUtils {
 	
 	private Concept findArvPlan(Encounter encounter) {
 		
@@ -397,22 +395,4 @@ public class PrescriptionUtils {
 		return clone;
 	}
 	
-	public Date calculatePrescriptionExpirationDate(List<DrugOrder> drugOrders) {
-		
-		Calendar maximumCalendarExpirationDate = Calendar.getInstance();
-		maximumCalendarExpirationDate.setTime(new Date(Long.MIN_VALUE));
-		
-		Date maximumExpirationDate = maximumCalendarExpirationDate.getTime();
-		
-		for (DrugOrder drugOrder : drugOrders) {
-			
-			if (drugOrder.getAutoExpireDate().after(maximumExpirationDate)) {
-				
-				maximumCalendarExpirationDate.setTime(drugOrder.getAutoExpireDate());
-				maximumExpirationDate = maximumCalendarExpirationDate.getTime();
-			}
-		}
-		
-		return maximumExpirationDate;
-	}
 }

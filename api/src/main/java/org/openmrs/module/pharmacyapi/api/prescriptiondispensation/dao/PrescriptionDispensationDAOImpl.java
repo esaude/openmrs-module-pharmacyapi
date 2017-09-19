@@ -21,6 +21,8 @@ import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.Prescri
  */
 public class PrescriptionDispensationDAOImpl implements PrescriptionDispensationDAO {
 	
+	private static final String PrescriptionDispensation = null;
+	
 	private SessionFactory sessionFactory;
 	
 	@Override
@@ -126,4 +128,26 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		
 		this.sessionFactory.getCurrentSession().saveOrUpdate(prescriptionDispensation);
 	}
+	
+	@Override
+	public void update(PrescriptionDispensation prescriptionDispensation) {
+		
+		this.sessionFactory.getCurrentSession().update(prescriptionDispensation);
+	}
+	
+	@Override
+	public PrescriptionDispensation findByFila(Encounter fila) throws PharmacyBusinessException {
+		
+		final Query query = this.sessionFactory.getCurrentSession()
+		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByFila).setParameter("fila", fila);
+		
+		PrescriptionDispensation uniqueResult = (org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation) query
+		        .uniqueResult();
+		
+		if (uniqueResult == null) {
+			throw new PharmacyBusinessException("Entity PrescriptionDispensation not found for parameter fila = " + fila);
+		}
+		return uniqueResult;
+	}
+	
 }

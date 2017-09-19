@@ -34,7 +34,7 @@ public class OrderTemplate implements BaseTemplateLoader {
 				this.add("encounter", this.one(Encounter.class, EncounterTemplate.VALID));
 				this.add("dose", 1.0);
 				this.add("duration", 1);
-				this.add("durationUnits", this.one(Concept.class, ConceptTemplate.WEEKS));
+				this.add("durationUnits", this.one(Concept.class, ConceptTemplate.DURATION_WEEKS));
 			}
 		});
 		

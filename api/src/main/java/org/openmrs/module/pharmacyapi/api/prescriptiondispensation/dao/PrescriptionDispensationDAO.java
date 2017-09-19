@@ -31,6 +31,8 @@ public interface PrescriptionDispensationDAO {
 		String findByDispensationEncounter = "PrescriptionDispensation.findByDispensationEncounter";
 		
 		String findLastByPrescription = "PrescriptionDispensation.findLastByPrescription";
+		
+		String findByFila = "PrescriptionDispensation.findByFila";
 	}
 	
 	public interface QUERY {
@@ -44,11 +46,15 @@ public interface PrescriptionDispensationDAO {
 		String findByDispensationEncounter = "select pd from PrescriptionDispensation pd where pd.dispensation = :dispensation";
 		
 		String findLastByPrescription = "select pd from PrescriptionDispensation pd where pd.prescription = :prescription and pd.retired is false and pd.prescriptionDispensationId = (select max(pdSub.prescriptionDispensationId) from PrescriptionDispensation pdSub where pd.prescription = pdSub.prescription and pdSub.retired is false) ";
+		
+		String findByFila = "select pd from PrescriptionDispensation pd where pd.fila = :fila";
 	}
 	
 	void setSessionFactory(SessionFactory sessionFactory);
 	
 	PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation);
+	
+	void update(PrescriptionDispensation prescriptionDispensation);
 	
 	void retire(PrescriptionDispensation prescriptionDispensation);
 	
@@ -57,6 +63,8 @@ public interface PrescriptionDispensationDAO {
 	List<PrescriptionDispensation> findByPrescription(Encounter prescription);
 	
 	PrescriptionDispensation findByDispensationEncounter(Encounter dispensation) throws PharmacyBusinessException;
+	
+	PrescriptionDispensation findByFila(Encounter fila) throws PharmacyBusinessException;
 	
 	List<PrescriptionDispensation> findByPatientUuid(String patientUuid);
 	

@@ -28,6 +28,8 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	
 	PrescriptionDispensation savePrescriptionDispensation(Patient patient, Encounter prescription, Encounter dispensation);
 	
+	void updatePrescriptionDispensation(PrescriptionDispensation prescriptionDispensation);
+	
 	void retire(User user, PrescriptionDispensation prescriptionDispensation, String reason)
 	        throws PharmacyBusinessException;
 	
@@ -36,6 +38,8 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	
 	PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
 	        throws PharmacyBusinessException;
+	
+	PrescriptionDispensation findPrescriptionDispensationByFila(Encounter fila) throws PharmacyBusinessException;
 	
 	Drug findDrugByOrderUuid(String uuid);
 	
