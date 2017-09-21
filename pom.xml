@@ -99,6 +99,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>esaudemetadata</artifactId>
+			<version>${esaudeMetadataVersion}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
