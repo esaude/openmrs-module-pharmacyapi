@@ -3,6 +3,10 @@ jdk:
  - oraclejdk7
 notifications:
   slack: esaude:fJniHlqocbXRRIkoDY1Ky4dw
-
+install:
+  - mvn test-compile -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn test jacoco:report
 after_success:
+- mvn coveralls:report
 - mvn jacoco:report coveralls:report
