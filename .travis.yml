@@ -3,3 +3,6 @@ jdk:
  - oraclejdk7
 notifications:
   slack: esaude:fJniHlqocbXRRIkoDY1Ky4dw
+
+after_success:
+- mvn jacoco:report coveralls:report
