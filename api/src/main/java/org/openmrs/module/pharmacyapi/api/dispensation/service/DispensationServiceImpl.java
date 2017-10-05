@@ -40,6 +40,7 @@ import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.validation.DispensationValidator;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.util.PrescriptionUtils;
@@ -72,6 +73,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	private DbSessionManager dbSessionManager;
 	
 	private PrescriptionDispensationService prescriptionDispensationService;
+	
+	private PharmacyHeuristicService pharmacyHeuristicService;
 	
 	@Autowired
 	private DispensationValidator dispensationValidator;
@@ -155,12 +158,11 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 							filaEncounterType, location);
 
 					this.processFila(filaEncounter, dispensationEncounter, arvDispensationItems, arvConceptQuestion,
-							quantityConcept, nextPickUpConcept, prescription);
+							quantityConcept, nextPickUpConcept);
 				}
 			}
 
 		} finally {
-			// this.dbSessionManager.setAutoFlushMode();
 			Context.flushSession();
 		}
 
@@ -216,7 +218,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	private void processFila(Encounter encounter, Encounter dispensationEncounter,
 	        List<DispensationItem> arvDispensationItems, Concept arvConceptQuestion, final Concept quantityConcept,
-	        final Concept nextPickUpConcept, Encounter prescriptionEncounter) throws PharmacyBusinessException {
+	        final Concept nextPickUpConcept) throws PharmacyBusinessException {
 		
 		DispensationItem dispensationItem = arvDispensationItems.iterator().next();
 		final Order arvOrder = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
@@ -271,14 +273,14 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			encounter.addObs(obsDrugOrder);
 		}
 		
-		encounter = this.encounterService.saveEncounter(encounter);
+		Encounter createdEncounter = this.encounterService.saveEncounter(encounter);
 		PrescriptionDispensation prescriptionDispensation = this.prescriptionDispensationService
 		        .findPrescriptionDispensationByDispensation(dispensationEncounter);
-		prescriptionDispensation.setFila(encounter);
+		prescriptionDispensation.setFila(createdEncounter);
 		this.prescriptionDispensationService.updatePrescriptionDispensation(prescriptionDispensation);
 	}
 	
-	private DrugOrder getDispensedDrugOrder(Encounter dispensationEncounter, Drug drug) {
+	private DrugOrder getDispensedDrugOrder(Encounter dispensationEncounter, Drug drug) throws PharmacyBusinessException {
 		
 		for (Order order : dispensationEncounter.getOrders()) {
 			
@@ -290,7 +292,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			}
 			
 		}
-		return null;
+		throw new PharmacyBusinessException("Drug Order not found for drug " + drug);
 	}
 	
 	private Double calculateArvDispensedQuantity(List<DispensationItem> arvDispensationItems) {
@@ -349,6 +351,17 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	@Override
+	public void setDispensationDAO(DispensationDAO dispensationDAO) {
+		this.dispensationDAO = dispensationDAO;
+		
+	}
+	
+	@Override
+	public void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService) {
+		this.pharmacyHeuristicService = pharmacyHeuristicService;
+	}
+	
+	@Override
 	public void cancelDispensationItems(Dispensation dispensation, String cancelationReason)
 	        throws PharmacyBusinessException {
 		
@@ -357,15 +370,15 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		DispensationItem dispensationItem = dispensation.getDispensationItems().iterator().next();
 		DrugOrder drugOrder = (DrugOrder) Context.getOrderService().getOrderByUuid(dispensationItem.getOrderUuid());
 		
-		if (StringUtils.isNotBlank(dispensationItem.getRegimeUuid())) {
+		if (StringUtils.isNotBlank(dispensationItem.getRegimeUuid())
+		        && this.prescriptionDispensationService.isArvDrug(new PrescriptionItem(), drugOrder)) {
 			
-			if (this.prescriptionDispensationService.isArvDrug(new PrescriptionItem(), drugOrder)) {
-				removeDrugOrderObsFromFilaEncounter(dispensation, dispensationItem, drugOrder);
-			}
+			removeDrugOrderObsFromFilaEncounter(dispensation, drugOrder);
+			
 		}
 		Context.getOrderService().voidOrder(drugOrder, cancelationReason);
 		
-		List<Obs> lstObs = this.prescriptionDispensationService.findObsByOrder(drugOrder);
+		List<Obs> lstObs = this.pharmacyHeuristicService.findObsByOrder(drugOrder);
 		
 		for (Obs obs : lstObs) {
 			
@@ -374,15 +387,15 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		}
 	}
 	
-	private void removeDrugOrderObsFromFilaEncounter(Dispensation dispensation, DispensationItem dispensationItem,
-	        DrugOrder drugOrder) throws PharmacyBusinessException {
+	private void removeDrugOrderObsFromFilaEncounter(Dispensation dispensation, DrugOrder drugOrder)
+	        throws PharmacyBusinessException {
 		
 		Patient patient = Context.getPatientService().getPatientByUuid(dispensation.getPatientUuid());
 		
 		final EncounterType filaEncounterType = this.encounterService
 		        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
-		Encounter filaEncounter = this.prescriptionDispensationService.findEncounterByPatientAndEncounterTypeAndOrder(
-		    patient, filaEncounterType, drugOrder);
+		Encounter filaEncounter = this.pharmacyHeuristicService.findEncounterByPatientAndEncounterTypeAndOrder(patient,
+		    filaEncounterType, drugOrder);
 		
 		Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
 		    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
@@ -495,12 +508,6 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		return dispensations;
 	}
 	
-	@Override
-	public void setDispensationDAO(DispensationDAO dispensationDAO) {
-		this.dispensationDAO = dispensationDAO;
-		
-	}
-	
 	private Prescription preparePrescription(Encounter prescriptionEncounter) {
 		
 		Order anyOrder = prescriptionEncounter.getOrders().iterator().next();
@@ -519,4 +526,5 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		}
 		return prescription;
 	}
+	
 }

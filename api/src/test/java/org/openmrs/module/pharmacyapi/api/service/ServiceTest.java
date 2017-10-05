@@ -11,6 +11,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
 import org.openmrs.module.pharmacyapi.api.drugitem.service.DrugItemService;
 import org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
@@ -29,6 +30,8 @@ public class ServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private DrugRegimeService drugRegimeService;
 	
+	private PharmacyHeuristicService pharmacyHeuristicService;
+	
 	@Before
 	public void before() throws Exception {
 		
@@ -44,11 +47,13 @@ public class ServiceTest extends BaseModuleContextSensitiveTest {
 		this.patientService = Context.getService(PatientService.class);
 		this.drugItemService = Context.getService(DrugItemService.class);
 		this.drugRegimeService = Context.getService(DrugRegimeService.class);
+		this.pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
 		Assert.assertNotNull(this.prescriptionService);
 		Assert.assertNotNull(this.dispensationService);
 		Assert.assertNotNull(this.patientService);
 		Assert.assertNotNull(this.drugItemService);
 		Assert.assertNotNull(this.drugRegimeService);
+		Assert.assertNotNull(this.pharmacyHeuristicService);
 	}
 }

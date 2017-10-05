@@ -18,6 +18,7 @@ import org.openmrs.api.ProviderService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ public interface DispensationService extends OpenmrsService {
 	void setDispensationDAO(DispensationDAO dispensationDAO);
 	
 	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
+	
+	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
 	
 	void cancelDispensationItems(Dispensation dispensation, String cancelationReason) throws PharmacyBusinessException;
 	

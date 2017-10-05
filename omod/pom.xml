@@ -62,16 +62,6 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 			</plugin>
 
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<configuration>
-					<includes>
-						<include>org/openmrs/module/openmrs-module-pharmacyapi/web/**</include>
-					</includes>
-				</configuration>
-			</plugin>
-
 		</plugins>
 	</build>
 

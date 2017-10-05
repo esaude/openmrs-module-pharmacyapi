@@ -24,12 +24,13 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
-import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
 import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription.PrescriptionStatus;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
@@ -49,11 +50,15 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	
 	private ConceptService conceptService;
 	
+	private EncounterService encounterService;
+	
 	private DispensationDAO dispensationDAO;
 	
 	private DbSessionManager dbSessionManager;
 	
 	private PrescriptionDispensationService prescriptionDispensationService;
+	
+	private PharmacyHeuristicService pharmacyHeuristicService;
 	
 	@Autowired
 	private PrescriptionValidator prescriptionValidator;
@@ -69,6 +74,12 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	}
 	
 	@Override
+	public void setEncounterService(EncounterService encounterService) {
+		
+		this.encounterService = encounterService;
+	}
+	
+	@Override
 	public void setDispensationDAO(final DispensationDAO dispensationDAO) {
 		this.dispensationDAO = dispensationDAO;
 	}
@@ -81,6 +92,10 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	@Override
 	public void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService) {
 		this.prescriptionDispensationService = prescriptionDispensationService;
+	}
+	
+	public void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService) {
+		this.pharmacyHeuristicService = pharmacyHeuristicService;
 	}
 	
 	@Override
@@ -154,7 +169,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	private List<PrescriptionItem> getNotDispensedPrescriptionItems(Patient patient) {
 
 		final List<PrescriptionItem> prescriptionItems = new ArrayList<>();
-		EncounterType encounterType = this.getEncounterTypeByPatientAge(patient);
+		EncounterType encounterType = this.pharmacyHeuristicService.getEncounterTypeByPatientAge(patient);
 
 		List<DrugOrder> ordersNotDispensed = this.dispensationDAO.findNotDispensedDrugOrdersByPatient(patient,
 				encounterType);
@@ -205,7 +220,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		this.prescriptionUtils.prepareObservations(prescription, encounter);
 		this.prescriptionUtils.prepareOrders(prescription, encounter);
 		
-		Context.getEncounterService().saveEncounter(encounter);
+		this.encounterService.saveEncounter(encounter);
 		prescription.setPrescriptionEncounter(encounter);
 		
 		return prescription;
@@ -299,18 +314,5 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 			list.add(drugOrder);
 		}
 		return mapped;
-	}
-	
-	@Override
-	public EncounterType getEncounterTypeByPatientAge(Patient patient) {
-		
-		if (patient != null) {
-			
-			EncounterType encounterType = Context.getEncounterService().getEncounterTypeByUuid(
-			    patient.getAge() < 15 ? MappedEncounters.ARV_FOLLOW_UP_CHILD : MappedEncounters.ARV_FOLLOW_UP_ADULT);
-			return encounterType;
-		}
-		
-		throw new APIException("Cannot find encounterType for non given patient");
 	}
 }

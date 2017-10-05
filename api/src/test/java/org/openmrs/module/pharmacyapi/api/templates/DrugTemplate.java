@@ -9,11 +9,11 @@ import br.com.six2six.fixturefactory.Rule;
 
 public class DrugTemplate implements BaseTemplateLoader {
 	
-	final static String TRIOMUNE30 = "3cfcf118-931c-46f7-8ff6-7b876f0d4202";
+	public final static String TRIOMUNE30 = "3cfcf118-931c-46f7-8ff6-7b876f0d4202";
 	
-	final static String ASPIRIN = "05ec820a-d297-44e3-be6e-698531d9dd3f";
+	public final static String ASPIRIN = "05ec820a-d297-44e3-be6e-698531d9dd3f";
 	
-	final static String NYQUIL = "7e2323fa-0fa0-461f-9b59-6765997d849e";
+	public final static String NYQUIL = "7e2323fa-0fa0-461f-9b59-6765997d849e";
 	
 	@Override
 	public void load() {
