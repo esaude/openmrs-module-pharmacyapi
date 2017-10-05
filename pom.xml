@@ -54,7 +54,7 @@
 
 	<properties>
 		<openmrsPlatformVersion>1.11.5</openmrsPlatformVersion>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<openMRSWebServicesVersion>2.16</openMRSWebServicesVersion>
 		<inventoryCommonVersion>3.4.3</inventoryCommonVersion>
 		<inventoryVersion>2.3.4</inventoryVersion>
