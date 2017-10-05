@@ -58,7 +58,6 @@
 		<openMRSWebServicesVersion>2.16</openMRSWebServicesVersion>
 		<inventoryCommonVersion>3.4.3</inventoryCommonVersion>
 		<inventoryVersion>2.3.4</inventoryVersion>
-		<esaudeMetadataVersion>1.4.10</esaudeMetadataVersion>
 	</properties>
 
 	<dependencies>
@@ -97,14 +96,6 @@
 			<groupId>br.com.six2six</groupId>
 			<artifactId>fixture-factory</artifactId>
 			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>esaudemetadata</artifactId>
-			<version>${esaudeMetadataVersion}</version>
-			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
 
