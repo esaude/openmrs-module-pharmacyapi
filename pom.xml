@@ -58,6 +58,7 @@
 		<openMRSWebServicesVersion>2.16</openMRSWebServicesVersion>
 		<inventoryCommonVersion>3.4.3</inventoryCommonVersion>
 		<inventoryVersion>2.3.4</inventoryVersion>
+		<esaudeMetadataVersion>1.4.10</esaudeMetadataVersion>
 	</properties>
 
 	<dependencies>
