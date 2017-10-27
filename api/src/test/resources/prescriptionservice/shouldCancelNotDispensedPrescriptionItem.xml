@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+ <orders order_id="100" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_activated="2008-08-08 00:00:00.0" date_stopped="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-08 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-nonrevised" care_setting="1" encounter_id="3" />
+ <orders order_id="101" order_type_id="1" previous_order_id="100" order_number="111" orderer="1" urgency="ROUTINE" order_action="REVISE" concept_id="88" creator="1" date_activated="2008-08-15 00:00:00.0" date_created="2008-08-15 00:00:00.0" voided="false" patient_id="7" uuid="e1f95924-697a-11e3-bd76-revised" care_setting="1" encounter_id="3" />
+ 
+ <drug_order order_id="100" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+ <drug_order order_id="101" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+</dataset> 

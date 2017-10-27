@@ -12,7 +12,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
-import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -76,8 +76,8 @@ public class DispensationItemCreationRule implements IDispensationRuleValidation
 			
 			Patient patient = Context.getPatientService().getPatientByUuid(dispensation.getPatientUuid());
 			
-			EncounterType encounterType = Context.getService(PrescriptionService.class)
-			        .getEncounterTypeByPatientAge(patient);
+			EncounterType encounterType = Context.getService(PharmacyHeuristicService.class).getEncounterTypeByPatientAge(
+			    patient);
 			
 			if (!encounterType.equals(prescriptionEncounter.getEncounterType())) {
 				throw new PharmacyBusinessException(" Encounter of prescription must be of " + encounterType.getName()

@@ -3,6 +3,10 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.service;
 
+import java.util.Date;
+import java.util.List;
+
+import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
@@ -12,7 +16,9 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +47,15 @@ public interface DispensationService extends OpenmrsService {
 	
 	void setDbSessionManager(final DbSessionManager dbSessionManager);
 	
+	void setDispensationDAO(DispensationDAO dispensationDAO);
+	
 	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
 	
+	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
+	
 	void cancelDispensationItems(Dispensation dispensation, String cancelationReason) throws PharmacyBusinessException;
+	
+	List<Dispensation> findFilaDispensationByPatientAndDateInterval(Patient patient, Date startDate, Date endDate)
+	        throws PharmacyBusinessException;
 	
 }

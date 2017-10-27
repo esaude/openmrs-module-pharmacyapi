@@ -4,16 +4,13 @@
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -24,6 +21,7 @@ import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.drugitem.model.DrugItem;
 import org.openmrs.module.pharmacyapi.api.drugitem.service.DrugItemService;
 import org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation;
@@ -37,10 +35,18 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	
 	private PrescriptionDispensationDAO prescriptionDispensationDAO;
 	
+	private PharmacyHeuristicService pharmacyHeuristicService;
+	
 	@Override
 	public void setPrescriptionDispensationDAO(PrescriptionDispensationDAO prescriptionDispensationDAO) {
 		
 		this.prescriptionDispensationDAO = prescriptionDispensationDAO;
+	}
+	
+	@Override
+	public void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService) {
+		
+		this.pharmacyHeuristicService = pharmacyHeuristicService;
 	}
 	
 	@Override
@@ -118,29 +124,10 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	
 	public boolean isTheSameConceptAndSameDrug(final DrugOrder order, Obs observation) {
 		
-		Drug obsDrug = findDrugByOrderUuid(observation.getOrder().getUuid());
+		Drug obsDrug = this.pharmacyHeuristicService.findDrugByOrderUuid(observation.getOrder().getUuid());
 		
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
 		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
-	}
-	
-	@Override
-	public Drug findDrugByOrderUuid(String uuid) {
-		
-		return this.prescriptionDispensationDAO.findDrugByOrderUuid(uuid);
-	}
-	
-	@Override
-	public Encounter findEncounterByPatientAndEncounterTypeAndOrder(Patient patient, EncounterType encounterType, Order order) {
-		
-		return this.prescriptionDispensationDAO
-		        .findEncounterByPatientAndEncounterTypeAndOrder(patient, encounterType, order);
-	}
-	
-	@Override
-	public List<Obs> findObsByOrder(Order order) {
-		
-		return this.prescriptionDispensationDAO.findObsByOrder(order);
 	}
 	
 	@Override
@@ -156,4 +143,16 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 		
 		this.prescriptionDispensationDAO.retire(found);
 	}
+	
+	@Override
+	public void updatePrescriptionDispensation(PrescriptionDispensation prescriptionDispensation) {
+		this.prescriptionDispensationDAO.update(prescriptionDispensation);
+	}
+	
+	@Override
+	public PrescriptionDispensation findPrescriptionDispensationByFila(Encounter fila) throws PharmacyBusinessException {
+		
+		return this.prescriptionDispensationDAO.findByFila(fila);
+	}
+	
 }

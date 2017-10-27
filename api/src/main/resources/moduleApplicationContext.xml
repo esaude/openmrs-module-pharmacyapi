@@ -39,9 +39,16 @@
 				<property name="dbSessionManager">
 					<ref bean="dbSessionManager" />
 				</property>
+				<property name="encounterService">
+					<ref bean="encounterService" />
+				</property>
 				<property name="prescriptionDispensationService">
 					<ref bean="prescriptionDispensationService" />
 				</property>
+				<property name="pharmacyHeuristicService">
+					<ref bean="pharmacyHeuristicService" />
+				</property>
+				
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -62,6 +69,9 @@
 				class="org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationServiceImpl">
 				<property name="providerService">
 					<ref bean="providerService" />
+				</property>
+				<property name="dispensationDAO">
+					<ref bean="dispensationDAO" />
 				</property>
 				<property name="orderService">
 					<ref bean="orderService" />
@@ -87,6 +97,10 @@
 				
 				<property name="prescriptionDispensationService">
 					<ref bean="prescriptionDispensationService" />
+				</property>
+				
+				<property name="pharmacyHeuristicService">
+					<ref bean="pharmacyHeuristicService" />
 				</property>
 				
 			</bean>
@@ -160,6 +174,9 @@
 						<property name="sessionFactory"> <ref bean="sessionFactory" /></property>
 					</bean>
 				</property>
+				<property name="pharmacyHeuristicService">
+					<ref bean="pharmacyHeuristicService" />
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -180,6 +197,27 @@
 				class="org.openmrs.module.pharmacyapi.api.drugitem.service.DrugWrapperServiceImpl">
 				<property name="sessionFactory">
 					<ref bean="sessionFactory" />
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean id="pharmacyHeuristicService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicServiceImpl">
+				<property name="pharmacyHeuristicDAO">
+					<ref bean="pharmacyHeuristicDAO" />
 				</property>
 			</bean>
 		</property>
@@ -245,12 +283,26 @@
 		</property>
 	</bean>
 	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService</value>
+				<ref local="pharmacyHeuristicService" />
+			</list>
+		</property>
+	</bean>
 		
 	<bean id="dbSessionManager" class="org.openmrs.module.pharmacyapi.db.DbSessionManagerImpl">
         <property name="sessionFactory"><ref bean="dbSessionFactory"/></property>
     </bean> 
     
     <bean id="dispensationDAO" class="org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAOImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	 <bean id="pharmacyHeuristicDAO" class="org.openmrs.module.pharmacyapi.api.pharmacyheuristic.dao.PharmacyHeuristicDAOImpl">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>

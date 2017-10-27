@@ -172,9 +172,10 @@
 
 
 	</changeSet>
-	
-	
-	<changeSet id="pharmacyapi-v1.0.0-table-prescription-dispensation" author="Guimino">
+
+
+	<changeSet id="pharmacyapi-v1.0.0-table-prescription-dispensation"
+		author="Guimino">
 
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -193,9 +194,9 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 
-		    <column name="patient_id" type="int">
+			<column name="patient_id" type="int">
 				<constraints nullable="false" />
-			</column> 
+			</column>
 
 			<column name="prescription_id" type="int">
 				<constraints nullable="false" />
@@ -208,7 +209,7 @@
 			<column name="uuid" type="char(38)">
 				<constraints nullable="false" unique="true" />
 			</column>
-			
+
 			<column name="creator" defaultValueNumeric="0" type="int">
 				<constraints nullable="false" />
 			</column>
@@ -226,7 +227,7 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" />
-			
+
 		</createTable>
 
 		<addForeignKeyConstraint
@@ -238,8 +239,8 @@
 			constraintName="phm_prescription_dispensation_dispensation_fk"
 			baseTableName="phm_prescription_dispensation" baseColumnNames="dispensation_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
-		
-	   <addForeignKeyConstraint constraintName="phm_prescription_dispensation_creator_fk"
+
+		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_creator_fk"
 			baseTableName="phm_prescription_dispensation" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
@@ -250,7 +251,7 @@
 		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_retired_by_fk"
 			baseTableName="phm_prescription_dispensation" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-			
+
 		<addForeignKeyConstraint constraintName="phm_prescription_dispensation_patient_fk"
 			baseTableName="phm_prescription_dispensation" baseColumnNames="patient_id"
 			referencedTableName="patient" referencedColumnNames="patient_id" />
@@ -258,6 +259,31 @@
 		<addUniqueConstraint tableName="phm_prescription_dispensation"
 			columnNames="prescription_id, dispensation_id" constraintName="phm_prescription_dispensation_presdisp_unique" />
 
+	</changeSet>
+
+	<changeSet
+		id="add-column_fila_id_in_table_phm_prescription_dispensation"
+		author="Guimino">
+
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists columnName="fila_id"
+					tableName="phm_prescription_dispensation" />
+			</not>
+		</preConditions>
+
+		<comment>
+			add column fila_id in table phm_prescription_dispensation table
+		</comment>
+
+		<addColumn tableName="phm_prescription_dispensation">
+			<column name="fila_id" type="int" />
+		</addColumn>
+
+		<addForeignKeyConstraint
+			constraintName="phm_prescription_dispensation_fila_fk"
+			baseTableName="phm_prescription_dispensation" baseColumnNames="fila_id"
+			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 	</changeSet>
 
 </databaseChangeLog>

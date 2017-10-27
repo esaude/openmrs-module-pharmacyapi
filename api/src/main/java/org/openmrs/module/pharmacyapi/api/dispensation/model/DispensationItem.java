@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.DrugOrder;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 
 /**
  * @author Stélio Moiane
@@ -19,6 +21,8 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	
 	private String orderUuid;
 	
+	private DrugOrder drugOrder;
+	
 	private Double quantityToDispense;
 	
 	private Double quantityDispensed;
@@ -28,6 +32,14 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	private String regimeUuid;
 	
 	private String prescriptionUuid;
+	
+	private Prescription prescription;
+	
+	private Date dispensationItemCreationDate;
+	
+	private Date prescriptionExpirationDate;
+	
+	private Dispensation dispensation;
 	
 	@Override
 	public Integer getId() {
@@ -87,6 +99,22 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 		return regimeUuid;
 	}
 	
+	public Date getDispensationItemCreationDate() {
+		return dispensationItemCreationDate;
+	}
+	
+	public void setDispensationItemCreationDate(Date dispensationItemCreationDate) {
+		this.dispensationItemCreationDate = dispensationItemCreationDate;
+	}
+	
+	public Date getPrescriptionExpirationDate() {
+		return prescriptionExpirationDate;
+	}
+	
+	public void setPrescriptionExpirationDate(Date prescriptionExpirationDate) {
+		this.prescriptionExpirationDate = prescriptionExpirationDate;
+	}
+	
 	public void setRegimeUuid(String regimeUuid) {
 		this.regimeUuid = regimeUuid;
 	}
@@ -98,4 +126,29 @@ public class DispensationItem extends BaseOpenmrsData implements Serializable {
 	public void setPrescriptionUuid(String prescriptionUuid) {
 		this.prescriptionUuid = prescriptionUuid;
 	}
+	
+	public Dispensation getDispensation() {
+		return dispensation;
+	}
+	
+	public void setDispensation(Dispensation dispensation) {
+		this.dispensation = dispensation;
+	}
+	
+	public DrugOrder getDrugOrder() {
+		return drugOrder;
+	}
+	
+	public void setDrugOrder(DrugOrder drugOrder) {
+		this.drugOrder = drugOrder;
+	}
+	
+	public Prescription getPrescription() {
+		return prescription;
+	}
+	
+	public void setPrescription(Prescription prescription) {
+		this.prescription = prescription;
+	}
+	
 }

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+ <orders order_id="100" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_activated="2008-08-08 00:00:00.0" date_stopped="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-08 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-nonrevised" care_setting="1" encounter_id="4" />
+ 
+ <drug_order order_id="100" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+
+ <obs obs_id="15" person_id="7" concept_id="21" encounter_id="4" order_id ="100" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_coded="22" comments="" creator="1" date_created="2008-08-19 12:32:59.0" voided="false" uuid="1ce473c8-3fac-440d-9f92-e10facab194f"/>
+
+</dataset> 

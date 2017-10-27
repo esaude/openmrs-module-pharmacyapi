@@ -1,26 +1,36 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -37,11 +47,13 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		if (rep instanceof RefRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
+			description.addProperty("dispensationItems");
 			description.addSelfLink();
 			return description;
 		} else if (rep instanceof DefaultRepresentation) {
 			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("uuid");
+			description.addProperty("dispensationItems");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
@@ -119,6 +131,46 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	}
 	
 	@Override
+	protected PageableResult doSearch(final RequestContext context) {
+
+		final String patientUuid = context.getRequest().getParameter("patient");
+		String startDate = context.getRequest().getParameter("startDate");
+		String endDate = context.getRequest().getParameter("endDate");
+
+		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
+
+		if (patientUuid == null || patient == null) {
+			return new EmptySearchResult();
+		}
+
+		if (startDate != null && endDate != null) {
+
+			try {
+
+				return new NeedsPaging<>(findFilaByPatientAndDateInterval(patient, startDate, endDate), context);
+			} catch (ParseException | PharmacyBusinessException e) {
+
+				throw new APIException(e);
+			}
+		}
+
+		return new EmptySearchResult();
+	}
+	
+	private List<Dispensation> findFilaByPatientAndDateInterval(Patient patient, String startDateText, String endDateText)
+	        throws ParseException, PharmacyBusinessException {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		Date stardDate = formatter.parse(startDateText);
+		Date endDate = formatter.parse(endDateText);
+		
+		List<Dispensation> dispensations = Context.getService(DispensationService.class)
+		        .findFilaDispensationByPatientAndDateInterval(patient, stardDate, endDate);
+		
+		return dispensations;
+	}
+	
+	@Override
 	protected void delete(final Dispensation dispensation, final String reason, final RequestContext context)
 	        throws ResponseException {
 		
@@ -137,6 +189,14 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
+	@PropertySetter("dispensationItems")
+	public static void prescriptionItems(Dispensation instance, List<DispensationItem> items) {
+		for (DispensationItem item : items) {
+			item.setDispensation(instance);
+		}
+		instance.setDispensationItems(items);
+	}
+	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() throws ResourceDoesNotSupportOperationException {
 		
@@ -150,5 +210,10 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		
 		return description;
 		
+	}
+	
+	@Override
+	public List<String> getPropertiesToExposeAsSubResources() {
+		return Arrays.asList("dispensationItems");
 	}
 }

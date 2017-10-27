@@ -5,13 +5,13 @@ package org.openmrs.module.pharmacyapi.api.prescription.service;
 
 import java.util.List;
 
-import org.openmrs.EncounterType;
 import org.openmrs.Patient;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
@@ -22,7 +22,9 @@ import org.openmrs.module.pharmacyapi.db.DbSessionManager;
  */
 public interface PrescriptionService extends OpenmrsService {
 	
-	void setConceptService(final ConceptService conceptService) throws APIException;
+	void setConceptService(final ConceptService conceptService);
+	
+	void setEncounterService(EncounterService encounterService);
 	
 	void setDispensationDAO(DispensationDAO dispensationDAO);
 	
@@ -30,13 +32,13 @@ public interface PrescriptionService extends OpenmrsService {
 	
 	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
 	
+	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
+	
 	Prescription createPrescription(Prescription prescription) throws PharmacyBusinessException;
 	
 	List<Prescription> findAllPrescriptionsByPatient(final Patient patient);
 	
 	List<Prescription> findPrescriptionsByPatientAndActiveStatus(final Patient patient);
-	
-	EncounterType getEncounterTypeByPatientAge(Patient patient);
 	
 	void cancelPrescriptionItem(PrescriptionItem prescriptionItem, String cancelationReason)
 	        throws PharmacyBusinessException;

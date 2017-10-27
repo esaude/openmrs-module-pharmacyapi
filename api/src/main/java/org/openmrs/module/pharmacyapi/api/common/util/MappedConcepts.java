@@ -48,4 +48,12 @@ public class MappedConcepts {
 	
 	public static final String POSOLOGY = "e1de28ae-1d5f-11e0-b929-000c29ad1d07";
 	
+	public static final String DURATION_WEEKS = "9d96489b-10e8-11e5-9009-0242ac110012";
+	
+	public static final String DURATION_MONTHS = "9d96d012-10e8-11e5-9009-0242ac110012";
+	
+	public static final String DURATION_DAYS = "9d6f51fb-10e8-11e5-9009-0242ac110012";
+	
+	public static final String PRESCRIPTION = "e60fded1-14e9-48e2-967e-7612290e447d";
+	
 }

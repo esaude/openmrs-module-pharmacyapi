@@ -4,6 +4,8 @@
 package org.openmrs.module.pharmacyapi.api.prescription.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +26,11 @@ import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessExcep
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedDurationUnits;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription.PrescriptionStatus;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem.PrescriptionItemStatus;
-import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.springframework.stereotype.Component;
 
@@ -178,10 +180,11 @@ public class PrescriptionUtils {
 				Concept conceptDrug = Context.getConceptService().getDrugByUuid(item.getDrugOrder().getDrug().getUuid())
 				        .getConcept();
 				
-				final Obs obsRegime = new Obs();
-				obsRegime.setConcept(Context.getConceptService().getConceptByUuid(MappedConcepts.TREATMENT_PRESCRIBED));
-				obsRegime.setValueCoded(conceptDrug);
-				encounter.addObs(obsRegime);
+				final Obs obsTreatmentPrescribe = new Obs();
+				obsTreatmentPrescribe.setConcept(Context.getConceptService().getConceptByUuid(
+				    MappedConcepts.TREATMENT_PRESCRIBED));
+				obsTreatmentPrescribe.setValueCoded(conceptDrug);
+				encounter.addObs(obsTreatmentPrescribe);
 			}
 		}
 	}
@@ -223,7 +226,7 @@ public class PrescriptionUtils {
 	
 	public Encounter prepareEncounter(Prescription prescription) {
 		
-		EncounterType encounterType = Context.getService(PrescriptionService.class).getEncounterTypeByPatientAge(
+		EncounterType encounterType = Context.getService(PharmacyHeuristicService.class).getEncounterTypeByPatientAge(
 		    prescription.getPatient());
 		final EncounterRole encounterRole = Context.getEncounterService().getEncounterRoleByUuid(
 		    MappedEncounters.DEFAULT_ENCONTER_ROLE);
@@ -323,7 +326,7 @@ public class PrescriptionUtils {
 	
 	private boolean isTheSameConceptAndSameDrug(final DrugOrder order, Obs observation) {
 		
-		Drug obsDrug = Context.getService(PrescriptionDispensationService.class).findDrugByOrderUuid(
+		Drug obsDrug = Context.getService(PharmacyHeuristicService.class).findDrugByOrderUuid(
 		    observation.getOrder().getUuid());
 		
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
@@ -394,4 +397,22 @@ public class PrescriptionUtils {
 		return clone;
 	}
 	
+	public Date calculatePrescriptionExpirationDate(List<DrugOrder> drugOrders) {
+		
+		Calendar maximumCalendarExpirationDate = Calendar.getInstance();
+		maximumCalendarExpirationDate.setTime(new Date(Long.MIN_VALUE));
+		
+		Date maximumExpirationDate = maximumCalendarExpirationDate.getTime();
+		
+		for (DrugOrder drugOrder : drugOrders) {
+			
+			if (drugOrder.getAutoExpireDate().after(maximumExpirationDate)) {
+				
+				maximumCalendarExpirationDate.setTime(drugOrder.getAutoExpireDate());
+				maximumExpirationDate = maximumCalendarExpirationDate.getTime();
+			}
+		}
+		
+		return maximumExpirationDate;
+	}
 }

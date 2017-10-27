@@ -6,12 +6,7 @@ package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-import org.openmrs.Drug;
 import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Obs;
-import org.openmrs.Order;
-import org.openmrs.Patient;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation;
 
@@ -31,6 +26,8 @@ public interface PrescriptionDispensationDAO {
 		String findByDispensationEncounter = "PrescriptionDispensation.findByDispensationEncounter";
 		
 		String findLastByPrescription = "PrescriptionDispensation.findLastByPrescription";
+		
+		String findByFila = "PrescriptionDispensation.findByFila";
 	}
 	
 	public interface QUERY {
@@ -44,11 +41,15 @@ public interface PrescriptionDispensationDAO {
 		String findByDispensationEncounter = "select pd from PrescriptionDispensation pd where pd.dispensation = :dispensation";
 		
 		String findLastByPrescription = "select pd from PrescriptionDispensation pd where pd.prescription = :prescription and pd.retired is false and pd.prescriptionDispensationId = (select max(pdSub.prescriptionDispensationId) from PrescriptionDispensation pdSub where pd.prescription = pdSub.prescription and pdSub.retired is false) ";
+		
+		String findByFila = "select pd from PrescriptionDispensation pd where pd.fila = :fila";
 	}
 	
 	void setSessionFactory(SessionFactory sessionFactory);
 	
 	PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation);
+	
+	void update(PrescriptionDispensation prescriptionDispensation);
 	
 	void retire(PrescriptionDispensation prescriptionDispensation);
 	
@@ -58,13 +59,10 @@ public interface PrescriptionDispensationDAO {
 	
 	PrescriptionDispensation findByDispensationEncounter(Encounter dispensation) throws PharmacyBusinessException;
 	
+	PrescriptionDispensation findByFila(Encounter fila) throws PharmacyBusinessException;
+	
 	List<PrescriptionDispensation> findByPatientUuid(String patientUuid);
 	
 	PrescriptionDispensation findLastByPrescription(Encounter prescription);
 	
-	Drug findDrugByOrderUuid(String uuid);
-	
-	Encounter findEncounterByPatientAndEncounterTypeAndOrder(Patient patient, EncounterType encounterType, Order order);
-	
-	List<Obs> findObsByOrder(Order order);
 }
