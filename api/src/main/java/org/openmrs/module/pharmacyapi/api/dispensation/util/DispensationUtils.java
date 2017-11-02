@@ -1,4 +1,13 @@
 /**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+/**
  * 
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.util;
@@ -64,52 +73,52 @@ public class DispensationUtils {
 	}
 	
 	public List<PrescriptionItem> preparePrescriptionItems(Prescription prescription, Encounter prescriptionEncounter,
-			List<DrugOrder> drugOrders) {
-
+	        List<DrugOrder> drugOrders) {
+		
 		List<PrescriptionItem> prescriptionItems = new ArrayList<>();
-
+		
 		PrescriptionDispensationService prescriptionDispensationService = Context
-				.getService(PrescriptionDispensationService.class);
-
+		        .getService(PrescriptionDispensationService.class);
+		
 		for (DrugOrder drugOrder : drugOrders) {
-
+			
 			PrescriptionItem prescriptionItem = null;
-
+			
 			if (Action.NEW.equals(drugOrder.getAction())) {
-
+				
 				prescriptionItem = new PrescriptionItem(drugOrder);
 				this.setPrescriptionInstructions(prescriptionItem, drugOrder);
 				prescriptionItem.setDrugToPickUp(drugOrder.getQuantity());
 				prescriptionItem.setStatus(PrescriptionItemStatus.NEW);
 				prescriptionItem.setPrescription(prescription);
-
+				
 			} else {
-
+				
 				if (Action.REVISE.equals(drugOrder.getAction())) {
-
+					
 					prescriptionItem = new PrescriptionItem(drugOrder);
 					this.setPrescriptionInstructions(prescriptionItem, drugOrder);
-
+					
 				} else if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
-
+					
 					prescriptionItem = new PrescriptionItem(cloneDrugOrder(drugOrder));
 					this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
-
+					
 				} else {
 					continue;
 				}
-
+				
 				Double quantity = calculateDrugPikckedUp(drugOrder);
 				prescriptionItem.setDrugPickedUp(quantity);
 				prescriptionItem.setDrugToPickUp(
-						prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
+				        prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
 				prescriptionItem.setPrescription(prescription);
-
+				
 				PrescriptionItemStatus status = Action.DISCONTINUE.equals(drugOrder.getAction())
-						? PrescriptionItemStatus.FINALIZED : PrescriptionItemStatus.ACTIVE;
+				        ? PrescriptionItemStatus.FINALIZED : PrescriptionItemStatus.ACTIVE;
 				prescriptionItem.setStatus(status);
 			}
-
+			
 			if (prescriptionItem != null) {
 				try {
 					if (prescriptionDispensationService.isArvDrug(prescriptionItem, drugOrder)) {
@@ -117,14 +126,15 @@ public class DispensationUtils {
 						prescriptionItem.setTherapeuticLine(findArvTherapeuticPlan(prescriptionEncounter));
 						prescriptionItem.setTherapeuticLine(findArvTherapeuticPlan(prescriptionEncounter));
 					}
-				} catch (PharmacyBusinessException e) {
-
+				}
+				catch (PharmacyBusinessException e) {
+					
 				}
 				prescriptionItems.add(prescriptionItem);
 			}
 		}
 		return prescriptionItems;
-
+		
 	}
 	
 	public void prepareObservations(Prescription prescription, Encounter encounter) throws PharmacyBusinessException {
@@ -299,26 +309,26 @@ public class DispensationUtils {
 	}
 	
 	public Double calculateDrugPikckedUp(final DrugOrder order) throws APIException {
-
+		
 		Double quantity = 0.0;
 		final List<Obs> observations = new ArrayList<>();
-
+		
 		DrugOrder tempOrder = order;
 		while (tempOrder.getPreviousOrder() != null) {
-
+			
 			if (tempOrder.getOrderReason() == null && !tempOrder.getVoided()) {
 				observations.addAll(tempOrder.getEncounter().getObs());
 			}
 			tempOrder = (DrugOrder) tempOrder.getPreviousOrder();
 		}
-
+		
 		for (final Obs observation : observations) {
-
+			
 			if (!observation.getVoided() && this.isTheSameConceptAndSameDrug(order, observation)) {
 				quantity += observation.getValueNumeric();
 			}
 		}
-
+		
 		return quantity;
 	}
 	
@@ -339,12 +349,12 @@ public class DispensationUtils {
 	}
 	
 	public List<PrescriptionItem> filterPrescriptionItemsByStatus(List<PrescriptionItem> prescriptionItems,
-			List<PrescriptionItemStatus> itemStatus) {
-
+	        List<PrescriptionItemStatus> itemStatus) {
+		
 		List<PrescriptionItem> result = new ArrayList<>();
-
+		
 		for (PrescriptionItem prescriptionItem : prescriptionItems) {
-
+			
 			if (itemStatus.contains(prescriptionItem.getStatus())) {
 				result.add(prescriptionItem);
 			}

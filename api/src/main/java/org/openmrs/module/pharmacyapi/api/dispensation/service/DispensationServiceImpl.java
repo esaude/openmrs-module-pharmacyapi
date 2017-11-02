@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 /*
  * Friends in Global Health - FGH © 2017
  */
@@ -86,86 +95,87 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	@Override
 	public Dispensation dispense(final Dispensation dispensation) throws PharmacyBusinessException {
-
+		
 		try {
-
+			
 			// workaround to controll the hibernate sessions commits
 			this.dbSessionManager.setManualFlushMode();
-
+			
 			dispensationValidator.validateCreation(dispensation);
-
+			
 			Person person = Context.getPersonService().getPersonByUuid(dispensation.getProviderUuid());
 			Provider provider = Context.getProviderService().getProvidersByPerson(person).iterator().next();
 			final Patient patient = this.patientService.getPatientByUuid(dispensation.getPatientUuid());
-
+			
 			final EncounterRole encounterRole = this.encounterService
-					.getEncounterRoleByUuid(MappedEncounters.DEFAULT_ENCONTER_ROLE);
+			        .getEncounterRoleByUuid(MappedEncounters.DEFAULT_ENCONTER_ROLE);
 			final EncounterType encounterType = this.encounterService
-					.getEncounterTypeByUuid(MappedEncounters.DISPENSATION_ENCOUNTER_TYPE);
-
+			        .getEncounterTypeByUuid(MappedEncounters.DISPENSATION_ENCOUNTER_TYPE);
+			
 			final Location location = this.locationService.getLocationByUuid(dispensation.getLocationUuid());
-
+			
 			List<DispensationItem> arvDispensationItems = new ArrayList<>();
-
+			
 			Concept arvConceptQuestion = Context.getConceptService()
-					.getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-
+			        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+			
 			final Concept dispensationConceptSet = this.conceptService
-					.getConceptByUuid(MappedConcepts.DISPENSATION_SET);
+			        .getConceptByUuid(MappedConcepts.DISPENSATION_SET);
 			final Concept quantityConcept = this.conceptService.getConceptByUuid(MappedConcepts.MEDICATION_QUANTITY);
 			final Concept nextPickUpConcept = this.conceptService.getConceptByUuid(MappedConcepts.DATE_OF_NEXT_PICK_UP);
-
+			
 			Map<Encounter, List<DispensationItem>> mapDispensationItemByPrescription = groupDispensationItemsByPrescription(
-					dispensation);
-
+			        dispensation);
+			
 			for (Encounter prescription : mapDispensationItemByPrescription.keySet()) {
-
+				
 				final Encounter dispensationEncounter = this.createEncounter(provider, patient, encounterRole,
-						encounterType, location);
-
+				    encounterType, location);
+				
 				List<DispensationItem> dispensationItems = mapDispensationItemByPrescription.get(prescription);
-
+				
 				for (DispensationItem dispensationItem : dispensationItems) {
-
+					
 					final Order order = this.orderService.getOrderByUuid(dispensationItem.getOrderUuid());
 					Order orderProcess = order.cloneForRevision();
-
+					
 					if (dispensationItem.getTotalDispensed().equals(((DrugOrder) orderProcess).getQuantity())) {
 						orderProcess = order.cloneForDiscontinuing();
 						((DrugOrder) (orderProcess)).setDispenseAsWritten(Boolean.TRUE);
 					}
-
+					
 					if (StringUtils.isNotEmpty(dispensationItem.getRegimeUuid())) {
 						arvDispensationItems.add(dispensationItem);
 					}
-
+					
 					orderProcess.setOrderer(provider);
 					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet,
-							quantityConcept, nextPickUpConcept, dispensationItem, arvConceptQuestion);
+					    quantityConcept, nextPickUpConcept, dispensationItem, arvConceptQuestion);
 				}
-
+				
 				this.encounterService.saveEncounter(dispensationEncounter);
-
+				
 				this.prescriptionDispensationService.savePrescriptionDispensation(patient, prescription,
-						dispensationEncounter);
-
+				    dispensationEncounter);
+				
 				if (!arvDispensationItems.isEmpty()) {
-
+					
 					final EncounterType filaEncounterType = this.encounterService
-							.getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
-
+					        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
+					
 					final Encounter filaEncounter = this.createEncounter(provider, patient, encounterRole,
-							filaEncounterType, location);
-
+					    filaEncounterType, location);
+					
 					this.processFila(filaEncounter, dispensationEncounter, arvDispensationItems, arvConceptQuestion,
-							quantityConcept, nextPickUpConcept);
+					    quantityConcept, nextPickUpConcept);
 				}
 			}
-
-		} finally {
+			
+		}
+		finally {
 			Context.flushSession();
 		}
-
+		
 		return dispensation;
 	}
 	
@@ -434,61 +444,61 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	private Map<Encounter, List<DispensationItem>> groupDispensationItemsByPrescription(Dispensation dispensation) {
-
+		
 		Map<Encounter, List<DispensationItem>> mapPrescription = new HashMap<>();
-
+		
 		Map<String, Encounter> mapCachedPrescription = new HashMap<>();
-
+		
 		for (DispensationItem dispensationItem : dispensation.getDispensationItems()) {
-
+			
 			Encounter prescription = mapCachedPrescription.get(dispensationItem.getPrescriptionUuid()) != null
-					? mapCachedPrescription.get(dispensationItem.getPrescriptionUuid())
-					: Context.getEncounterService().getEncounterByUuid(dispensationItem.getPrescriptionUuid());
-
+			        ? mapCachedPrescription.get(dispensationItem.getPrescriptionUuid())
+			        : Context.getEncounterService().getEncounterByUuid(dispensationItem.getPrescriptionUuid());
+			
 			List<DispensationItem> list = mapPrescription.get(prescription);
-
+			
 			if (list == null) {
 				mapPrescription.put(prescription, list = new ArrayList<>());
 			}
 			list.add(dispensationItem);
 		}
-
+		
 		return mapPrescription;
 	}
 	
 	@Override
 	public List<Dispensation> findFilaDispensationByPatientAndDateInterval(Patient patient, Date startDate,
-			Date endDate) throws PharmacyBusinessException {
-
+	        Date endDate) throws PharmacyBusinessException {
+		
 		EncounterType filaEncounter = Context.getEncounterService()
-				.getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
-
+		        .getEncounterTypeByUuid(MappedEncounters.FILA_ENCOUNTER_TYPE);
+		
 		List<Encounter> filas = this.dispensationDAO.findEncountersByPatientAndEncounterTypeAndDateInterval(patient,
-				filaEncounter, startDate, endDate);
-
+		    filaEncounter, startDate, endDate);
+		
 		Concept arvDrugConcept = Context.getConceptService()
-
-				.getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+		        
+		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 		List<Dispensation> dispensations = new ArrayList<>();
 		for (Encounter fila : filas) {
-
+			
 			PrescriptionDispensation prescriptionDispensation = this.prescriptionDispensationService
-					.findPrescriptionDispensationByFila(fila);
-
+			        .findPrescriptionDispensationByFila(fila);
+			
 			Dispensation dispensation = new Dispensation();
 			dispensation.setProviderUuid(prescriptionDispensation.getDispensation().getEncounterProviders().iterator()
-					.next().getProvider().getUuid());
+			        .next().getProvider().getUuid());
 			List<DrugOrder> drugOrders = this.dispensationDAO.findDrugOrderByEncounterAndOrderActionAndVoided(
-					prescriptionDispensation.getPrescription(), Action.NEW, false);
-
+			    prescriptionDispensation.getPrescription(), Action.NEW, false);
+			
 			Date prescriptionExpirationDate = this.prescriptionUtils.calculatePrescriptionExpirationDate(drugOrders);
-
+			
 			List<DispensationItem> dispensationItems = new ArrayList<>();
 			for (Obs obs : fila.getAllObs()) {
-
+				
 				if (arvDrugConcept.equals(obs.getConcept())) {
 					DispensationItem dispensationItem = new DispensationItem();
-
+					
 					DrugOrder drugOrder = this.dispensationDAO.findDrugOrderByOrderUuid(obs.getOrder().getUuid());
 					dispensationItem.setDrugOrder(drugOrder);
 					dispensationItem.setQuantityDispensed(obs.getValueNumeric());
@@ -504,7 +514,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				dispensations.add(dispensation);
 			}
 		}
-
+		
 		return dispensations;
 	}
 	

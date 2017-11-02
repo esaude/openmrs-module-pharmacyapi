@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.util.Arrays;
@@ -31,8 +40,9 @@ import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_11.RestCon
 /**
  * @author Stélio Moiane
  */
-@Resource(name = RestConstants.VERSION_1 + "/prescription", order = 1, supportedClass = Prescription.class, supportedOpenmrsVersions = {
-        "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+@Resource(name = RestConstants.VERSION_1
+        + "/prescription", order = 1, supportedClass = Prescription.class, supportedOpenmrsVersions = { "1.8.*",
+        "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class PrescriptionResource extends DataDelegatingCrudResource<Prescription> {
 	
 	@Override
@@ -106,9 +116,9 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		try {
 			Context.getService(PrescriptionService.class).createPrescription(delegate);
 		}
-		catch (PharmacyBusinessException e) {
+		catch (final PharmacyBusinessException e) {
 			
-			throw new APIException(e);
+			throw new APIException(e.getMessage());
 		}
 		return delegate;
 	}
@@ -134,8 +144,8 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	protected PageableResult doSearch(final RequestContext context) {
 		
 		final String patientUuid = context.getRequest().getParameter("patient");
-		String findAllPrescribed = context.getRequest().getParameter("findAllPrescribed");
-		String findAllActive = context.getRequest().getParameter("findAllActive");
+		final String findAllPrescribed = context.getRequest().getParameter("findAllPrescribed");
+		final String findAllActive = context.getRequest().getParameter("findAllActive");
 		
 		if (patientUuid == null) {
 			return new EmptySearchResult();
@@ -149,20 +159,20 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		
 		if (StringUtils.isNotBlank(findAllPrescribed)) {
 			
-			return findAllPrescribed(context, patient, findAllPrescribed);
+			return this.findAllPrescribed(context, patient, findAllPrescribed);
 		}
 		
 		if (StringUtils.isNotBlank(findAllActive)) {
 			
-			return findAllActive(context, patient, findAllActive);
+			return this.findAllActive(context, patient, findAllActive);
 		}
 		
 		return new EmptySearchResult();
 	}
 	
 	@PropertySetter("prescriptionItems")
-	public static void prescriptionItems(Prescription instance, List<PrescriptionItem> items) {
-		for (PrescriptionItem item : items) {
+	public static void prescriptionItems(final Prescription instance, final List<PrescriptionItem> items) {
+		for (final PrescriptionItem item : items) {
 			item.setPrescription(instance);
 		}
 		instance.setPrescriptionItems(items);
@@ -173,7 +183,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	 */
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
-		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		final DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("prescriptionDate");
 		description.addProperty("prescriptionItems");
 		description.addProperty("prescriptionEncounter");
@@ -202,43 +212,45 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		return RestConstants1_11.RESOURCE_VERSION;
 	}
 	
-	private PageableResult findAllPrescribed(RequestContext context, Patient patient, String findAllPrescribed) {
-
+	private PageableResult findAllPrescribed(final RequestContext context, final Patient patient,
+	        final String findAllPrescribed) {
+		
 		Boolean doSearchAllPrecribed = Boolean.FALSE;
-
+		
 		try {
 			doSearchAllPrecribed = Boolean.valueOf(findAllPrescribed).booleanValue();
-
-		} catch (Exception e) {
+			
 		}
-
+		catch (final Exception e) {}
+		
 		if (doSearchAllPrecribed) {
-			List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
-					.findAllPrescriptionsByPatient(patient);
-
+			final List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
+			        .findAllPrescriptionsByPatient(patient);
+			
 			return new NeedsPaging<>(prescriptions, context);
 		}
-
+		
 		return new EmptySearchResult();
 	}
 	
-	private PageableResult findAllActive(RequestContext context, Patient patient, String findAllActive) {
-
+	private PageableResult findAllActive(final RequestContext context, final Patient patient,
+	        final String findAllActive) {
+		
 		Boolean doSearchAllActive = Boolean.FALSE;
-
+		
 		try {
 			doSearchAllActive = Boolean.valueOf(findAllActive).booleanValue();
-
-		} catch (Exception e) {
+			
 		}
-
+		catch (final Exception e) {}
+		
 		if (doSearchAllActive) {
-			List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
-					.findPrescriptionsByPatientAndActiveStatus(patient);
-
+			final List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
+			        .findPrescriptionsByPatientAndActiveStatus(patient);
+			
 			return new NeedsPaging<>(prescriptions, context);
 		}
-
+		
 		return new EmptySearchResult();
 	}
 }

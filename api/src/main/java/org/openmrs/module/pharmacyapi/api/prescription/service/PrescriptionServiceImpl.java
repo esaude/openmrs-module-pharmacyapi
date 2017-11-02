@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 /*
  * Friends in Global Health - FGH © 2016
  */
@@ -100,36 +109,36 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	
 	@Override
 	public List<Prescription> findPrescriptionsByPatientAndActiveStatus(final Patient patient) {
-
+		
 		List<PrescriptionItem> prescriptionItems = getNotDispensedPrescriptionItems(patient);
-
+		
 		prescriptionItems.addAll(getDispensedPrescriptionItems(patient));
-
+		
 		Map<Encounter, List<PrescriptionItem>> mapPrescriptionItemsByPrescriptionEncounter = new HashMap<>();
-
+		
 		for (PrescriptionItem prescriptionItem : prescriptionItems) {
-
+			
 			List<PrescriptionItem> lst = mapPrescriptionItemsByPrescriptionEncounter
-					.get(prescriptionItem.getPrescription().getPrescriptionEncounter());
-
+			        .get(prescriptionItem.getPrescription().getPrescriptionEncounter());
+			
 			if (lst == null) {
 				mapPrescriptionItemsByPrescriptionEncounter
-						.put(prescriptionItem.getPrescription().getPrescriptionEncounter(), lst = new ArrayList<>());
+				        .put(prescriptionItem.getPrescription().getPrescriptionEncounter(), lst = new ArrayList<>());
 			}
 			lst.add(prescriptionItem);
 		}
-
+		
 		List<Prescription> result = new ArrayList<>();
-
+		
 		for (Encounter prescriptionEncounter : mapPrescriptionItemsByPrescriptionEncounter.keySet()) {
-
+			
 			List<PrescriptionItem> items = mapPrescriptionItemsByPrescriptionEncounter.get(prescriptionEncounter);
-
+			
 			items = this.prescriptionUtils.filterPrescriptionItemsByStatus(items,
-					Arrays.asList(PrescriptionItemStatus.NEW, PrescriptionItemStatus.ACTIVE));
-
+			    Arrays.asList(PrescriptionItemStatus.NEW, PrescriptionItemStatus.ACTIVE));
+			
 			if (!items.isEmpty()) {
-
+				
 				Prescription prescription = preparePrescription(prescriptionEncounter);
 				prescription.setPrescriptionItems(items);
 				prescription.setPrescriptionStatus(PrescriptionStatus.ACTIVE);
@@ -140,52 +149,52 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	}
 	
 	private List<PrescriptionItem> getDispensedPrescriptionItems(Patient patient) {
-
+		
 		final List<PrescriptionItem> prescriptionItems = new ArrayList<>();
-
+		
 		final List<DrugOrder> dispensedOrders = this.dispensationDAO.findDispensedDrugOrdersByPatient(patient);
-
+		
 		if (!dispensedOrders.isEmpty()) {
-
+			
 			Map<Encounter, List<DrugOrder>> mapDrugOrdersByDispensation = mapDrugOrdersByEncounter(dispensedOrders);
-
+			
 			for (Encounter dispensationEncounter : mapDrugOrdersByDispensation.keySet()) {
-
+				
 				try {
 					Encounter prescriptionEncounter = this.prescriptionDispensationService
-							.findPrescriptionDispensationByDispensation(dispensationEncounter).getPrescription();
+					        .findPrescriptionDispensationByDispensation(dispensationEncounter).getPrescription();
 					Prescription prescription = preparePrescription(prescriptionEncounter);
-
+					
 					prescriptionItems.addAll(prescriptionUtils.preparePrescriptionItems(prescription,
-							prescriptionEncounter, mapDrugOrdersByDispensation.get(dispensationEncounter)));
-
-				} catch (PharmacyBusinessException e) {
+					    prescriptionEncounter, mapDrugOrdersByDispensation.get(dispensationEncounter)));
+					
 				}
+				catch (PharmacyBusinessException e) {}
 			}
 		}
 		return prescriptionItems;
 	}
 	
 	private List<PrescriptionItem> getNotDispensedPrescriptionItems(Patient patient) {
-
+		
 		final List<PrescriptionItem> prescriptionItems = new ArrayList<>();
 		EncounterType encounterType = this.pharmacyHeuristicService.getEncounterTypeByPatientAge(patient);
-
+		
 		List<DrugOrder> ordersNotDispensed = this.dispensationDAO.findNotDispensedDrugOrdersByPatient(patient,
-				encounterType);
-
+		    encounterType);
+		
 		if (!ordersNotDispensed.isEmpty()) {
-
+			
 			Map<Encounter, List<DrugOrder>> mapDrugOrdersByPrescription = mapDrugOrdersByEncounter(ordersNotDispensed);
-
+			
 			for (Encounter prescriptionEncounter : mapDrugOrdersByPrescription.keySet()) {
-
+				
 				if (encounterType.equals(prescriptionEncounter.getEncounterType())) {
-
+					
 					Prescription prescription = preparePrescription(prescriptionEncounter);
-
+					
 					prescriptionItems.addAll(prescriptionUtils.preparePrescriptionItems(prescription,
-							prescriptionEncounter, mapDrugOrdersByPrescription.get(prescriptionEncounter)));
+					    prescriptionEncounter, mapDrugOrdersByPrescription.get(prescriptionEncounter)));
 				}
 			}
 		}
@@ -253,35 +262,35 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	
 	@Override
 	public List<Prescription> findAllPrescriptionsByPatient(Patient patient) {
-
+		
 		List<PrescriptionItem> prescriptionItems = getNotDispensedPrescriptionItems(patient);
 		prescriptionItems.addAll(getDispensedPrescriptionItems(patient));
-
+		
 		Map<Encounter, List<PrescriptionItem>> mapPrescriptionItemsByPrescriptionEncounter = new HashMap<>();
-
+		
 		for (PrescriptionItem prescriptionItem : prescriptionItems) {
-
+			
 			List<PrescriptionItem> lst = mapPrescriptionItemsByPrescriptionEncounter
-					.get(prescriptionItem.getPrescription().getPrescriptionEncounter());
-
+			        .get(prescriptionItem.getPrescription().getPrescriptionEncounter());
+			
 			if (lst == null) {
 				mapPrescriptionItemsByPrescriptionEncounter
-						.put(prescriptionItem.getPrescription().getPrescriptionEncounter(), lst = new ArrayList<>());
+				        .put(prescriptionItem.getPrescription().getPrescriptionEncounter(), lst = new ArrayList<>());
 			}
 			lst.add(prescriptionItem);
 		}
-
+		
 		List<Prescription> result = new ArrayList<>();
-
+		
 		for (Encounter prescriptionEncounter : mapPrescriptionItemsByPrescriptionEncounter.keySet()) {
-
+			
 			List<PrescriptionItem> items = mapPrescriptionItemsByPrescriptionEncounter.get(prescriptionEncounter);
-
+			
 			if (!items.isEmpty()) {
 				Prescription prescription = preparePrescription(prescriptionEncounter);
 				prescription.setPrescriptionItems(items);
 				prescription.setPrescriptionStatus(this.prescriptionUtils.calculatePrescriptioStatus(items));
-
+				
 				result.add(prescription);
 			}
 		}
@@ -302,11 +311,11 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	}
 	
 	private Map<Encounter, List<DrugOrder>> mapDrugOrdersByEncounter(List<DrugOrder> drugOrders) {
-
+		
 		Map<Encounter, List<DrugOrder>> mapped = new HashMap<>();
-
+		
 		for (DrugOrder drugOrder : drugOrders) {
-
+			
 			List<DrugOrder> list = mapped.get(drugOrder.getEncounter());
 			if (list == null) {
 				mapped.put(drugOrder.getEncounter(), list = new ArrayList<>());

@@ -1,5 +1,14 @@
 /**
- * 
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+/**
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
@@ -13,23 +22,22 @@ import org.springframework.stereotype.Component;
 public class LocationPrescriptionRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(Prescription prescription) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription) throws PharmacyBusinessException {
 		
 		if (prescription == null) {
-			throw new PharmacyBusinessException(" Invalid prescriprion argument");
+			throw new PharmacyBusinessException("pharmacyapi.invalid.prescription");
 		}
-		Location location = prescription.getLocation();
+		final Location location = prescription.getLocation();
 		
 		if (location == null) {
 			
-			throw new PharmacyBusinessException("Invalid Prescription Location argument " + prescription);
+			throw new PharmacyBusinessException("pharmacyapi.invalid.prescription.location");
 		}
-		Location found = Context.getLocationService().getLocationByUuid(location.getUuid());
+		final Location found = Context.getLocationService().getLocationByUuid(location.getUuid());
 		
 		if (found == null) {
 			
-			throw new PharmacyBusinessException("Location with uuid '" + prescription.getLocation().getUuid()
-			        + "' not found");
+			throw new PharmacyBusinessException("pharmacyapi.location.not.found", prescription.getLocation().getUuid());
 		}
 	}
 }
