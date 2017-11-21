@@ -490,6 +490,11 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 					DispensationItem dispensationItem = new DispensationItem();
 
 					DrugOrder drugOrder = this.dispensationDAO.findDrugOrderByOrderUuid(obs.getOrder().getUuid());
+
+					if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
+                        drugOrder = (DrugOrder) drugOrder.getPreviousOrder();
+                    }
+                    
 					dispensationItem.setDrugOrder(drugOrder);
 					dispensationItem.setQuantityDispensed(obs.getValueNumeric());
 					dispensationItem.setDateOfNextPickUp(obs.getValueDatetime());
