@@ -507,6 +507,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			final List<DispensationItem> dispensationItems = new ArrayList<>();
 			for (final Obs obs : fila.getAllObs()) {
 				
+				if (arvDrugConcept.equals(obs.getConcept())) {
+					final DispensationItem dispensationItem = new DispensationItem();
 					DrugOrder drugOrder = this.dispensationDAO.findDrugOrderByOrderUuid(obs.getOrder().getUuid());
 					if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
 						drugOrder = (DrugOrder) drugOrder.getPreviousOrder();
