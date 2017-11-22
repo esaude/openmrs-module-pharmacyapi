@@ -9,15 +9,21 @@
  */
 package org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service;
 
+import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
+import org.openmrs.Form;
+import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.dao.PharmacyHeuristicDAO;
 
 public interface PharmacyHeuristicService extends OpenmrsService {
@@ -30,6 +36,15 @@ public interface PharmacyHeuristicService extends OpenmrsService {
 	
 	Encounter findEncounterByPatientAndEncounterTypeAndOrder(Patient patient, EncounterType encounterType, Order order);
 	
-	List<Obs> findObsByOrder(Order order);
+	Encounter findLastEncounterByPatientAndEncounterTypeAndLocationAndDate(Patient patient, EncounterType encounterType,
+	        Location location, Date encounterDateTime) throws PharmacyBusinessException;
 	
+	Form getFormByPatientAge(Patient patient) throws PharmacyBusinessException;
+	
+	Visit findLastVisitByPatientAndEncounterDate(final Patient patient, Date encounterDate)
+	        throws PharmacyBusinessException;
+	
+	List<Obs> findObservationsByOrder(Order order);
+	
+	void updateOrder(Order order, Concept orderReason);
 }

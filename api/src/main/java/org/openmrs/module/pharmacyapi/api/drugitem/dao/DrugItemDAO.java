@@ -41,10 +41,6 @@ public interface DrugItemDAO {
 	
 	DrugItem findByUuid(String uuid);
 	
-	List<DrugItem> findAll(boolean retired);
-	
-	void save(DrugItem drugItem);
-	
 	DrugItem findByDrugId(Integer drugId) throws EntityNotFoundException;
 	
 	List<DrugItem> findAll(Boolean retired);

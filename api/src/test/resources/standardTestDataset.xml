@@ -329,6 +329,8 @@
   <encounter_role encounter_role_id="1" name="Unknown" description="Unknown encounter role for legacy providers with no encounter role set" creator="1" retired="false" date_created="2011-08-18 14:00:00.0" uuid="a0b03050-c99b-11e0-9572-0800200c9a66" />
   <encounter_type encounter_type_id="1" name="Scheduled" description="Scheduled Visit" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="61ae96f4-6afe-4351-b6f8-cd4fc383cce1"/>
   <encounter_type encounter_type_id="2" name="Emergency" description="Emergency visit" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="07000be2-26b6-4cce-8b40-866d8435b613"/>
+  <encounter_type encounter_type_id="5" name="general" description="general encounter" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="9d0c3be0-10e8-11e5-9009-0242ac110012"/>
+  
   <encounter_type encounter_type_id="6" name="Laboratory" description="Visit to the laboratory" creator="1" date_created="2008-08-15 15:39:55.0" retired="true" retired_by="1" date_retired="2008-08-15 00:00:00.0" retire_reason="for testing" uuid="02c533ab-b74b-4ee4-b6e5-ffb6d09a0ac8"/>
   <provider provider_id="1" person_id="1" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
   <encounter encounter_id="3" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4ac"/>
@@ -456,4 +458,39 @@
   <visit visit_id="5" patient_id="6" visit_type_id="1" date_started="2005-01-01 00:00:00.0" creator="1" date_created="2005-01-01 00:00:00.0" voided="0" uuid="8cfda6ae-6b78-11e0-93c3-18a905e044dc" />
   <visit visit_id="6" patient_id="2" visit_type_id="1" date_started="2005-01-01 00:00:00.0" creator="1" date_created="2005-01-01 00:00:00.0" voided="1" voided_by="1" date_voided="2005-01-01 00:00:00.0" void_reason="no reason" uuid="e1428fea-6b78-11e0-93c3-18a905e044dc" />
   <visit_attribute_type visit_attribute_type_id="1" name="Audit Date" datatype="org.openmrs.customdatatype.datatype.DateDatatype" min_occurs="0" max_occurs="1" creator="1" date_created="2005-01-01 00:00:00.0" retired="0" uuid="8770f6d6-7673-11e0-8f03-001e378eb67e" />
+
+ <form form_id="2" name="Basic Form" version="0.1" build="0" published="0" description="Adult follow up" creator="1" date_created="2005-08-07 00:00:00.0" changed_by="1" date_changed="2007-10-24 14:51:53.0" retired="false" retired_reason="" uuid="e28aa7aa-1d5f-11e0-b929-000c29ad1d07"/>
+ <form form_id="3" name="Basic Form" version="0.1" build="0" published="0" description="pediatric follow up" creator="1" date_created="2005-08-07 00:00:00.0" changed_by="1" date_changed="2007-10-24 14:51:53.0" retired="false" retired_reason="" uuid="e28ac028-1d5f-11e0-b929-000c29ad1d07"/>
+ <form form_id="4" name="Basic Form" version="0.1" build="0" published="0" description="fila" creator="1" date_created="2005-08-07 00:00:00.0" changed_by="1" date_changed="2007-10-24 14:51:53.0" retired="false" retired_reason="" uuid="49857ace-1a92-4980-8313-1067714df151"/>
+   
+  
+ <encounter_type encounter_type_id="100" name="arv follow up Adult" description="arv follow up Adult" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="e278f956-1d5f-11e0-b929-000c29ad1d07"/>
+   
+ <concept concept_id="997" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
+ <concept_name concept_id="997" name="terapeutic plan" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="997" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
+
+ <concept concept_id="998" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d9ee10-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="998" name="arv plan" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="998" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ee10-1d5f-11e0-b929-000carv-plan"/> 
+
+ <concept concept_id="999" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d83d4a-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="999" name="previous anti retroviral drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="999" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d83d4a-1d5f-11e0-b929-000c29ad1d07"/> 
+
+ <concept concept_id="1000" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d74899a-10e8-11e5-9009-0242ac110012"/> 
+ <concept_name concept_id="1000" name="After meals" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1000" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="9d74899a-10e8-11e5-9009-0242ac110012"/> 
+
+ <concept concept_id="1001" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="488e6803-c7db-43b2-8911-8d5d2a8472fd"/> 
+ <concept_name concept_id="1001" name="poc mapping prescriptioin date" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1001" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="488e6803-c7db-43b2-8911-8d5d2a8472fd"/> 
+ 
+ <concept concept_id="1002" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9dc17c1b-7b6d-488e-a38d-505a7b65ec82"/> 
+ <concept_name concept_id="1002" name="TDF+3TC+EFV" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1002" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="9dc17c1b-7b6d-488e-a38d-505a7b65ec82"/> 
+ 
+ <concept concept_id="1003" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
+ <concept_name concept_id="1003" name="first line" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
+ 
+ <concept concept_id="1003" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
+ <concept_name concept_id="1003" name="first line" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
+ 
+ <concept concept_id="1004" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="1004" name="start drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
+ 	
 </dataset>

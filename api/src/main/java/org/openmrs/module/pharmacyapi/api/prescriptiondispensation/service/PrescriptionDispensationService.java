@@ -8,7 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service;
 
@@ -19,7 +19,6 @@ import org.openmrs.User;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
-import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation;
 
@@ -32,15 +31,15 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	
 	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
 	
-	PrescriptionDispensation savePrescriptionDispensation(Patient patient, Encounter prescription, Encounter dispensation);
+	PrescriptionDispensation savePrescriptionDispensation(Patient patient, Encounter prescription,
+	        Encounter dispensation);
 	
 	void updatePrescriptionDispensation(PrescriptionDispensation prescriptionDispensation);
 	
 	void retire(User user, PrescriptionDispensation prescriptionDispensation, String reason)
 	        throws PharmacyBusinessException;
 	
-	public boolean isArvDrug(final PrescriptionItem prescription, final DrugOrder drugOrder)
-	        throws PharmacyBusinessException;
+	public boolean isArvDrug(final DrugOrder drugOrder) throws PharmacyBusinessException;
 	
 	PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
 	        throws PharmacyBusinessException;

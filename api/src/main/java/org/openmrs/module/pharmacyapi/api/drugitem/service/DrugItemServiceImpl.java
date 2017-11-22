@@ -33,11 +33,6 @@ public class DrugItemServiceImpl extends BaseOpenmrsService implements DrugItemS
 	}
 	
 	@Override
-	public void saveDrugItem(final DrugItem drugItem) {
-		this.drugItemDAO.save(drugItem);
-	}
-	
-	@Override
 	public DrugItem findDrugItemByUuid(final String uuid) {
 		return this.drugItemDAO.findByUuid(uuid);
 	}
@@ -48,7 +43,7 @@ public class DrugItemServiceImpl extends BaseOpenmrsService implements DrugItemS
 	}
 	
 	@Override
-	public DrugItem findDrugItemByDrugId(Integer drugId) throws PharmacyBusinessException {
+	public DrugItem findDrugItemByDrugId(final Integer drugId) throws PharmacyBusinessException {
 		return this.drugItemDAO.findByDrugId(drugId);
 	}
 }

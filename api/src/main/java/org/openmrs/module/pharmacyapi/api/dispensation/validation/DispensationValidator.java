@@ -8,11 +8,12 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,9 +29,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DispensationValidator {
 	
-	private List<IDispensationRuleValidation> rulesForCreateDispensation = new ArrayList<>();
+	private final List<IDispensationRuleValidation> rulesForCreateDispensation = new ArrayList<>();
 	
-	private List<IDispensationRuleValidation> rulesForCancellationDispensation = new ArrayList<>();
+	private final List<IDispensationRuleValidation> rulesForCancellationDispensation = new ArrayList<>();
 	
 	@Autowired
 	private LocationDispensationRule locationRule;
@@ -50,31 +51,32 @@ public class DispensationValidator {
 	@PostConstruct
 	private void initializeRules() {
 		
-		rulesForCreateDispensation.add(patientRule);
-		rulesForCreateDispensation.add(locationRule);
-		rulesForCreateDispensation.add(providerRule);
-		rulesForCreateDispensation.add(dispensationItemCreationRule);
+		this.rulesForCreateDispensation.add(this.patientRule);
+		this.rulesForCreateDispensation.add(this.locationRule);
+		this.rulesForCreateDispensation.add(this.providerRule);
+		this.rulesForCreateDispensation.add(this.dispensationItemCreationRule);
 		
-		rulesForCancellationDispensation.add(patientRule);
-		rulesForCancellationDispensation.add(providerRule);
-		rulesForCancellationDispensation.add(locationRule);
-		rulesForCancellationDispensation.add(dispensationItemCancelationRule);
+		this.rulesForCancellationDispensation.add(this.patientRule);
+		this.rulesForCancellationDispensation.add(this.providerRule);
+		this.rulesForCancellationDispensation.add(this.locationRule);
+		this.rulesForCancellationDispensation.add(this.dispensationItemCancelationRule);
 		
 	}
 	
-	public void validateCreation(Dispensation dispensation) throws PharmacyBusinessException {
+	public void validateCreation(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
 		
-		for (IDispensationRuleValidation rule : rulesForCreateDispensation) {
+		for (final IDispensationRuleValidation rule : this.rulesForCreateDispensation) {
 			
-			rule.validate(dispensation);
+			rule.validate(dispensation, date);
 		}
 	}
 	
-	public void validateCancellation(Dispensation dispensation) throws PharmacyBusinessException {
+	public void validateCancellation(final Dispensation dispensation, final Date date)
+	        throws PharmacyBusinessException {
 		
-		for (IDispensationRuleValidation rule : rulesForCancellationDispensation) {
+		for (final IDispensationRuleValidation rule : this.rulesForCancellationDispensation) {
 			
-			rule.validate(dispensation);
+			rule.validate(dispensation, date);
 		}
 	}
 }

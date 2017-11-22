@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+
+  <encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a1"/>
+  <encounter encounter_id="1001" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2010-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a2"/>
+  <encounter encounter_id="1002" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2016-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a3"/>
+  <encounter encounter_id="1003" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2017-11-09 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a4"/>
+  <encounter encounter_id="1004" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2017-11-09 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a5"/>
+  <encounter encounter_id="1005" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2017-11-09 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4a6"/> 
+
+</dataset> 

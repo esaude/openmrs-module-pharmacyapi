@@ -8,11 +8,12 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrescriptionValidator {
 	
-	private List<IPrescriptionValidationRule> rulesForCreatingPrescription = new ArrayList<>();
+	private final List<IPrescriptionValidationRule> rulesForCreatingPrescription = new ArrayList<>();
 	
 	@Autowired
 	private PatientPrescriptionRule patientRule;
@@ -42,21 +43,25 @@ public class PrescriptionValidator {
 	@Autowired
 	private PrescriptionItemRule prescriptionItemRule;
 	
+	@Autowired
+	private PrescriptionExpirationDateteRule prescriptionExpirationDateteRule;
+	
 	@PostConstruct
 	private void initializeRules() {
 		
-		rulesForCreatingPrescription.add(patientRule);
-		rulesForCreatingPrescription.add(ProviderRule);
-		rulesForCreatingPrescription.add(locationRule);
-		rulesForCreatingPrescription.add(prescriptionDateRule);
-		rulesForCreatingPrescription.add(prescriptionItemRule);
+		this.rulesForCreatingPrescription.add(this.patientRule);
+		this.rulesForCreatingPrescription.add(this.ProviderRule);
+		this.rulesForCreatingPrescription.add(this.locationRule);
+		this.rulesForCreatingPrescription.add(this.prescriptionDateRule);
+		this.rulesForCreatingPrescription.add(this.prescriptionItemRule);
+		this.rulesForCreatingPrescription.add(this.prescriptionExpirationDateteRule);
 	}
 	
-	public void validateCreation(Prescription prescription) throws PharmacyBusinessException {
+	public void validateCreation(final Prescription prescription, final Date date) throws PharmacyBusinessException {
 		
-		for (IPrescriptionValidationRule rule : rulesForCreatingPrescription) {
+		for (final IPrescriptionValidationRule rule : this.rulesForCreatingPrescription) {
 			
-			rule.validate(prescription);
+			rule.validate(prescription, date);
 		}
 	}
 }

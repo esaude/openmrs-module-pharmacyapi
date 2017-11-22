@@ -8,11 +8,9 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao;
-
-import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
@@ -64,14 +62,8 @@ public interface PrescriptionDispensationDAO {
 	
 	PrescriptionDispensation findByUuid(String uuid);
 	
-	List<PrescriptionDispensation> findByPrescription(Encounter prescription);
-	
 	PrescriptionDispensation findByDispensationEncounter(Encounter dispensation) throws PharmacyBusinessException;
 	
 	PrescriptionDispensation findByFila(Encounter fila) throws PharmacyBusinessException;
-	
-	List<PrescriptionDispensation> findByPatientUuid(String patientUuid);
-	
-	PrescriptionDispensation findLastByPrescription(Encounter prescription);
 	
 }

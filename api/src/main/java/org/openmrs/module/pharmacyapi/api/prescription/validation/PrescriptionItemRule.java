@@ -8,10 +8,11 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,15 +34,15 @@ import org.springframework.stereotype.Component;
 public class PrescriptionItemRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(Prescription prescription) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
 		
 		if (prescription == null) {
 			throw new PharmacyBusinessException("Invalid Prescription Argument");
 		}
 		
-		Set<String> regimesUuid = new TreeSet<>();
+		final Set<String> regimesUuid = new TreeSet<>();
 		
-		for (PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
+		for (final PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
 			
 			if (prescriptionItem.getDrugOrder() == null) {
 				
@@ -49,56 +50,56 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 				        "Cannot create Prescription for prescriptionItem without drugOrder " + prescriptionItem);
 			}
 			
-			if (prescriptionItem.getDrugOrder().getDrug() == null
+			if ((prescriptionItem.getDrugOrder().getDrug() == null)
 			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDrug().getUuid())) {
 				
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem without Drug " + prescriptionItem);
 			}
 			
-			if (prescriptionItem.getDrugOrder().getDose() == null || prescriptionItem.getDrugOrder().getDose().isNaN()
-			        || prescriptionItem.getDrugOrder().getDose().doubleValue() <= 0) {
+			if ((prescriptionItem.getDrugOrder().getDose() == null) || prescriptionItem.getDrugOrder().getDose().isNaN()
+			        || (prescriptionItem.getDrugOrder().getDose().doubleValue() <= 0)) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Dose "
 				                + prescriptionItem.getDrugOrder().getDose());
 			}
 			
-			if (prescriptionItem.getDrugOrder().getDoseUnits() == null
+			if ((prescriptionItem.getDrugOrder().getDoseUnits() == null)
 			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDoseUnits().getUuid())) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid dose Units "
 				                + prescriptionItem.getDrugOrder().getDoseUnits());
 			}
 			
-			if (prescriptionItem.getDrugOrder().getDuration() == null
-			        || prescriptionItem.getDrugOrder().getDuration().intValue() <= 0) {
+			if ((prescriptionItem.getDrugOrder().getDuration() == null)
+			        || (prescriptionItem.getDrugOrder().getDuration().intValue() <= 0)) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration "
 				                + prescriptionItem.getDrugOrder().getDuration());
 			}
 			
-			if (prescriptionItem.getDrugOrder().getDurationUnits() == null
+			if ((prescriptionItem.getDrugOrder().getDurationUnits() == null)
 			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDurationUnits().getUuid())) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration Units "
 				                + prescriptionItem.getDrugOrder().getDurationUnits());
 			}
 			
-			if (prescriptionItem.getDrugOrder().getFrequency() == null
+			if ((prescriptionItem.getDrugOrder().getFrequency() == null)
 			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getFrequency().getUuid())) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Frequency "
 				                + prescriptionItem.getDrugOrder().getFrequency());
 			}
 			
-			if (prescriptionItem.getDrugOrder().getQuantityUnits() == null
+			if ((prescriptionItem.getDrugOrder().getQuantityUnits() == null)
 			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getQuantityUnits().getUuid())) {
 				throw new PharmacyBusinessException(
 				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Quantity Units "
 				                + prescriptionItem.getDrugOrder().getQuantityUnits());
 			}
 			
-			if (prescriptionItem.getRegime() != null
+			if ((prescriptionItem.getRegime() != null)
 			        && StringUtils.isNotBlank(prescriptionItem.getRegime().getUuid())) {
 				regimesUuid.add(prescriptionItem.getRegime().getUuid());
 			}
@@ -110,21 +111,21 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 			        + StringUtils.join(prescription.getPrescriptionItems(), "|"));
 		}
 		
-		Concept regime = prescription.getRegime();
+		final Concept regime = prescription.getRegime();
 		if (regime != null) {
 			
-			Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
-			PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
+			final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
+			final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
 			
-			List<Prescription> existingsPrescriptions = prescriptionService
-			        .findPrescriptionsByPatientAndActiveStatus(patient);
+			final List<Prescription> existingsPrescriptions = prescriptionService
+			        .findActivePrescriptionsByPatient(patient, date);
 			
-			for (Prescription existingPrescription : existingsPrescriptions) {
+			for (final Prescription existingPrescription : existingsPrescriptions) {
 				
 				if (existingPrescription.getRegime() != null) {
 					
 					throw new PharmacyBusinessException("Cannot create a new ARV Prescription for Patient "
-					        + getFormattedPatientToDisplay(patient) + " while exist Active ARV prescription "
+					        + this.getFormattedPatientToDisplay(patient) + " while exist Active ARV prescription "
 					        + StringUtils.join(existingsPrescriptions, "|"));
 					
 				}
@@ -133,8 +134,9 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 		
 	}
 	
-	private String getFormattedPatientToDisplay(Patient patient) {
-		return ((patient.getPatientIdentifier() != null) ? patient.getPatientIdentifier().getIdentifier() + " - "
-		        + patient.getPersonName().getFullName() : patient.getGivenName() + " " + patient.getFamilyName());
+	private String getFormattedPatientToDisplay(final Patient patient) {
+		return ((patient.getPatientIdentifier() != null)
+		        ? patient.getPatientIdentifier().getIdentifier() + " - " + patient.getPersonName().getFullName()
+		        : patient.getGivenName() + " " + patient.getFamilyName());
 	}
 }

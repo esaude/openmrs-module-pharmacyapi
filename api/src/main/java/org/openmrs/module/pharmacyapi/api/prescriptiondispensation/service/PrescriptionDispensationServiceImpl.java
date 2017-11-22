@@ -8,7 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service;
 
@@ -31,7 +31,6 @@ import org.openmrs.module.pharmacyapi.api.drugitem.model.DrugItem;
 import org.openmrs.module.pharmacyapi.api.drugitem.service.DrugItemService;
 import org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
-import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao.PrescriptionDispensationDAO;
 import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,26 +46,27 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	private PharmacyHeuristicService pharmacyHeuristicService;
 	
 	@Override
-	public void setPrescriptionDispensationDAO(PrescriptionDispensationDAO prescriptionDispensationDAO) {
+	public void setPrescriptionDispensationDAO(final PrescriptionDispensationDAO prescriptionDispensationDAO) {
 		
 		this.prescriptionDispensationDAO = prescriptionDispensationDAO;
 	}
 	
 	@Override
-	public void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService) {
+	public void setPharmacyHeuristicService(final PharmacyHeuristicService pharmacyHeuristicService) {
 		
 		this.pharmacyHeuristicService = pharmacyHeuristicService;
 	}
 	
 	@Override
-	public PrescriptionDispensation savePrescriptionDispensation(Patient patient, Encounter prescription,
-	        Encounter dispensation) {
+	public PrescriptionDispensation savePrescriptionDispensation(final Patient patient, final Encounter prescription,
+	        final Encounter dispensation) {
 		
-		PrescriptionDispensation prescriptionDispensation = new PrescriptionDispensation(patient, prescription, dispensation);
+		final PrescriptionDispensation prescriptionDispensation = new PrescriptionDispensation(patient, prescription,
+		        dispensation);
 		
 		// TODO: Should creates a Component validator to move the rules
 		// validator a put the mensagem validator in a resource bundle
-		if (patient == null || prescription == null || dispensation == null) {
+		if ((patient == null) || (prescription == null) || (dispensation == null)) {
 			throw new IllegalArgumentException("The arguments passed for dispensation is not valid ");
 		}
 		
@@ -82,38 +82,34 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	}
 	
 	@Override
-	public boolean isArvDrug(final PrescriptionItem prescriptionItem, final DrugOrder drugOrder)
-	        throws PharmacyBusinessException {
+	public boolean isArvDrug(final DrugOrder drugOrder) throws PharmacyBusinessException {
 		
-		Concept regime = getArvRegimeByEncounterDrugOrder(drugOrder);
+		final Concept regime = this.getArvRegimeByEncounterDrugOrder(drugOrder);
 		
 		if (regime != null) {
 			
-			DrugItem drugItem = Context.getService(DrugItemService.class).findDrugItemByDrugId(
-			    drugOrder.getDrug().getDrugId());
-			
+			final DrugItem drugItem = Context.getService(DrugItemService.class)
+			        .findDrugItemByDrugId(drugOrder.getDrug().getDrugId());
 			try {
 				Context.getService(DrugRegimeService.class).findDrugRegimeByRegimeAndDrugItem(regime, drugItem);
-				
-				prescriptionItem.setRegime(regime);
 				return Boolean.TRUE;
-				
 			}
-			catch (EntityNotFoundException e) {}
+			catch (final EntityNotFoundException e) {}
 		}
 		return Boolean.FALSE;
 	}
 	
-	private Concept getArvRegimeByEncounterDrugOrder(DrugOrder drugOrder) {
+	private Concept getArvRegimeByEncounterDrugOrder(final DrugOrder drugOrder) {
 		
-		Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
-		    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+		final Concept arvConceptQuestion = Context.getConceptService()
+		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 		
-		Encounter encounter = Context.getEncounterService().getEncounter(drugOrder.getEncounter().getEncounterId());
+		final Encounter encounter = Context.getEncounterService()
+		        .getEncounter(drugOrder.getEncounter().getEncounterId());
 		
-		Set<Obs> allObs = encounter.getAllObs();
+		final Set<Obs> allObs = encounter.getAllObs();
 		
-		for (Obs obs : allObs) {
+		for (final Obs obs : allObs) {
 			
 			if (arvConceptQuestion.equals(obs.getConcept())) {
 				
@@ -125,25 +121,26 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	}
 	
 	@Override
-	public PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
+	public PrescriptionDispensation findPrescriptionDispensationByDispensation(final Encounter dispensation)
 	        throws PharmacyBusinessException {
 		
 		return this.prescriptionDispensationDAO.findByDispensationEncounter(dispensation);
 	}
 	
-	public boolean isTheSameConceptAndSameDrug(final DrugOrder order, Obs observation) {
+	public boolean isTheSameConceptAndSameDrug(final DrugOrder order, final Obs observation) {
 		
-		Drug obsDrug = this.pharmacyHeuristicService.findDrugByOrderUuid(observation.getOrder().getUuid());
+		final Drug obsDrug = this.pharmacyHeuristicService.findDrugByOrderUuid(observation.getOrder().getUuid());
 		
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
 		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
 	}
 	
 	@Override
-	public void retire(User user, PrescriptionDispensation prescriptionDispensation, String reason)
+	public void retire(final User user, final PrescriptionDispensation prescriptionDispensation, final String reason)
 	        throws PharmacyBusinessException {
 		
-		PrescriptionDispensation found = this.prescriptionDispensationDAO.findByUuid(prescriptionDispensation.getUuid());
+		final PrescriptionDispensation found = this.prescriptionDispensationDAO
+		        .findByUuid(prescriptionDispensation.getUuid());
 		
 		found.setRetired(true);
 		found.setRetireReason(reason);
@@ -154,12 +151,13 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	}
 	
 	@Override
-	public void updatePrescriptionDispensation(PrescriptionDispensation prescriptionDispensation) {
+	public void updatePrescriptionDispensation(final PrescriptionDispensation prescriptionDispensation) {
 		this.prescriptionDispensationDAO.update(prescriptionDispensation);
 	}
 	
 	@Override
-	public PrescriptionDispensation findPrescriptionDispensationByFila(Encounter fila) throws PharmacyBusinessException {
+	public PrescriptionDispensation findPrescriptionDispensationByFila(final Encounter fila)
+	        throws PharmacyBusinessException {
 		
 		return this.prescriptionDispensationDAO.findByFila(fila);
 	}

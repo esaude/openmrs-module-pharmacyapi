@@ -10,6 +10,7 @@
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -114,7 +115,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	public Prescription save(final Prescription delegate) {
 		
 		try {
-			Context.getService(PrescriptionService.class).createPrescription(delegate);
+			Context.getService(PrescriptionService.class).createPrescription(delegate, new Date());
 		}
 		catch (final PharmacyBusinessException e) {
 			
@@ -157,15 +158,18 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			return new EmptySearchResult();
 		}
 		
-		if (StringUtils.isNotBlank(findAllPrescribed)) {
+		try {
 			
-			return this.findAllPrescribed(context, patient, findAllPrescribed);
-		}
-		
-		if (StringUtils.isNotBlank(findAllActive)) {
+			if (StringUtils.isNotBlank(findAllPrescribed)) {
+				return this.findAllPrescribed(context, patient, findAllPrescribed);
+			}
 			
-			return this.findAllActive(context, patient, findAllActive);
+			if (StringUtils.isNotBlank(findAllActive)) {
+				return this.findAllActive(context, patient, findAllActive);
+			}
+			
 		}
+		catch (final PharmacyBusinessException e) {}
 		
 		return new EmptySearchResult();
 	}
@@ -213,7 +217,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	}
 	
 	private PageableResult findAllPrescribed(final RequestContext context, final Patient patient,
-	        final String findAllPrescribed) {
+	        final String findAllPrescribed) throws PharmacyBusinessException {
 		
 		Boolean doSearchAllPrecribed = Boolean.FALSE;
 		
@@ -225,7 +229,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		
 		if (doSearchAllPrecribed) {
 			final List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
-			        .findAllPrescriptionsByPatient(patient);
+			        .findAllPrescriptionsByPatient(patient, new Date());
 			
 			return new NeedsPaging<>(prescriptions, context);
 		}
@@ -234,7 +238,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	}
 	
 	private PageableResult findAllActive(final RequestContext context, final Patient patient,
-	        final String findAllActive) {
+	        final String findAllActive) throws PharmacyBusinessException {
 		
 		Boolean doSearchAllActive = Boolean.FALSE;
 		
@@ -246,7 +250,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 		
 		if (doSearchAllActive) {
 			final List<Prescription> prescriptions = Context.getService(PrescriptionService.class)
-			        .findPrescriptionsByPatientAndActiveStatus(patient);
+			        .findActivePrescriptionsByPatient(patient, new Date());
 			
 			return new NeedsPaging<>(prescriptions, context);
 		}

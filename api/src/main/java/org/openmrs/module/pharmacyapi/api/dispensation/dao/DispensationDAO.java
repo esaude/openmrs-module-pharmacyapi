@@ -29,7 +29,7 @@ public interface DispensationDAO {
 	
 	void setSessionFactory(SessionFactory sessionFactory);
 	
-	List<DrugOrder> findNotDispensedDrugOrdersByPatient(Patient patient, EncounterType encounterType);
+	List<DrugOrder> findNotDispensedDrugOrdersByPatient(Patient patient, EncounterType... encounterType);
 	
 	List<DrugOrder> findDispensedDrugOrdersByPatient(Patient patient);
 	
@@ -38,6 +38,7 @@ public interface DispensationDAO {
 	
 	DrugOrder findDrugOrderByOrderUuid(String orderUuid);
 	
-	List<DrugOrder> findDrugOrderByEncounterAndOrderActionAndVoided(Encounter encounter, Action orderAction, boolean voided);
+	List<DrugOrder> findDrugOrderByEncounterAndOrderActionAndVoided(Encounter encounter, Action orderAction,
+	        boolean voided);
 	
 }

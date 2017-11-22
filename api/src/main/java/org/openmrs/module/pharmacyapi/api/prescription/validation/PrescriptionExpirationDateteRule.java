@@ -13,33 +13,28 @@
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
 import java.util.Date;
+import java.util.List;
 
-import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LocationPrescriptionRule implements IPrescriptionValidationRule {
+public class PrescriptionExpirationDateteRule implements IPrescriptionValidationRule {
 	
 	@Override
 	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
 		
-		if (prescription == null) {
-			throw new PharmacyBusinessException("pharmacyapi.invalid.prescription");
-		}
-		final Location location = prescription.getLocation();
-		
-		if (location == null) {
+		if (prescription.isArv()) {
 			
-			throw new PharmacyBusinessException("pharmacyapi.invalid.prescription.location");
-		}
-		final Location found = Context.getLocationService().getLocationByUuid(location.getUuid());
-		
-		if (found == null) {
-			
-			throw new PharmacyBusinessException("pharmacyapi.location.not.found", prescription.getLocation().getUuid());
+			final List<Prescription> arvNotExpiredPrescriptions = Context.getService(PrescriptionService.class)
+			        .findNotExpiredArvPrescriptions(prescription.getPatient(), date);
+			if (!arvNotExpiredPrescriptions.isEmpty()) {
+				throw new PharmacyBusinessException(
+				        "pharmacyapi.prescription.cannot.be.created.due.exisiting.active.arv.prescription");
+			}
 		}
 	}
 }

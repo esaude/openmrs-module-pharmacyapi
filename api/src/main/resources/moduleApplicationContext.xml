@@ -30,25 +30,15 @@
 		<property name="target">
 			<bean
 				class="org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServiceImpl">
-				<property name="conceptService">
-					<ref bean="conceptService" />
-				</property>
 				<property name="dispensationDAO">
 					<ref bean="dispensationDAO" />
-				</property>
-				<property name="dbSessionManager">
-					<ref bean="dbSessionManager" />
 				</property>
 				<property name="encounterService">
 					<ref bean="encounterService" />
 				</property>
-				<property name="prescriptionDispensationService">
-					<ref bean="prescriptionDispensationService" />
-				</property>
 				<property name="pharmacyHeuristicService">
 					<ref bean="pharmacyHeuristicService" />
 				</property>
-				
 			</bean>
 		</property>
 		<property name="preInterceptors">

@@ -8,9 +8,11 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 /**
- * 
+ *
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
+
+import java.util.Date;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -22,13 +24,13 @@ import org.springframework.stereotype.Component;
 public class PatientDispensationRule implements IDispensationRuleValidation {
 	
 	@Override
-	public void validate(Dispensation dispensation) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			throw new PharmacyBusinessException(" Invalid prescriprion argument");
 		}
 		
-		Patient patient = Context.getPatientService().getPatientByUuid(dispensation.getPatientUuid());
+		final Patient patient = Context.getPatientService().getPatientByUuid(dispensation.getPatientUuid());
 		
 		if (patient == null) {
 			throw new PharmacyBusinessException("Patient not found for given uuid " + dispensation.getPatientUuid());

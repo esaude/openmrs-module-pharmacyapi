@@ -42,24 +42,8 @@ public class DrugItemDAOImpl implements DrugItemDAO {
 		return (DrugItem) query.uniqueResult();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<DrugItem> findAll(final boolean retired) {
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugItem.class, "drugItem");
-		
-		if (!retired) {
-			searchCriteria.add(Restrictions.eq("drugItem.retired", false));
-		}
-		return searchCriteria.list();
-	}
-	
-	@Override
-	public void save(final DrugItem drugItem) {
-		this.sessionFactory.getCurrentSession().saveOrUpdate(drugItem);
-	}
-	
-	@Override
-	public DrugItem findByDrugId(Integer drugId) throws EntityNotFoundException {
+	public DrugItem findByDrugId(final Integer drugId) throws EntityNotFoundException {
 		
 		final Query query = this.sessionFactory.getCurrentSession().getNamedQuery(DrugItemDAO.QUERY_NAME.findByDrugId)
 		        .setParameter("drugId", drugId);
@@ -77,7 +61,8 @@ public class DrugItemDAOImpl implements DrugItemDAO {
 	@Override
 	public List<DrugItem> findAll(final Boolean retired) {
 		
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugItem.class, "drugItem");
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugItem.class,
+		    "drugItem");
 		
 		if (!retired) {
 			searchCriteria.add(Restrictions.eq("drugItem.retired", false));

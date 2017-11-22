@@ -12,6 +12,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.dao;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +23,9 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
-import org.openmrs.Patient;
+import org.openmrs.Order;
 import org.openmrs.Order.Action;
+import org.openmrs.Patient;
 import org.openmrs.module.pharmacyapi.api.common.util.DateUtils;
 
 /**
@@ -40,36 +42,43 @@ public class DispensationDAOImpl implements DispensationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DrugOrder> findNotDispensedDrugOrdersByPatient(Patient patient, EncounterType encounterType) {
+	public List<DrugOrder> findNotDispensedDrugOrdersByPatient(final Patient patient,
+	        final EncounterType... encounterTypes) {
 		
-		Query query = this.sessionFactory
-		        .getCurrentSession()
-		        .createQuery(
-		            "select o from DrugOrder o where o.patient = :patient and o.encounter.encounterType = :encounterType and o.voided is false and o.dateStopped is null and o.action <> 'DISCONTINUE' ");
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Order.class,
+		    "drugOrder");
+		searchCriteria.add(Restrictions.eq("drugOrder.patient", patient));
+		searchCriteria.createAlias("drugOrder.encounter", "encounter");
+		searchCriteria.add(Restrictions.in("encounter.encounterType", encounterTypes));
+		searchCriteria.add(Restrictions.eq("drugOrder.voided", false));
+		searchCriteria.add(Restrictions.isNull("drugOrder.dateStopped"));
+		searchCriteria.add(Restrictions
+		        .not(Restrictions.in("drugOrder.action", Arrays.asList(Action.REVISE, Action.DISCONTINUE))));
 		
-		return query.setParameter("patient", patient).setParameter("encounterType", encounterType).list();
+		return searchCriteria.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DrugOrder> findDispensedDrugOrdersByPatient(Patient patient) {
+	public List<DrugOrder> findDispensedDrugOrdersByPatient(final Patient patient) {
 		
-		String hql = "select distinct o from DrugOrder o where o.patient = :patient and o.voided is false "
+		final String hql = "select distinct o from DrugOrder o where o.patient = :patient and o.voided is false "
 		        + " and o.orderId = ( select max(dispensationDrugOrder.orderId) "
 		        + "	from PrescriptionDispensation pd "
 		        + " join pd.dispensation dispensation, DrugOrder dispensationDrugOrder where dispensationDrugOrder.encounter = dispensation and dispensationDrugOrder.drug = o.drug and pd.retired is false and dispensationDrugOrder.voided is false) ";
 		
-		Query query = this.sessionFactory.getCurrentSession().createQuery(hql);
+		final Query query = this.sessionFactory.getCurrentSession().createQuery(hql);
 		
 		return query.setParameter("patient", patient).list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Encounter> findEncountersByPatientAndEncounterTypeAndDateInterval(Patient patient,
-	        EncounterType encounterType, Date startDate, Date endDate) {
+	public List<Encounter> findEncountersByPatientAndEncounterTypeAndDateInterval(final Patient patient,
+	        final EncounterType encounterType, final Date startDate, final Date endDate) {
 		
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Encounter.class, "encounter");
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Encounter.class,
+		    "encounter");
 		searchCriteria.add(Restrictions.eq("encounter.patient", patient));
 		searchCriteria.add(Restrictions.eq("encounter.encounterType", encounterType));
 		searchCriteria.add(Restrictions.eq("encounter.voided", false));
@@ -80,8 +89,9 @@ public class DispensationDAOImpl implements DispensationDAO {
 	}
 	
 	@Override
-	public DrugOrder findDrugOrderByOrderUuid(String orderUuid) {
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugOrder.class, "drugOrder");
+	public DrugOrder findDrugOrderByOrderUuid(final String orderUuid) {
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugOrder.class,
+		    "drugOrder");
 		searchCriteria.add(Restrictions.eq("drugOrder.uuid", orderUuid));
 		
 		return (DrugOrder) searchCriteria.uniqueResult();
@@ -89,9 +99,10 @@ public class DispensationDAOImpl implements DispensationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DrugOrder> findDrugOrderByEncounterAndOrderActionAndVoided(Encounter encounter, Action orderAction,
-	        boolean voided) {
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugOrder.class, "drugOrder");
+	public List<DrugOrder> findDrugOrderByEncounterAndOrderActionAndVoided(final Encounter encounter,
+	        final Action orderAction, final boolean voided) {
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugOrder.class,
+		    "drugOrder");
 		searchCriteria.add(Restrictions.eq("drugOrder.encounter", encounter));
 		searchCriteria.add(Restrictions.eq("drugOrder.action", orderAction));
 		searchCriteria.add(Restrictions.eq("drugOrder.voided", voided));

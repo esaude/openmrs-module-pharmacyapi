@@ -12,10 +12,10 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Patient;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -23,33 +23,29 @@ import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
-import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
-import org.openmrs.module.pharmacyapi.db.DbSessionManager;
 
 /**
  * @author Stélio Moiane
  */
 public interface PrescriptionService extends OpenmrsService {
 	
-	void setConceptService(final ConceptService conceptService);
-	
 	void setEncounterService(EncounterService encounterService);
 	
 	void setDispensationDAO(DispensationDAO dispensationDAO);
 	
-	void setDbSessionManager(final DbSessionManager dbSessionManager);
-	
-	void setPrescriptionDispensationService(PrescriptionDispensationService prescriptionDispensationService);
-	
 	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
 	
-	Prescription createPrescription(Prescription prescription) throws PharmacyBusinessException;
+	Prescription createPrescription(Prescription prescription, final Date date) throws PharmacyBusinessException;
 	
-	List<Prescription> findAllPrescriptionsByPatient(final Patient patient);
+	List<Prescription> findAllPrescriptionsByPatient(final Patient patient, Date actualDate)
+	        throws PharmacyBusinessException;
 	
-	List<Prescription> findPrescriptionsByPatientAndActiveStatus(final Patient patient);
+	List<Prescription> findActivePrescriptionsByPatient(final Patient patient, Date actualDate)
+	        throws PharmacyBusinessException;
 	
 	void cancelPrescriptionItem(PrescriptionItem prescriptionItem, String cancelationReason)
 	        throws PharmacyBusinessException;
 	
+	List<Prescription> findNotExpiredArvPrescriptions(Patient patient, Date actualDate)
+	        throws PharmacyBusinessException;
 }

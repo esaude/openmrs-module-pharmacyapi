@@ -7,21 +7,13 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-/**
- *
- */
-package org.openmrs.module.pharmacyapi.api.common.validation;
+package org.openmrs.module.pharmacyapi.api.common.util;
 
-import java.util.Date;
-
-import org.openmrs.OpenmrsObject;
-import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
-
-/**
- *
- */
-public interface IValidationRule<T extends OpenmrsObject> {
+public interface MappedForms {
 	
-	public void validate(T t, Date date) throws PharmacyBusinessException;
+	String ADULT_FOLLOW_UP = "e28aa7aa-1d5f-11e0-b929-000c29ad1d07";
 	
+	String PEDIATRICS_FOLLOW_UP = "e28ac028-1d5f-11e0-b929-000c29ad1d07";
+	
+	String FILA = "49857ace-1a92-4980-8313-1067714df151";
 }

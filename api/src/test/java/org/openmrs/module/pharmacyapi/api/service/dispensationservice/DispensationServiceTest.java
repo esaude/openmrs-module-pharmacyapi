@@ -10,23 +10,20 @@
 /*
  * Friends in Global Health - FGH © 2016
  */
-package org.openmrs.module.pharmacyapi.api.common.util;
+package org.openmrs.module.pharmacyapi.api.service.dispensationservice;
+
+import org.junit.Ignore;
+import org.junit.Test;
+import org.openmrs.module.pharmacyapi.api.util.BaseTest;
 
 /**
  * @author Stélio Moiane
  */
-public interface MappedEncounters {
+public class DispensationServiceTest extends BaseTest {
 	
-	String ARV_FOLLOW_UP_ADULT = "e278f956-1d5f-11e0-b929-000c29ad1d07";
-	
-	String ARV_FOLLOW_UP_CHILD = "e278fce4-1d5f-11e0-b929-000c29ad1d07";
-	
-	String DEFAULT_ENCONTER_ROLE = "a0b03050-c99b-11e0-9572-0800200c9a66";
-	
-	String DISPENSATION_ENCOUNTER_TYPE = "18fd49b7-6c2b-4604-88db-b3eb5b3a6d5f";
-	
-	String FILA_ENCOUNTER_TYPE = "e279133c-1d5f-11e0-b929-000c29ad1d07";
-	
-	String GENERAL_PRESCRIPTION = "9d0c3be0-10e8-11e5-9009-0242ac110012";
-	
+	@Test
+	@Ignore
+	public void shouldDispenseOrdersForNonArvPrescription() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldDispenseOrdersForNonArvPrescription-dataset.xml");
+	}
 }

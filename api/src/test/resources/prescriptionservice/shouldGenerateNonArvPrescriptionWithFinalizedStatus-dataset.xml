@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+
+<encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul0"/>
+<encounter encounter_id="1001" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul1"/>
+ 	
+ <orders order_id="100" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_stopped="2017-11-08 00:00:00.0" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-0001" care_setting="1" encounter_id="1000" />
+ <orders order_id="101" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="DISCONTINUE" previous_order_id ="100" concept_id="88" orderer="1" instructions="2x daily" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-discnt1" care_setting="1" encounter_id="1001" /> 
+ 
+ <orders order_id="102" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_stopped="2017-11-08 00:00:00.0" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-ss01" care_setting="1" encounter_id="1000" />
+ <orders order_id="103" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="DISCONTINUE" previous_order_id ="102" concept_id="88" orderer="1" instructions="2x daily" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-discnt2" care_setting="1" encounter_id="1001" /> 
+  
+ <drug_order order_id="100" drug_inventory_id="2" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" dosing_instructions="9d74899a-10e8-11e5-9009-0242ac110012" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+ <drug_order order_id="101" drug_inventory_id="2" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions"  quantity_units="51" num_refills="10" dispense_as_written="1" />
+ 
+ <drug_order order_id="102" drug_inventory_id="3" dose="325.0" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions" dosing_instructions="9d74899a-10e8-11e5-9009-0242ac110012" route="22" quantity="1.0" quantity_units="51" num_refills="10" dispense_as_written="0" />
+ <drug_order order_id="103" drug_inventory_id="3" dose_units="50" as_needed="false" frequency="1" dosing_type="org.openmrs.SimpleDosingInstructions"  quantity_units="51" num_refills="10" dispense_as_written="1" />
+
+<phm_prescription_dispensation prescription_dispensation_id="1" patient_id ="7" prescription_id="1000" dispensation_id ="1001" uuid="9c67d35a-b86c-43db-9f24-24f7e466ac30" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" />
+
+</dataset> 

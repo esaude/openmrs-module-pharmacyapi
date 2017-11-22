@@ -7,21 +7,16 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-/**
- *
- */
-package org.openmrs.module.pharmacyapi.api.common.validation;
+package org.openmrs.module.pharmacyapi.api.prescription.util;
 
 import java.util.Date;
 
-import org.openmrs.OpenmrsObject;
+import org.openmrs.DrugOrder;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 
-/**
- *
- */
-public interface IValidationRule<T extends OpenmrsObject> {
+public interface PrescriptionItemGenerator {
 	
-	public void validate(T t, Date date) throws PharmacyBusinessException;
+	PrescriptionItem generate(DrugOrder drugOrder, Date creationDate) throws PharmacyBusinessException;
 	
 }
