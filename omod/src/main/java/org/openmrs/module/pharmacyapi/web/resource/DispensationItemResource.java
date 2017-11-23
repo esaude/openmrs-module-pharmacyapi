@@ -1,5 +1,14 @@
 /**
- * 
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+/**
+ *
  */
 package org.openmrs.module.pharmacyapi.web.resource;
 
@@ -27,12 +36,13 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @SubResource(parent = DispensationResource.class, path = "dispensationItem", supportedClass = DispensationItem.class, supportedOpenmrsVersions = {
         "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-public class DispensationItemResource extends DelegatingSubResource<DispensationItem, Dispensation, DispensationResource> {
+public class DispensationItemResource
+        extends DelegatingSubResource<DispensationItem, Dispensation, DispensationResource> {
 	
 	@Override
-	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
 		if (rep instanceof DefaultRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("drugOrder");
 			description.addProperty("quantityDispensed");
 			description.addProperty("dateOfNextPickUp");
@@ -42,7 +52,7 @@ public class DispensationItemResource extends DelegatingSubResource<Dispensation
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (rep instanceof FullRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("drugOrder");
 			description.addProperty("quantityDispensed");
 			description.addProperty("dateOfNextPickUp");
@@ -60,29 +70,29 @@ public class DispensationItemResource extends DelegatingSubResource<Dispensation
 	}
 	
 	@Override
-	public DispensationItem save(DispensationItem arg0) {
+	public DispensationItem save(final DispensationItem arg0) {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public PageableResult doGetAll(Dispensation parent, RequestContext context) throws ResponseException {
-
-		List<DispensationItem> items = new ArrayList<>();
+	public PageableResult doGetAll(final Dispensation parent, final RequestContext context) throws ResponseException {
+		
+		final List<DispensationItem> items = new ArrayList<>();
 		if (parent != null) {
 			items.addAll(parent.getDispensationItems());
 		}
-		return new NeedsPaging<DispensationItem>(items, context);
+		return new NeedsPaging<>(items, context);
 	}
 	
 	@Override
-	public Dispensation getParent(DispensationItem child) {
+	public Dispensation getParent(final DispensationItem child) {
 		
 		return child.getDispensation();
 	}
 	
 	@Override
-	public void setParent(DispensationItem child, Dispensation parent) {
+	public void setParent(final DispensationItem child, final Dispensation parent) {
 		
 		if (child != null) {
 			child.setDispensation(parent);
@@ -90,19 +100,20 @@ public class DispensationItemResource extends DelegatingSubResource<Dispensation
 	}
 	
 	@Override
-	protected void delete(DispensationItem arg0, String arg1, RequestContext arg2) throws ResponseException {
+	protected void delete(final DispensationItem arg0, final String arg1, final RequestContext arg2)
+	        throws ResponseException {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public DispensationItem getByUniqueId(String arg0) {
+	public DispensationItem getByUniqueId(final String arg0) {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public void purge(DispensationItem arg0, RequestContext arg1) throws ResponseException {
+	public void purge(final DispensationItem arg0, final RequestContext arg1) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 }

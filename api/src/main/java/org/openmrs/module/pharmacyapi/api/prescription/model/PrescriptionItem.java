@@ -1,13 +1,25 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.pharmacyapi.api.prescription.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 
 /**
- * 
+ *
  *
  */
 public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
@@ -15,7 +27,7 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public enum PrescriptionItemStatus {
-		NEW, ACTIVE, FINALIZED
+		NEW, ACTIVE, FINALIZED, INTERRUPTED, EXPIRED
 	}
 	
 	private DrugOrder drugOrder;
@@ -38,6 +50,8 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	private Concept interruptionReason;
 	
+	private Date expectedNextPickUpDate;
+	
 	private PrescriptionItemStatus status = PrescriptionItemStatus.NEW;
 	
 	public PrescriptionItem() {
@@ -45,97 +59,97 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 		this.drugToPickUp = 0.0;
 	}
 	
-	public PrescriptionItem(DrugOrder drugOrder) {
+	public PrescriptionItem(final DrugOrder drugOrder) {
 		this.drugPickedUp = 0.0;
 		this.drugToPickUp = 0.0;
 		this.drugOrder = drugOrder;
 	}
 	
 	public DrugOrder getDrugOrder() {
-		return drugOrder;
+		return this.drugOrder;
 	}
 	
-	public void setDrugOrder(DrugOrder drugOrder) {
+	public void setDrugOrder(final DrugOrder drugOrder) {
 		this.drugOrder = drugOrder;
 	}
 	
 	public Double getDrugToPickUp() {
-		return drugToPickUp;
+		return this.drugToPickUp;
 	}
 	
-	public void setDrugToPickUp(Double drugToPickUp) {
+	public void setDrugToPickUp(final Double drugToPickUp) {
 		this.drugToPickUp = drugToPickUp;
 	}
 	
 	public Double getDrugPickedUp() {
-		return drugPickedUp;
+		return this.drugPickedUp;
 	}
 	
-	public void setDrugPickedUp(Double drugPickedUp) {
+	public void setDrugPickedUp(final Double drugPickedUp) {
 		this.drugPickedUp = drugPickedUp;
 	}
 	
 	public Concept getRegime() {
-		return regime;
+		return this.regime;
 	}
 	
-	public void setRegime(Concept regime) {
+	public void setRegime(final Concept regime) {
 		this.regime = regime;
 	}
 	
 	public String getDosingInstructions() {
-		return dosingInstructions;
+		return this.dosingInstructions;
 	}
 	
-	public void setDosingInstructions(String dosingInstructions) {
+	public void setDosingInstructions(final String dosingInstructions) {
 		this.dosingInstructions = dosingInstructions;
 	}
 	
 	public Prescription getPrescription() {
-		return prescription;
+		return this.prescription;
 	}
 	
-	public void setPrescription(Prescription prescription) {
+	public void setPrescription(final Prescription prescription) {
 		this.prescription = prescription;
 	}
 	
 	public Concept getArvPlan() {
-		return arvPlan;
+		return this.arvPlan;
 	}
 	
-	public void setArvPlan(Concept arvPlan) {
+	public void setArvPlan(final Concept arvPlan) {
 		this.arvPlan = arvPlan;
 	}
 	
 	public Concept getChangeReason() {
-		return changeReason;
+		return this.changeReason;
 	}
 	
-	public void setChangeReason(Concept changeReason) {
+	public void setChangeReason(final Concept changeReason) {
 		this.changeReason = changeReason;
 	}
 	
 	public Concept getTherapeuticLine() {
-		return therapeuticLine;
+		return this.therapeuticLine;
 	}
 	
-	public void setTherapeuticLine(Concept therapeuticLine) {
+	public void setTherapeuticLine(final Concept therapeuticLine) {
 		this.therapeuticLine = therapeuticLine;
 	}
 	
 	public Concept getInterruptionReason() {
-		return interruptionReason;
+		return this.interruptionReason;
 	}
 	
-	public void setInterruptionReason(Concept interruptionReason) {
+	public void setInterruptionReason(final Concept interruptionReason) {
 		this.interruptionReason = interruptionReason;
 	}
 	
 	public PrescriptionItemStatus getStatus() {
-		return status;
+		return this.status;
 	}
 	
-	public void setStatus(PrescriptionItemStatus status) {
+	public void setStatus(final PrescriptionItemStatus status) {
 		this.status = status;
 	}
 	
@@ -145,7 +159,21 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	}
 	
 	@Override
-	public void setId(Integer arg0) {
-		
+	public void setId(final Integer arg0) {
+	}
+	
+	public Date getExpectedNextPickUpDate() {
+		return this.expectedNextPickUpDate;
+	}
+	
+	public void setExpectedNextPickUpDate(final Date expectedNextPickUpDate) {
+		this.expectedNextPickUpDate = expectedNextPickUpDate;
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString())
+		        .append("uuid", this.getUuid()).append("status", this.getStatus())
+		        .append("drugOrder", this.getDrugOrder()).append("regime", this.getRegime()).toString();
 	}
 }

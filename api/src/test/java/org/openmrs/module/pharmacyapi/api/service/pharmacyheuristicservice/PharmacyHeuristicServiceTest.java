@@ -1,5 +1,16 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.pharmacyapi.api.service.pharmacyheuristicservice;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -7,10 +18,15 @@ import org.junit.Test;
 import org.openmrs.Drug;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
+import org.openmrs.Form;
+import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.common.util.MappedForms;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.templates.DrugTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.EncounterTypeTemplate;
@@ -23,14 +39,14 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	@Test
 	public void shouldFindEncounterByChildPatient() throws Exception {
 		
-		PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		Patient childPatient = new Patient();
+		final Patient childPatient = new Patient();
 		childPatient.setBirthdateFromAge(14, null);
 		
-		EncounterType childEncounterType = Fixture.from(EncounterType.class)
+		final EncounterType childEncounterType = Fixture.from(EncounterType.class)
 		        .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_CHILD);
-		EncounterType encounterType = pharmacyHeuristicService.getEncounterTypeByPatientAge(childPatient);
+		final EncounterType encounterType = pharmacyHeuristicService.getEncounterTypeByPatientAge(childPatient);
 		
 		Assert.assertNotNull(encounterType);
 		Assert.assertEquals(childEncounterType.getUuid(), encounterType.getUuid());
@@ -39,14 +55,14 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	@Test
 	public void shouldFindEncounterByAdultPatient() throws Exception {
 		
-		PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		Patient adultPatient = new Patient();
+		final Patient adultPatient = new Patient();
 		adultPatient.setBirthdateFromAge(40, null);
 		
-		EncounterType adultEncounterType = Fixture.from(EncounterType.class)
+		final EncounterType adultEncounterType = Fixture.from(EncounterType.class)
 		        .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_ADULT);
-		EncounterType encounterType = pharmacyHeuristicService.getEncounterTypeByPatientAge(adultPatient);
+		final EncounterType encounterType = pharmacyHeuristicService.getEncounterTypeByPatientAge(adultPatient);
 		
 		Assert.assertNotNull(encounterType);
 		Assert.assertEquals(adultEncounterType.getUuid(), encounterType.getUuid());
@@ -55,13 +71,13 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	@Test
 	public void shouldFindDrugByOrderUuid() throws Exception {
 		
-		PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		String orderUuid = "921de0a3-05c4-444a-be03-e01b4c4b9142";
+		final String orderUuid = "921de0a3-05c4-444a-be03-e01b4c4b9142";
 		
-		Drug aspirinDrug = Fixture.from(Drug.class).gimme(DrugTemplate.ASPIRIN);
+		final Drug aspirinDrug = Fixture.from(Drug.class).gimme(DrugTemplate.ASPIRIN);
 		
-		Drug drug = pharmacyHeuristicService.findDrugByOrderUuid(orderUuid);
+		final Drug drug = pharmacyHeuristicService.findDrugByOrderUuid(orderUuid);
 		
 		Assert.assertNotNull(drug);
 		Assert.assertEquals(aspirinDrug.getUuid(), drug.getUuid());
@@ -69,15 +85,15 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	
 	@Test
 	public void shouldFindEncounterByPatientAndEncounterTypeAndOrder() throws Exception {
-		executeDataSet("pharmacyheuristicservice/shouldFindEncounterByPatientAndEncounterTypeAndOrder.xml");
+		this.executeDataSet("pharmacyheuristicservice/shouldFindEncounterByPatientAndEncounterTypeAndOrder.xml");
 		
-		PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		Patient patient = new Patient(7);
-		EncounterType encounterType = new EncounterType(1);
-		Order order = new Order(100);
+		final Patient patient = new Patient(7);
+		final EncounterType encounterType = new EncounterType(1);
+		final Order order = new Order(100);
 		
-		Encounter encounter = pharmacyHeuristicService.findEncounterByPatientAndEncounterTypeAndOrder(patient,
+		final Encounter encounter = pharmacyHeuristicService.findEncounterByPatientAndEncounterTypeAndOrder(patient,
 		    encounterType, order);
 		
 		Assert.assertNotNull(encounter);
@@ -87,18 +103,97 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 		Assert.assertEquals(order.getOrderId(), encounter.getOrders().iterator().next().getOrderId());
 	}
 	
+	@Test
 	public void shouldFindObsByOrder() throws Exception {
-		executeDataSet("pharmacyheuristicservice/shouldFindEncounterByPatientAndEncounterTypeAndOrder.xml");
+		this.executeDataSet("pharmacyheuristicservice/shouldFindEncounterByPatientAndEncounterTypeAndOrder.xml");
 		
-		PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		Order order = new Order(100);
+		final Order order = new Order(100);
 		
-		List<Obs> obs = pharmacyHeuristicService.findObsByOrder(order);
+		final List<Obs> obs = pharmacyHeuristicService.findObservationsByOrder(order);
 		
 		Assert.assertNotNull(obs);
 		Assert.assertEquals(1, obs.size());
 		Assert.assertEquals(order.getOrderId(), obs.get(0).getOrder().getOrderId());
 		
+	}
+	
+	@Test
+	public void shouldGetPediatricFormByChildtPatientAge() throws Exception {
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		
+		final Form childForm = pharmacyHeuristicService.getFormByPatientAge(new Patient(6));
+		
+		Assert.assertNotNull(childForm);
+		
+		Assert.assertEquals(MappedForms.PEDIATRICS_FOLLOW_UP, childForm.getUuid());
+	}
+	
+	@Test
+	public void shouldGetAdultFormByAdultPatientAge() throws Exception {
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		
+		final Form adultForm = pharmacyHeuristicService.getFormByPatientAge(new Patient(7));
+		
+		Assert.assertNotNull(adultForm);
+		
+		Assert.assertEquals(MappedForms.ADULT_FOLLOW_UP, adultForm.getUuid());
+	}
+	
+	@Test(expected = PharmacyBusinessException.class)
+	public void shouldThrowExceptionForNonGivenPatient() throws Exception {
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		
+		final Patient patient = null;
+		pharmacyHeuristicService.getFormByPatientAge(patient);
+	}
+	
+	@Test
+	public void ShouldFindfindLastVisitByPatient() throws Exception {
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2005);
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		
+		final Visit lastVisit = pharmacyHeuristicService.findLastVisitByPatientAndEncounterDate(new Patient(2),
+		    calendar.getTime());
+		
+		Assert.assertNotNull(lastVisit);
+		Assert.assertEquals(Integer.valueOf(3), lastVisit.getId());
+	}
+	
+	@Test(expected = PharmacyBusinessException.class)
+	public void ShouldThrowExceptionOnFindingLastVisitByForNonExistPatient() throws Exception {
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		pharmacyHeuristicService.findLastVisitByPatientAndEncounterDate(new Patient(200), new Date());
+	}
+	
+	@Test
+	public void shoudFindEncountersByPatientAndEncounterTypeAndLocationAndDate() throws Exception {
+		this.executeDataSet(
+		        "pharmacyheuristicservice/shoudFindEncountersByPatientAndEncounterTypeAndLocationAndDate-dataset.xml");
+		
+		final Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, 10);
+		calendar.set(Calendar.DAY_OF_MONTH, 9);
+		
+		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
+		
+		final Encounter encounter = pharmacyHeuristicService
+		        .findLastEncounterByPatientAndEncounterTypeAndLocationAndDate(new Patient(7), new EncounterType(2),
+		            new Location(1), calendar.getTime());
+		
+		Assert.assertNotNull(encounter);
+		Assert.assertEquals(Integer.valueOf(1005), encounter.getEncounterId());
 	}
 }

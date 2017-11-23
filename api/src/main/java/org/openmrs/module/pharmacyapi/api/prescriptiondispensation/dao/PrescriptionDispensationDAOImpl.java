@@ -1,9 +1,16 @@
 /**
- * 
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+/**
+ *
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao;
-
-import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -19,97 +26,68 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public void setSessionFactory(SessionFactory sessionFactory) {
+	public void setSessionFactory(final SessionFactory sessionFactory) {
 		
 		this.sessionFactory = sessionFactory;
 	}
 	
 	@Override
-	public PrescriptionDispensation save(PrescriptionDispensation prescriptionDispensation) {
+	public PrescriptionDispensation save(final PrescriptionDispensation prescriptionDispensation) {
 		
 		this.sessionFactory.getCurrentSession().save(prescriptionDispensation);
 		return prescriptionDispensation;
 	}
 	
 	@Override
-	public PrescriptionDispensation findByUuid(String uuid) {
+	public PrescriptionDispensation findByUuid(final String uuid) {
 		final Query query = this.sessionFactory.getCurrentSession()
 		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByUuid).setParameter("uuid", uuid);
 		
 		return (PrescriptionDispensation) query.uniqueResult();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<PrescriptionDispensation> findByPrescription(Encounter prescription) {
-		
-		final Query query = this.sessionFactory.getCurrentSession()
-		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByPrescription)
-		        .setParameter("prescription", prescription);
-		
-		return query.list();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<PrescriptionDispensation> findByPatientUuid(String patientUuid) {
-		
-		final Query query = this.sessionFactory.getCurrentSession()
-		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByPatientUuid).setParameter("uuid", patientUuid);
-		
-		return query.list();
-	}
-	
-	@Override
-	public PrescriptionDispensation findByDispensationEncounter(Encounter dispensation) throws PharmacyBusinessException {
+	public PrescriptionDispensation findByDispensationEncounter(final Encounter dispensation)
+	        throws PharmacyBusinessException {
 		
 		final Query query = this.sessionFactory.getCurrentSession()
 		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByDispensationEncounter)
 		        .setParameter("dispensation", dispensation);
 		
-		PrescriptionDispensation prescriptionDispensation = (PrescriptionDispensation) query.uniqueResult();
+		final PrescriptionDispensation prescriptionDispensation = (PrescriptionDispensation) query.uniqueResult();
 		if (prescriptionDispensation != null) {
 			
 			return prescriptionDispensation;
 		}
 		
-		throw new PharmacyBusinessException("Entity PrescriptionDispensation not Found for dispensation " + dispensation);
+		throw new PharmacyBusinessException(
+		        "Entity PrescriptionDispensation not Found for dispensation " + dispensation);
 	}
 	
 	@Override
-	public PrescriptionDispensation findLastByPrescription(Encounter prescription) {
-		
-		final Query query = this.sessionFactory.getCurrentSession()
-		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findLastByPrescription)
-		        .setParameter("prescription", prescription);
-		
-		return (PrescriptionDispensation) query.uniqueResult();
-		
-	}
-	
-	@Override
-	public void retire(PrescriptionDispensation prescriptionDispensation) {
+	public void retire(final PrescriptionDispensation prescriptionDispensation) {
 		
 		this.sessionFactory.getCurrentSession().saveOrUpdate(prescriptionDispensation);
 	}
 	
 	@Override
-	public void update(PrescriptionDispensation prescriptionDispensation) {
+	public void update(final PrescriptionDispensation prescriptionDispensation) {
 		
 		this.sessionFactory.getCurrentSession().update(prescriptionDispensation);
 	}
 	
 	@Override
-	public PrescriptionDispensation findByFila(Encounter fila) throws PharmacyBusinessException {
+	public PrescriptionDispensation findByFila(final Encounter fila) throws PharmacyBusinessException {
 		
 		final Query query = this.sessionFactory.getCurrentSession()
 		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByFila).setParameter("fila", fila);
 		
-		PrescriptionDispensation uniqueResult = (org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation) query
+		final PrescriptionDispensation uniqueResult = (org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation) query
 		        .uniqueResult();
 		
 		if (uniqueResult == null) {
-			throw new PharmacyBusinessException("Entity PrescriptionDispensation not found for parameter fila = " + fila);
+			throw new PharmacyBusinessException(
+			        "Entity PrescriptionDispensation not found for parameter fila = " + fila);
 		}
 		return uniqueResult;
 	}

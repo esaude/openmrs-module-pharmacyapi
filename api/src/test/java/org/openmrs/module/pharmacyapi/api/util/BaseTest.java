@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 /*
  * Friends in Global Health - FGH © 2016
  */
@@ -12,6 +21,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.templates.ConceptTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.EncounterTypeTemplate;
+import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import br.com.six2six.fixturefactory.Fixture;
@@ -32,42 +42,41 @@ public abstract class BaseTest extends BaseModuleContextSensitiveTest {
 		
 	}
 	
+	@Override
 	@Before
 	public void baseSetupWithStandardDataAndAuthentication() throws Exception {
 		
 		if (!Context.isSessionOpen()) {
 			Context.openSession();
 		}
-		initializeInMemoryDatabase();
+		this.initializeInMemoryDatabase();
 		
-		deleteAllData();
+		this.deleteAllData();
 		
-		if (useInMemoryDatabase()) {
-			initializeInMemoryDatabase();
+		if (this.useInMemoryDatabase()) {
+			this.initializeInMemoryDatabase();
 		} else {
-			executeDataSet(INITIAL_XML_DATASET_PACKAGE_PATH);
+			this.executeDataSet(BaseContextSensitiveTest.INITIAL_XML_DATASET_PACKAGE_PATH);
 		}
 		
-		executeDataSet(EXAMPLE_XML_DATASET_PACKAGE_PATH);
+		this.executeDataSet(BaseTest.EXAMPLE_XML_DATASET_PACKAGE_PATH);
 		
 		// Commit so that it is not rolled back after a test.
-		getConnection().commit();
+		this.getConnection().commit();
 		
-		updateSearchIndex();
-		authenticate();
+		this.updateSearchIndex();
+		this.authenticate();
 		
 		Context.clearSession();
 		
-		setUp();
+		this.setUp();
 	}
 	
 	public void setUp() {
 		
-		SessionFactory sessionFactory = (SessionFactory) applicationContext.getBean("sessionFactory");
+		final SessionFactory sessionFactory = (SessionFactory) this.applicationContext.getBean("sessionFactory");
 		
-		Session currentSession = sessionFactory.getCurrentSession();
-		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_ADULT);
+		final Session currentSession = sessionFactory.getCurrentSession();
 		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
 		        .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_CHILD);
 		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
@@ -75,19 +84,15 @@ public abstract class BaseTest extends BaseModuleContextSensitiveTest {
 		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
 		        .gimme(EncounterTypeTemplate.FILA_ENCOUNTER_TYPE);
 		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.POC_MAPPING_PRESCRIPTION_DATE);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession)).gimme(ConceptTemplate.ARV_PLAN);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession)).gimme(ConceptTemplate.ARV_THERAPEUTIC_LINE);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession)).gimme(ConceptTemplate.TREATMENT_PRESCRIBED);
+		        .gimme(ConceptTemplate.TREATMENT_PRESCRIBED);
 		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
 		        .gimme(ConceptTemplate.REASON_ANTIRETROVIRALS_STOPPED);
 		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
 		        .gimme(ConceptTemplate.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT);
 		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
 		        .gimme(ConceptTemplate.TREATMENT_PRESCRIBED_SET);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession)).gimme(ConceptTemplate.ARV_DOSAGE_AMOUNT);
+		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
+		        .gimme(ConceptTemplate.ARV_DOSAGE_AMOUNT);
 		
 		// Fixture.from(OrderFrequency.class).uses(new
 		// HibernateProcessor(currentSession))

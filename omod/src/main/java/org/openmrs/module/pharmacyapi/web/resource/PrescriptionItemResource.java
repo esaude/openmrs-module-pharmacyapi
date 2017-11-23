@@ -1,5 +1,14 @@
 /**
- * 
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
+/**
+ *
  */
 package org.openmrs.module.pharmacyapi.web.resource;
 
@@ -28,12 +37,13 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @SubResource(parent = PrescriptionResource.class, path = "prescriptionItem", supportedClass = PrescriptionItem.class, supportedOpenmrsVersions = {
         "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-public class PrescriptionItemResource extends DelegatingSubResource<PrescriptionItem, Prescription, PrescriptionResource> {
+public class PrescriptionItemResource
+        extends DelegatingSubResource<PrescriptionItem, Prescription, PrescriptionResource> {
 	
 	@Override
-	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+	public DelegatingResourceDescription getRepresentationDescription(final Representation rep) {
 		if (rep instanceof DefaultRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("display");
 			description.addProperty("drugToPickUp");
 			description.addProperty("drugPickedUp");
@@ -45,11 +55,12 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("changeReason", Representation.REF);
 			description.addProperty("interruptionReason", Representation.REF);
 			description.addProperty("status");
+			description.addProperty("expectedNextPickUpDate");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			return description;
 		} else if (rep instanceof FullRepresentation) {
-			DelegatingResourceDescription description = new DelegatingResourceDescription();
+			final DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("display");
 			description.addProperty("drugToPickUp");
 			description.addProperty("drugPickedUp");
@@ -61,6 +72,7 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 			description.addProperty("changeReason");
 			description.addProperty("interruptionReason");
 			description.addProperty("status");
+			description.addProperty("expectedNextPickUpDate");
 			return description;
 		}
 		return null;
@@ -72,34 +84,34 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 	}
 	
 	@Override
-	public PrescriptionItem save(PrescriptionItem arg0) {
+	public PrescriptionItem save(final PrescriptionItem arg0) {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@PropertyGetter("display")
-	public String getDisplayString(PrescriptionItem item) {
+	public String getDisplayString(final PrescriptionItem item) {
 		return item.getDrugOrder().getDrug().getName();
 	}
 	
 	@Override
-	public PageableResult doGetAll(Prescription parent, RequestContext context) throws ResponseException {
-
-		List<PrescriptionItem> items = new ArrayList<>();
+	public PageableResult doGetAll(final Prescription parent, final RequestContext context) throws ResponseException {
+		
+		final List<PrescriptionItem> items = new ArrayList<>();
 		if (parent != null) {
 			items.addAll(parent.getPrescriptionItems());
 		}
-		return new NeedsPaging<PrescriptionItem>(items, context);
+		return new NeedsPaging<>(items, context);
 	}
 	
 	@Override
-	public Prescription getParent(PrescriptionItem child) {
+	public Prescription getParent(final PrescriptionItem child) {
 		
 		return child.getPrescription();
 	}
 	
 	@Override
-	public void setParent(PrescriptionItem child, Prescription parent) {
+	public void setParent(final PrescriptionItem child, final Prescription parent) {
 		
 		if (child != null) {
 			child.setPrescription(parent);
@@ -107,19 +119,20 @@ public class PrescriptionItemResource extends DelegatingSubResource<Prescription
 	}
 	
 	@Override
-	protected void delete(PrescriptionItem arg0, String arg1, RequestContext arg2) throws ResponseException {
+	protected void delete(final PrescriptionItem arg0, final String arg1, final RequestContext arg2)
+	        throws ResponseException {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public PrescriptionItem getByUniqueId(String arg0) {
+	public PrescriptionItem getByUniqueId(final String arg0) {
 		
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	
 	@Override
-	public void purge(PrescriptionItem arg0, RequestContext arg1) throws ResponseException {
+	public void purge(final PrescriptionItem arg0, final RequestContext arg1) throws ResponseException {
 		throw new ResourceDoesNotSupportOperationException();
 	}
 	

@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.pharmacyapi.web.resource;
 
 import java.text.ParseException;
@@ -132,28 +141,29 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	
 	@Override
 	protected PageableResult doSearch(final RequestContext context) {
-
+		
 		final String patientUuid = context.getRequest().getParameter("patient");
 		String startDate = context.getRequest().getParameter("startDate");
 		String endDate = context.getRequest().getParameter("endDate");
-
+		
 		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
-
+		
 		if (patientUuid == null || patient == null) {
 			return new EmptySearchResult();
 		}
-
+		
 		if (startDate != null && endDate != null) {
-
+			
 			try {
-
+				
 				return new NeedsPaging<>(findFilaByPatientAndDateInterval(patient, startDate, endDate), context);
-			} catch (ParseException | PharmacyBusinessException e) {
-
+			}
+			catch (ParseException | PharmacyBusinessException e) {
+				
 				throw new APIException(e);
 			}
 		}
-
+		
 		return new EmptySearchResult();
 	}
 	

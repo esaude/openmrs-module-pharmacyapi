@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.pharmacyapi.api.common.util;
 
 import java.util.Calendar;
@@ -17,10 +26,10 @@ public class DateUtils {
 	 * @param date de referencia.
 	 * @return {@link Date} que representa o horário minimo para dia informado.
 	 */
-	public static Date lowDateTime(Date date) {
-		Calendar aux = Calendar.getInstance();
+	public static Date lowDateTime(final Date date) {
+		final Calendar aux = Calendar.getInstance();
 		aux.setTime(date);
-		toOnlyDate(aux); // zera os parametros de hour,min,sec,milisec
+		DateUtils.toOnlyDate(aux); // zera os parametros de hour,min,sec,milisec
 		return aux.getTime();
 	}
 	
@@ -33,12 +42,13 @@ public class DateUtils {
 	 * @param date de referencia.
 	 * @return {@link Date} que representa o horário maximo para dia informado.
 	 */
-	public static Date highDateTime(Date date) {
-		Calendar aux = Calendar.getInstance();
+	public static Date highDateTime(final Date date) {
+		final Calendar aux = Calendar.getInstance();
 		aux.setTime(date);
-		toOnlyDate(aux); // zera os parametros de hour,min,sec,milisec
-		aux.roll(Calendar.DATE, true); // vai para o dia seguinte
-		aux.roll(Calendar.MILLISECOND, false); // reduz 1 milisegundo
+		aux.set(Calendar.HOUR_OF_DAY, 23);
+		aux.set(Calendar.MINUTE, 59);
+		aux.set(Calendar.SECOND, 59);
+		aux.set(Calendar.MILLISECOND, 999);
 		return aux.getTime();
 	}
 	
@@ -47,7 +57,7 @@ public class DateUtils {
 	 * 
 	 * @param date a ser modificado.
 	 */
-	public static void toOnlyDate(Calendar date) {
+	public static void toOnlyDate(final Calendar date) {
 		date.set(Calendar.HOUR_OF_DAY, 0);
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.SECOND, 0);
