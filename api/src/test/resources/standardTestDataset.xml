@@ -465,6 +465,20 @@
    
   
  <encounter_type encounter_type_id="100" name="arv follow up Adult" description="arv follow up Adult" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="e278f956-1d5f-11e0-b929-000c29ad1d07"/>
+ <encounter_type encounter_type_id="200" name="poc dispensation" description="arv follow up Adult" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="18fd49b7-6c2b-4604-88db-b3eb5b3a6d5f"/>
+ 
+ <concept concept_id="980" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="643e7b77-467e-4ea5-b26b-78d664efaeb5"/> 
+ <concept_name concept_id="980" name="poc Dispensation Set" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="980" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="643e7b77-467e-4ea5-b26b-78d664efaeb5"/> 
+   
+ <concept concept_id="981" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1de2ca0-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="981" name="poc medication Quantity" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="981" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1de2ca0-1d5f-11e0-b929-000c29ad1d07"/>   
+   
+ <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
+
+ <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
+   
    
  <concept concept_id="997" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
  <concept_name concept_id="997" name="terapeutic plan" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="997" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 

@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
@@ -43,6 +44,7 @@ public class PrescriptionServiceTest extends BaseTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void shouldCreateNonArvPrescription() throws Exception {
 		
 		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
