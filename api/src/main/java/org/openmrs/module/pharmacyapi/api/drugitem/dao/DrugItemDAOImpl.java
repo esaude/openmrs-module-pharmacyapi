@@ -70,4 +70,14 @@ public class DrugItemDAOImpl implements DrugItemDAO {
 		return searchCriteria.list();
 		
 	}
+	
+	@Override
+	public DrugItem findByFNM(final String fnm) {
+		
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugItem.class,
+		    "drugItem");
+		searchCriteria.add(Restrictions.eq("drugItem.fnmCode", fnm));
+		
+		return (DrugItem) searchCriteria.uniqueResult();
+	}
 }

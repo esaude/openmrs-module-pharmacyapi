@@ -30,4 +30,6 @@ public interface DrugItemService extends OpenmrsService {
 	List<DrugItem> findAllDrugItem(Boolean retired);
 	
 	DrugItem findDrugItemByDrugId(Integer drugId) throws PharmacyBusinessException;
+	
+	DrugItem findDrugItemByFNM(String fnm);
 }

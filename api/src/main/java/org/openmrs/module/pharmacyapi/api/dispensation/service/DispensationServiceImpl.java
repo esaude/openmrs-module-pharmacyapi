@@ -191,13 +191,9 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	}
 	
 	private void performWastDrugOrders(final Map<DrugOrder, Double> mapQuantityByDrugOrder, final Location location) {
-		
-		// FIXME: remover esse location com ID =2
-		final Location tempLocation = Context.getLocationService().getLocation(2);
-		
 		for (final Entry<DrugOrder, Double> entry : mapQuantityByDrugOrder.entrySet()) {
 			try {
-				this.batchService.createWasteDrug(entry.getKey(), tempLocation, entry.getValue(), new Date());
+				this.batchService.createWasteDrug(entry.getKey(), location, entry.getValue(), new Date());
 			}
 			catch (final Exception e) {
 				throw new APIException(e);
