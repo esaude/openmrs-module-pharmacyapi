@@ -1,6 +1,11 @@
 language: java
 jdk: oraclejdk8
-script: mvn clean install --batch-mode
+#script: mvn clean install --batch-mode
+install: true
+script: ./mvnw clean install
+cache:
+  directories:
+  - $HOME/.m2
 after_success:
 - mvn jacoco:report coveralls:report
 notifications:
