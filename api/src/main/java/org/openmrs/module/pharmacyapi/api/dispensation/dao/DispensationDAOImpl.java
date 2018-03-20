@@ -23,7 +23,6 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
-import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.Patient;
 import org.openmrs.module.pharmacyapi.api.common.util.DateUtils;
@@ -45,7 +44,7 @@ public class DispensationDAOImpl implements DispensationDAO {
 	public List<DrugOrder> findNotDispensedDrugOrdersByPatient(final Patient patient,
 	        final EncounterType... encounterTypes) {
 		
-		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Order.class,
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(DrugOrder.class,
 		    "drugOrder");
 		searchCriteria.add(Restrictions.eq("drugOrder.patient", patient));
 		searchCriteria.createAlias("drugOrder.encounter", "encounter");
