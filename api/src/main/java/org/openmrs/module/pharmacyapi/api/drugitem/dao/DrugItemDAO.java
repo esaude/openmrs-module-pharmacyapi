@@ -45,4 +45,6 @@ public interface DrugItemDAO {
 	
 	List<DrugItem> findAll(Boolean retired);
 	
+	DrugItem findByFNM(String fnm);
+	
 }
