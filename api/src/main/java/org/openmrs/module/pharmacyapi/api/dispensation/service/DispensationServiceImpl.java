@@ -36,6 +36,7 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.Visit;
+import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
@@ -45,6 +46,7 @@ import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.inventorypoc.batch.service.BatchService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
@@ -96,6 +98,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	private DispensationDAO dispensationDAO;
 	
+	private BatchService batchService;
+	
 	@Override
 	public Dispensation dispense(final Dispensation dispensation) throws PharmacyBusinessException {
 		
@@ -130,6 +134,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			final Map<Encounter, List<DispensationItem>> mapDispensationItemByPrescription = this
 			        .groupDispensationItemsByPrescription(dispensation);
 			
+			final Map<DrugOrder, Double> mapQuantityByDrugOrder = new HashMap<>();
 			for (final Entry<Encounter, List<DispensationItem>> prescriptionDispensationItems : mapDispensationItemByPrescription
 			        .entrySet()) {
 				
@@ -154,12 +159,16 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 					orderProcess.setOrderer(provider);
 					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet,
 					    quantityConcept, nextPickUpConcept, dispensationItem, arvConceptQuestion);
+					
+					mapQuantityByDrugOrder.put((DrugOrder) orderProcess, dispensationItem.getQuantityToDispense());
 				}
 				
 				this.encounterService.saveEncounter(dispensationEncounter);
 				
 				this.prescriptionDispensationService.savePrescriptionDispensation(patient, prescriptionEncounter,
 				    dispensationEncounter);
+				
+				this.performWastDrugOrders(mapQuantityByDrugOrder, location);
 				
 				if (!arvDispensationItems.isEmpty()) {
 					
@@ -179,6 +188,17 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		}
 		
 		return dispensation;
+	}
+	
+	private void performWastDrugOrders(final Map<DrugOrder, Double> mapQuantityByDrugOrder, final Location location) {
+		for (final Entry<DrugOrder, Double> entry : mapQuantityByDrugOrder.entrySet()) {
+			try {
+				this.batchService.createWasteDrug(entry.getKey(), location, entry.getValue(), new Date());
+			}
+			catch (final Exception e) {
+				throw new APIException(e);
+			}
+		}
 	}
 	
 	private Encounter createEncounter(final Provider provider, final Patient patient, final EncounterRole encounterRole,
@@ -383,7 +403,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 	
 	@Override
 	public void cancelDispensationItems(final Dispensation dispensation, final String cancelationReason)
-	        throws PharmacyBusinessException {
+	        throws Exception {
 		
 		this.dispensationValidator.validateCancellation(dispensation, new Date());
 		
@@ -405,6 +425,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			Context.getObsService().voidObs(obs,
 			    "Cancellation of Dispensation Item " + drugOrder.getDrug().getDisplayName());
 		}
+		
+		this.batchService.reverseWastedDrug(drugOrder);
 	}
 	
 	private void removeDrugOrderObsFromFilaEncounter(final Dispensation dispensation, final DrugOrder drugOrder)
@@ -550,6 +572,11 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			}
 		}
 		return prescription;
+	}
+	
+	@Override
+	public void setBatchService(final BatchService batchService) {
+		this.batchService = batchService;
 	}
 	
 }

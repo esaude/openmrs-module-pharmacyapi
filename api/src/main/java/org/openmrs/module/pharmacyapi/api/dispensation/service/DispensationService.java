@@ -24,6 +24,7 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
+import org.openmrs.module.inventorypoc.batch.service.BatchService;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.dispensation.dao.DispensationDAO;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
@@ -62,7 +63,9 @@ public interface DispensationService extends OpenmrsService {
 	
 	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
 	
-	void cancelDispensationItems(Dispensation dispensation, String cancelationReason) throws PharmacyBusinessException;
+	void setBatchService(BatchService batchService);
+	
+	void cancelDispensationItems(Dispensation dispensation, String cancelationReason) throws Exception;
 	
 	List<Dispensation> findFilaDispensationByPatientAndDateInterval(Patient patient, Date startDate, Date endDate)
 	        throws PharmacyBusinessException;

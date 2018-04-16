@@ -12,21 +12,14 @@
  */
 package org.openmrs.module.pharmacyapi.api.util;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.openmrs.Concept;
-import org.openmrs.EncounterType;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.templates.ConceptTemplate;
-import org.openmrs.module.pharmacyapi.api.templates.EncounterTypeTemplate;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
-import br.com.six2six.fixturefactory.processor.HibernateProcessor;
 
 /**
  * @author Stélio Moiane
@@ -76,23 +69,31 @@ public abstract class BaseTest extends BaseModuleContextSensitiveTest {
 		
 		final SessionFactory sessionFactory = (SessionFactory) this.applicationContext.getBean("sessionFactory");
 		
-		final Session currentSession = sessionFactory.getCurrentSession();
-		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_CHILD);
-		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(EncounterTypeTemplate.DISPENSATION_ENCOUNTER_TYPE);
-		Fixture.from(EncounterType.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(EncounterTypeTemplate.FILA_ENCOUNTER_TYPE);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.TREATMENT_PRESCRIBED);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.REASON_ANTIRETROVIRALS_STOPPED);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.TREATMENT_PRESCRIBED_SET);
-		Fixture.from(Concept.class).uses(new HibernateProcessor(currentSession))
-		        .gimme(ConceptTemplate.ARV_DOSAGE_AMOUNT);
+		// final Session currentSession = sessionFactory.getCurrentSession();
+		// Fixture.from(EncounterType.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(EncounterTypeTemplate.ARV_FOLLOW_UP_CHILD);
+		// Fixture.from(EncounterType.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(EncounterTypeTemplate.DISPENSATION_ENCOUNTER_TYPE);
+		// Fixture.from(EncounterType.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(EncounterTypeTemplate.FILA_ENCOUNTER_TYPE);
+		// Fixture.from(Concept.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(ConceptTemplate.TREATMENT_PRESCRIBED);
+		// Fixture.from(Concept.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(ConceptTemplate.REASON_ANTIRETROVIRALS_STOPPED);
+		// Fixture.from(Concept.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(ConceptTemplate.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT);
+		// Fixture.from(Concept.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(ConceptTemplate.TREATMENT_PRESCRIBED_SET);
+		// Fixture.from(Concept.class).uses(new
+		// HibernateProcessor(currentSession))
+		// .gimme(ConceptTemplate.ARV_DOSAGE_AMOUNT);
 		
 		// Fixture.from(OrderFrequency.class).uses(new
 		// HibernateProcessor(currentSession))

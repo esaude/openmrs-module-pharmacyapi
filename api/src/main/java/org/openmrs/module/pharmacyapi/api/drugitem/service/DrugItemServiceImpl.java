@@ -46,4 +46,9 @@ public class DrugItemServiceImpl extends BaseOpenmrsService implements DrugItemS
 	public DrugItem findDrugItemByDrugId(final Integer drugId) throws PharmacyBusinessException {
 		return this.drugItemDAO.findByDrugId(drugId);
 	}
+	
+	@Override
+	public DrugItem findDrugItemByFNM(final String fnm) {
+		return this.drugItemDAO.findByFNM(fnm);
+	}
 }

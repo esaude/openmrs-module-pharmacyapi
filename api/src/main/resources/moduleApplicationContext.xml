@@ -92,6 +92,9 @@
 				<property name="pharmacyHeuristicService">
 					<ref bean="pharmacyHeuristicService" />
 				</property>
+				<property name="batchService">
+					<ref bean="batchService" />
+				</property>
 				
 			</bean>
 		</property>
