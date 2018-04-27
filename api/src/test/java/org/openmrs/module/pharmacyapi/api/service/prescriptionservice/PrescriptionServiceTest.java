@@ -65,7 +65,7 @@ public class PrescriptionServiceTest extends BaseTest {
 		        .gimme(PrescriptionItemTemplate.VALID_01);
 		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));
 		
-		final Prescription createdPrescription = prescriptionService.createPrescription(prescription, date);
+		final Prescription createdPrescription = prescriptionService.createPrescription(prescription);
 		
 		Assert.assertNotNull(createdPrescription);
 		
