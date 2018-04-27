@@ -23,7 +23,7 @@
 	<require_modules>
 		<require_module version="${openMRSWebServicesVersion}">org.openmrs.module.webservices.rest</require_module>
 		<require_module>org.openmrs.module.esaudemetadata</require_module>
-		<require_module version="1.0.0" >org.openmrs.module.inventorypoc</require_module>
+		<require_module version="1.0.1" >org.openmrs.module.inventorypoc</require_module>
 	</require_modules>
 
 	<!-- Extensions -->
