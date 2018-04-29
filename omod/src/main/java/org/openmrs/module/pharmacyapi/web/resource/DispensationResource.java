@@ -46,8 +46,9 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 /**
  * @author Stélio Moiane
  */
-@Resource(name = RestConstants.VERSION_1 + "/dispensation", order = 1, supportedClass = Dispensation.class, supportedOpenmrsVersions = {
-        "1.8.*", "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+@Resource(name = RestConstants.VERSION_1
+        + "/dispensation", order = 1, supportedClass = Dispensation.class, supportedOpenmrsVersions = { "1.8.*",
+        "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class DispensationResource extends DataDelegatingCrudResource<Dispensation> {
 	
 	@Override
@@ -91,7 +92,7 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 			dispensationService.dispense(dispensation);
 			
 		}
-		catch (Exception e) {
+		catch (final Exception e) {
 			throw new APIException(e);
 		}
 		return dispensation;
@@ -109,22 +110,22 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	@Override
 	public Dispensation getByUniqueId(final String orderUuid) {
 		
-		Order order = Context.getOrderService().getOrderByUuid(orderUuid);
+		final Order order = Context.getOrderService().getOrderByUuid(orderUuid);
 		if (order != null) {
-			Dispensation dispensation = new Dispensation();
-			DispensationItem dispensationItem = new DispensationItem();
+			final Dispensation dispensation = new Dispensation();
+			final DispensationItem dispensationItem = new DispensationItem();
 			dispensationItem.setOrderUuid(order.getUuid());
 			dispensation.setDispensationItems(Arrays.asList(dispensationItem));
 			dispensation.setPatientUuid(order.getPatient().getUuid());
 			dispensation.setLocationUuid(order.getEncounter().getLocation().getUuid());
 			dispensation.setProviderUuid(order.getEncounter().getProvider().getUuid());
 			
-			Concept arvConceptQuestion = Context.getConceptService().getConceptByUuid(
-			    MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+			final Concept arvConceptQuestion = Context.getConceptService()
+			        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 			
-			Set<Obs> allObs = order.getEncounter().getAllObs(isRetirable());
+			final Set<Obs> allObs = order.getEncounter().getAllObs(this.isRetirable());
 			
-			for (Obs obs : allObs) {
+			for (final Obs obs : allObs) {
 				
 				if (obs.getConcept().equals(arvConceptQuestion)) {
 					
@@ -143,20 +144,20 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	protected PageableResult doSearch(final RequestContext context) {
 		
 		final String patientUuid = context.getRequest().getParameter("patient");
-		String startDate = context.getRequest().getParameter("startDate");
-		String endDate = context.getRequest().getParameter("endDate");
+		final String startDate = context.getRequest().getParameter("startDate");
+		final String endDate = context.getRequest().getParameter("endDate");
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(patientUuid);
 		
-		if (patientUuid == null || patient == null) {
+		if ((patientUuid == null) || (patient == null)) {
 			return new EmptySearchResult();
 		}
 		
-		if (startDate != null && endDate != null) {
+		if ((startDate != null) && (endDate != null)) {
 			
 			try {
 				
-				return new NeedsPaging<>(findFilaByPatientAndDateInterval(patient, startDate, endDate), context);
+				return new NeedsPaging<>(this.findFilaByPatientAndDateInterval(patient, startDate, endDate), context);
 			}
 			catch (ParseException | PharmacyBusinessException e) {
 				
@@ -167,14 +168,14 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		return new EmptySearchResult();
 	}
 	
-	private List<Dispensation> findFilaByPatientAndDateInterval(Patient patient, String startDateText, String endDateText)
-	        throws ParseException, PharmacyBusinessException {
+	private List<Dispensation> findFilaByPatientAndDateInterval(final Patient patient, final String startDateText,
+	        final String endDateText) throws ParseException, PharmacyBusinessException {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		Date stardDate = formatter.parse(startDateText);
-		Date endDate = formatter.parse(endDateText);
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		final Date stardDate = formatter.parse(startDateText);
+		final Date endDate = formatter.parse(endDateText);
 		
-		List<Dispensation> dispensations = Context.getService(DispensationService.class)
+		final List<Dispensation> dispensations = Context.getService(DispensationService.class)
 		        .findFilaDispensationByPatientAndDateInterval(patient, stardDate, endDate);
 		
 		return dispensations;
@@ -187,9 +188,9 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		try {
 			Context.getService(DispensationService.class).cancelDispensationItems(dispensation, reason);
 		}
-		catch (Exception e) {
+		catch (final Exception e) {
 			
-			throw new APIException(e);
+			throw new APIException(e.getMessage());
 		}
 		
 	}
@@ -200,8 +201,8 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	}
 	
 	@PropertySetter("dispensationItems")
-	public static void prescriptionItems(Dispensation instance, List<DispensationItem> items) {
-		for (DispensationItem item : items) {
+	public static void prescriptionItems(final Dispensation instance, final List<DispensationItem> items) {
+		for (final DispensationItem item : items) {
 			item.setDispensation(instance);
 		}
 		instance.setDispensationItems(items);
