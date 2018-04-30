@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+
+<encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul0"/>
+<encounter encounter_id="1001" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul1"/>
+ 	
+<phm_prescription_dispensation  prescription_dispensation_id ="1" patient_id ="7" prescription_id = "1000" dispensation_id ="1001" uuid ="3a9eb480-4112-4fdd-8aba-0175bddb3706" creator ="1" date_created="2008-08-18 14:22:17.0" retired ="false"/> 
+
+</dataset> 
