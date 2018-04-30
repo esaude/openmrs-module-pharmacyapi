@@ -34,41 +34,41 @@ import org.springframework.stereotype.Component;
 
 @Component
 public abstract class AbstractPrescriptionItemGenerator implements PrescriptionItemGenerator {
-	
+
 	protected void setPrescriptionInstructions(final PrescriptionItem prescriptionItem, final DrugOrder drugOrder) {
 		final Concept concept = Context.getConceptService().getConceptByUuid(drugOrder.getDosingInstructions());
 		prescriptionItem.setDosingInstructions(concept.getNames().iterator().next().getName());
 	}
-	
+
 	protected DrugOrder fetchDrugOrder(final DrugOrder drugOrder) {
 		return (DrugOrder) Context.getOrderService().getOrderByUuid(drugOrder.getUuid());
 	}
-	
+
 	protected void setArvDataFields(final DrugOrder drugOrder, final PrescriptionItem prescriptionItem)
-	        throws PharmacyBusinessException {
-		
+			throws PharmacyBusinessException {
+
 		final PrescriptionDispensationService prescriptionDispensationService = Context
-		        .getService(PrescriptionDispensationService.class);
-		
+				.getService(PrescriptionDispensationService.class);
+
 		if (prescriptionDispensationService.isArvDrug(drugOrder)) {
 			prescriptionItem.setRegime(this.findRegime(drugOrder));
 			prescriptionItem.setArvPlan(this.findArvPlan(drugOrder));
 			prescriptionItem.setTherapeuticLine(this.findArvTherapeuticPlan(drugOrder));
 		}
 	}
-	
+
 	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(PrescriptionItem item,
-	        Date consultationDate);
-	
+			Date consultationDate);
+
 	private Concept findArvPlan(final DrugOrder drugOrder) {
 		DrugOrder tempDrugOrder = drugOrder;
 		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
-		
+
 		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
 		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_PLAN);
-		
+
 		for (final Obs obs : allObs) {
 			if (arvPlan.equals(obs.getConcept())) {
 				return obs.getValueCoded();
@@ -76,35 +76,35 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		}
 		throw new IllegalArgumentException("No ARV plan found for drugOrder with uuid " + drugOrder.getUuid());
 	}
-	
+
 	private Concept findArvTherapeuticPlan(final DrugOrder drugOrder) {
 		DrugOrder tempDrugOrder = drugOrder;
 		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
-		
+
 		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
 		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_THERAPEUTIC_LINE);
-		
+
 		for (final Obs obs : allObs) {
 			if (arvPlan.equals(obs.getConcept())) {
 				return obs.getValueCoded();
 			}
 		}
 		throw new IllegalArgumentException(
-		        "No ARV Therapeutic Line found for drugOrder with uuid " + drugOrder.getUuid());
+				"No ARV Therapeutic Line found for drugOrder with uuid " + drugOrder.getUuid());
 	}
-	
+
 	private Concept findRegime(final DrugOrder drugOrder) {
 		DrugOrder tempDrugOrder = drugOrder;
 		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
-		
+
 		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
 		final Concept regime = Context.getConceptService()
-		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-		
+				.getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+
 		for (final Obs obs : allObs) {
 			if (regime.equals(obs.getConcept())) {
 				return obs.getValueCoded();
@@ -112,70 +112,70 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		}
 		throw new IllegalArgumentException("No Regime found for drugOrder with uuid " + drugOrder.getUuid());
 	}
-	
+
 	protected Double calculateDrugPikckedUp(final DrugOrder order) {
-		
+
 		Double quantity = 0.0;
 		final List<Obs> observations = new ArrayList<>();
-		
+
 		DrugOrder tempOrder = order;
 		while (tempOrder.getPreviousOrder() != null) {
-			
+
 			if ((tempOrder.getOrderReason() == null) && !tempOrder.getVoided()) {
-				observations.addAll(tempOrder.getEncounter().getObs());
+
+				observations.addAll(Context.getObsService().getObservations(tempOrder.getEncounter()));
 			}
 			tempOrder = (DrugOrder) tempOrder.getPreviousOrder();
 		}
-		
+
 		for (final Obs observation : observations) {
-			
+
 			if (!observation.getVoided() && this.isTheSameConceptAndSameDrug(order, observation)) {
 				quantity += observation.getValueNumeric();
 			}
 		}
-		
+
 		return quantity;
 	}
-	
+
 	protected Date getNextPickUpDate(final DrugOrder drugOrder) {
-		
+
 		final List<Obs> observations = Context.getService(PharmacyHeuristicService.class)
-		        .findObservationsByOrder(drugOrder);
+				.findObservationsByOrder(drugOrder);
 		for (final Obs obs : observations) {
-			
+
 			if (MappedConcepts.DATE_OF_NEXT_PICK_UP.equals(obs.getConcept().getUuid())) {
-				
+
 				return obs.getValueDate();
 			}
 		}
 		return null;
 	}
-	
+
 	private boolean isTheSameConceptAndSameDrug(final DrugOrder order, final Obs observation) {
-		
+
 		final Drug obsDrug = Context.getService(PharmacyHeuristicService.class)
-		        .findDrugByOrderUuid(observation.getOrder().getUuid());
-		
+				.findDrugByOrderUuid(observation.getOrder().getUuid());
+
 		return MappedConcepts.MEDICATION_QUANTITY.equals(observation.getConcept().getUuid())
-		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
+				&& order.getDrug().getUuid().equals(obsDrug.getUuid());
 	}
-	
+
 	public boolean isOrderExpired(final PrescriptionItem item, final Date creationDate) {
-		
-		final Date expirationDate = item.getExpirationDate();
-		
+
+		final Double drugToPickUp = item.getDrugToPickUp();
+
+		final Date nextPickUpDate = this.getNextPickUpDate(item.getDrugOrder());
+
 		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(expirationDate);
-		
-		if (item.getDrugOrder().getDuration() > 2) {
-			calendar.add(Calendar.DAY_OF_MONTH, -1);
-		}
-		
+		calendar.setTime(nextPickUpDate);
+		calendar.add(Calendar.DAY_OF_MONTH, drugToPickUp.intValue());
+
 		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-		        || (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				|| (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 			calendar.add(Calendar.DAY_OF_MONTH, -1);
 		}
-		
+
 		return creationDate.after(calendar.getTime());
 	}
 }

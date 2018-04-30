@@ -157,6 +157,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 					}
 					
 					orderProcess.setOrderer(provider);
+					orderProcess.setPatient(order.getPatient());
 					this.prepareDispensation(orderProcess, dispensationEncounter, dispensationConceptSet,
 					    quantityConcept, nextPickUpConcept, dispensationItem, arvConceptQuestion);
 					

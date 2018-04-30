@@ -487,11 +487,7 @@
    
  <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
  <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
-
- <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
- <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
-   
-   
+ 
  <concept concept_id="997" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
  <concept_name concept_id="997" name="terapeutic plan" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="997" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
 
@@ -517,6 +513,6 @@
  <concept_name concept_id="1003" name="first line" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
  
  <concept concept_id="1004" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
- <concept_name concept_id="1004" name="start drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
- 	
+ <concept_name concept_id="1004" name="start drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1004" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
+ 
 </dataset>

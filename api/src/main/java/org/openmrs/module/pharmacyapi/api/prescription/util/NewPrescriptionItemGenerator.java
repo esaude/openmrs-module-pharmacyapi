@@ -33,6 +33,7 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 		prescriptionItem.setDrugToPickUp(fetchedDO.getQuantity());
 		this.setPrescriptionInstructions(prescriptionItem, fetchedDO);
 		this.setArvDataFields(drugOrder, prescriptionItem);
+		prescriptionItem.setExpectedNextPickUpDate(this.getExpirationDateMinus2Days(prescriptionItem));
 		
 		return prescriptionItem;
 	}
@@ -48,6 +49,11 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 	@Override
 	public boolean isOrderExpired(final PrescriptionItem item, final Date consultationDate) {
 		
+		return consultationDate.after(this.getExpirationDateMinus2Days(item));
+	}
+	
+	private Date getExpirationDateMinus2Days(final PrescriptionItem item) {
+		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(item.getDrugOrder().getEncounter().getDateCreated());
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
@@ -57,6 +63,7 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 			
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
-		return consultationDate.after(calendar.getTime());
+		
+		return calendar.getTime();
 	}
 }
