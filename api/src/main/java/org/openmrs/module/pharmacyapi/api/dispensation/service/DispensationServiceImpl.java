@@ -196,7 +196,7 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 				this.batchService.createWasteDrug(entry.getKey(), location, entry.getValue(), new Date());
 			}
 			catch (final Exception e) {
-				throw new APIException(e);
+				throw new APIException(e.getMessage());
 			}
 		}
 	}
