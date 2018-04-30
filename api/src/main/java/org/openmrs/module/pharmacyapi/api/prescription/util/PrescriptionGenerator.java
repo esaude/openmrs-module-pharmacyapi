@@ -53,16 +53,30 @@ public class PrescriptionGenerator {
 		final Map<Encounter, List<DrugOrder>> drugOrdersByEncounter = this.groupDrugOrdersByEncounter(drugOrders);
 		
 		for (final Entry<Encounter, List<DrugOrder>> ordersByEncounter : drugOrdersByEncounter.entrySet()) {
-			
-			final Prescription prescription = this.preparePrescription(ordersByEncounter.getKey());
+			Encounter encounter = ordersByEncounter.getKey();
+			final Prescription prescription = this.preparePrescription(encounter);
+			List<DrugOrder> orders = ordersByEncounter.getValue();
 			final List<PrescriptionItem> prescriptionItems = this.prescriptionItemFactory
-			        .generatePrescriptionItems(prescription, creationDate, ordersByEncounter.getValue());
+			        .generatePrescriptionItems(prescription, creationDate, orders);
 			prescription.setPrescriptionItems(prescriptionItems);
 			prescription.setPrescriptionStatus(this.calculatePrescriptioStatus(prescriptionItems));
+			prescription.setChangeReason(getChangeReason(encounter));
 			result.add(prescription);
 		}
 		
 		return result;
+	}
+	
+	private Concept getChangeReason(Encounter encounter) {
+		Concept changeReason = null;
+		for (Obs obs : encounter.getObs()) {
+			Concept concept = obs.getConcept();
+			if (concept.getUuid().equals(MappedConcepts.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT)) {
+				changeReason = obs.getValueCoded();
+				break;
+			}
+		}
+		return changeReason;
 	}
 	
 	private Map<Encounter, List<DrugOrder>> groupDrugOrdersByEncounter(final List<DrugOrder> drugOrders)

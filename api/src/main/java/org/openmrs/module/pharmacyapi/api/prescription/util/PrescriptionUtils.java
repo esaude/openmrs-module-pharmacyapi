@@ -69,17 +69,7 @@ public class PrescriptionUtils {
 			obsTherapeuticLine.setValueCoded(this.getArvTherapeuticLineByPrescriptionTherapeuticLineUuid(prescription));
 			encounter.addObs(obsTherapeuticLine);
 			
-			if (prescription.getInterruptionReason() != null) {
-				
-				final Obs obsInterruptionReason = new Obs();
-				obsInterruptionReason.setConcept(
-				        Context.getConceptService().getConceptByUuid(MappedConcepts.REASON_ANTIRETROVIRALS_STOPPED));
-				obsInterruptionReason.setValueCoded(
-				        Context.getConceptService().getConceptByUuid(prescription.getInterruptionReason().getUuid()));
-				encounter.addObs(obsInterruptionReason);
-				
-			} else if (prescription.getChangeReason() != null) {
-				
+			if (prescription.getChangeReason() != null) {
 				final Obs obsChangeReason = new Obs();
 				obsChangeReason.setConcept(Context.getConceptService()
 				        .getConceptByUuid(MappedConcepts.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT));

@@ -36,6 +36,7 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		
 		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchDO, creationDate));
 		this.setArvDataFields(fetchDO, prescriptionItem);
+		prescriptionItem.setInterruptionReason(drugOrder.getOrderReason());
 		return prescriptionItem;
 	}
 	
