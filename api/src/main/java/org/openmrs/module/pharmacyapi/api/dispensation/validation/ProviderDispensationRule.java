@@ -13,7 +13,6 @@
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.openmrs.Person;
 import org.openmrs.Provider;
@@ -29,7 +28,7 @@ import org.springframework.stereotype.Component;
 public class ProviderDispensationRule implements IDispensationRuleValidation {
 	
 	@Override
-	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			throw new PharmacyBusinessException(" Invalid Dispensation argument");

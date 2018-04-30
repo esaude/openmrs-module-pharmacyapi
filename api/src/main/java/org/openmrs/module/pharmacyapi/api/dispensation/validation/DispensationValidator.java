@@ -67,7 +67,7 @@ public class DispensationValidator {
 		
 		for (final IDispensationRuleValidation rule : this.rulesForCreateDispensation) {
 			
-			rule.validate(dispensation, date);
+			rule.validate(dispensation);
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class DispensationValidator {
 		
 		for (final IDispensationRuleValidation rule : this.rulesForCancellationDispensation) {
 			
-			rule.validate(dispensation, date);
+			rule.validate(dispensation);
 		}
 	}
 }

@@ -151,17 +151,16 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	}
 	
 	@Override
-	public Prescription createPrescription(final Prescription prescription, final Date date)
-	        throws PharmacyBusinessException {
+	public Prescription createPrescription(final Prescription prescription) throws PharmacyBusinessException {
 		
-		this.prescriptionValidator.validateCreation(prescription, date);
+		this.prescriptionValidator.validateCreation(prescription);
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
 		final Provider provider = Context.getProviderService().getProviderByUuid(prescription.getProvider().getUuid());
 		prescription.setPatient(patient);
 		prescription.setProvider(provider);
 		
-		final Encounter encounter = this.prescriptionUtils.preparePrescriptionEncounter(prescription, date);
+		final Encounter encounter = this.prescriptionUtils.preparePrescriptionEncounter(prescription);
 		this.prescriptionUtils.prepareObservations(prescription, encounter);
 		this.prescriptionUtils.prepareOrders(prescription, encounter);
 		

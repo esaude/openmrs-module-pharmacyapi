@@ -88,4 +88,5 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	public String getLocationUuid() {
 		return this.locationUuid;
 	}
+	
 }
