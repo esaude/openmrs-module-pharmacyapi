@@ -20,37 +20,37 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionItemGenerator {
-
+	
 	@Override
 	public PrescriptionItem generate(final DrugOrder drugOrder, final Date creationDate)
-			throws PharmacyBusinessException {
-
+	        throws PharmacyBusinessException {
+		
 		final DrugOrder fetchDO = this.fetchDrugOrder(drugOrder);
 		final PrescriptionItem prescriptionItem = new PrescriptionItem(this.cloneDrugOrder(fetchDO));
 		final Double quantity = this.calculateDrugPikckedUp(fetchDO);
 		prescriptionItem.setDrugPickedUp(quantity);
 		prescriptionItem
-		.setDrugToPickUp(prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
+		        .setDrugToPickUp(prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
 		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(prescriptionItem.getDrugOrder()));
 		this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
-
+		
 		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		this.setArvDataFields(fetchDO, prescriptionItem);
 		return prescriptionItem;
 	}
-
+	
 	private DrugOrder cloneDrugOrder(final DrugOrder drugOrder) {
-
+		
 		final DrugOrder clone = new DrugOrder();
 		clone.setId(drugOrder.getId());
 		clone.setPreviousOrder(drugOrder.getPreviousOrder());
-
+		
 		DrugOrder tempDrugOrder = drugOrder;
 		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-
+			
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
-
+		
 		clone.setDose(tempDrugOrder.getDose());
 		clone.setQuantity(tempDrugOrder.getQuantity());
 		clone.setDosingInstructions(tempDrugOrder.getDosingInstructions());
@@ -72,16 +72,16 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		clone.setDrug(tempDrugOrder.getDrug());
 		clone.setDateCreated(tempDrugOrder.getDateCreated());
 		clone.setAutoExpireDate(tempDrugOrder.getAutoExpireDate());
-
+		
 		return clone;
 	}
-
+	
 	@Override
 	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
-			final Date consultationDate) {
-
+	        final Date consultationDate) {
+		
 		return item.getDrugOrder().getOrderReason() != null ? PrescriptionItemStatus.INTERRUPTED
-				: this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
-						: PrescriptionItemStatus.FINALIZED;
+		        : this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
+		                : PrescriptionItemStatus.FINALIZED;
 	}
 }
