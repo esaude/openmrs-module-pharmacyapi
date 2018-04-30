@@ -59,7 +59,7 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 11);
-		calendar.set(Calendar.DAY_OF_MONTH, 2);
+		calendar.set(Calendar.DAY_OF_MONTH, 7);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
@@ -82,7 +82,7 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 17);
+		calendar.set(Calendar.DAY_OF_MONTH, 16);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();

@@ -9,7 +9,7 @@
 <phm_drug_regime drug_regime_id ="2" drug_item_id="3" regime_id="1002" uuid="8fe85975-90f0-4288-ba51-a003ef7axxxd" creator="1" date_created="2008-08-18 14:22:17.0" retired="false"/>
 
 
- <encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-16 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adult"/>
+ <encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-16 00:00:00.0" creator="1" date_created="2008-08-16 00:00:00.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adult"/>
  	
  <orders order_id="100" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_stopped="2017-11-08 00:00:00.0" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-0001" care_setting="1" encounter_id="1000" />
  <orders order_id="101" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-0002" care_setting="1" encounter_id="1000" />

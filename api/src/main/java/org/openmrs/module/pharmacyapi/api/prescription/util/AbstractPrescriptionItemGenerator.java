@@ -13,6 +13,7 @@
 package org.openmrs.module.pharmacyapi.api.prescription.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -160,15 +161,21 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 	}
 	
 	public boolean isOrderExpired(final PrescriptionItem item, final Date creationDate) {
-		//
-		// Order tempDrugOrder = order;
-		// while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-		// tempDrugOrder = tempDrugOrder.getPreviousOrder();
-		// }
 		
-		// creationDate.after(item.getExpirationDate());
+		final Date expirationDate = item.getExpirationDate();
 		
-		return creationDate.after(item.getExpirationDate());
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(expirationDate);
+		
+		if (item.getDrugOrder().getDuration() > 2) {
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		
+		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+		        || (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+		}
+		
+		return creationDate.after(calendar.getTime());
 	}
-	
 }

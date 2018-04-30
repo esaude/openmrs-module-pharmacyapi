@@ -41,12 +41,14 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 	
 	private DrugOrder cloneDrugOrder(final DrugOrder drugOrder) {
 		
+		final DrugOrder clone = new DrugOrder();
+		clone.setPreviousOrder(drugOrder.getPreviousOrder());
+		
 		DrugOrder tempDrugOrder = drugOrder;
-		while (Action.DISCONTINUE.equals(tempDrugOrder.getAction())) {
+		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
 			
 			tempDrugOrder = (DrugOrder) drugOrder.getPreviousOrder();
 		}
-		final DrugOrder clone = new DrugOrder();
 		
 		clone.setId(tempDrugOrder.getId());
 		clone.setDose(tempDrugOrder.getDose());
