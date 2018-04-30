@@ -23,21 +23,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PrescriptionItemFactory {
-
+	
 	@Autowired
 	private NewPrescriptionItemGenerator newPrescriptionItemGenerator;
-
+	
 	@Autowired
 	private RevisePrescriptionItemGenerator revisePrescriptionItemGenerator;
-
+	
 	@Autowired
 	private DiscountinuePrescriptionItemGenerator dIscountinuePrescriptionItemGenerator;
-
+	
 	public List<PrescriptionItem> generatePrescriptionItems(final Prescription prescription, final Date creationDate,
-			final List<DrugOrder> drugOrders) throws PharmacyBusinessException {
-
+	        final List<DrugOrder> drugOrders) throws PharmacyBusinessException {
+		
 		final List<PrescriptionItem> items = new ArrayList<>();
-
+		
 		for (final DrugOrder drugOrder : drugOrders) {
 			final PrescriptionItem item = this.generatePrescriptionItem(drugOrder, creationDate);
 			item.setPrescription(prescription);
@@ -45,22 +45,22 @@ public class PrescriptionItemFactory {
 		}
 		return items;
 	}
-
+	
 	private PrescriptionItem generatePrescriptionItem(final DrugOrder drugOrder, final Date creationDate)
-			throws PharmacyBusinessException {
-
+	        throws PharmacyBusinessException {
+		
 		if (Action.NEW.equals(drugOrder.getAction())) {
 			return this.newPrescriptionItemGenerator.generate(drugOrder, creationDate);
 		}
-
+		
 		if (Action.REVISE.equals(drugOrder.getAction())) {
 			return this.revisePrescriptionItemGenerator.generate(drugOrder, creationDate);
 		}
-
+		
 		if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
 			return this.dIscountinuePrescriptionItemGenerator.generate(drugOrder, creationDate);
 		}
 		throw new IllegalArgumentException("failed to parse drugOrder with order action " + drugOrder.getAction()
-		+ " and uuid " + drugOrder.getUuid());
+		        + " and uuid " + drugOrder.getUuid());
 	}
 }

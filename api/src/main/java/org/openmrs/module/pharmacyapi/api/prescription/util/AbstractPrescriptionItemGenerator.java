@@ -21,7 +21,6 @@ import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -57,8 +56,8 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		}
 	}
 	
-	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        Date expirationDate);
+	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(PrescriptionItem item,
+	        Date consultationDate);
 	
 	private Concept findArvPlan(final DrugOrder drugOrder) {
 		DrugOrder tempDrugOrder = drugOrder;
@@ -160,13 +159,16 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
 	}
 	
-	public boolean isOrderExpired(final Order order, final Date creationDate) {
+	public boolean isOrderExpired(final PrescriptionItem item, final Date creationDate) {
+		//
+		// Order tempDrugOrder = order;
+		// while (!Action.NEW.equals(tempDrugOrder.getAction())) {
+		// tempDrugOrder = tempDrugOrder.getPreviousOrder();
+		// }
 		
-		Order tempDrugOrder = order;
-		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-			tempDrugOrder = tempDrugOrder.getPreviousOrder();
-		}
-		return creationDate.after(tempDrugOrder.getAutoExpireDate());
+		// creationDate.after(item.getExpirationDate());
+		
+		return creationDate.after(item.getExpirationDate());
 	}
 	
 }

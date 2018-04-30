@@ -34,7 +34,7 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(prescriptionItem.getDrugOrder()));
 		this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
 		
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchDO, creationDate));
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		this.setArvDataFields(fetchDO, prescriptionItem);
 		return prescriptionItem;
 	}
@@ -75,11 +75,11 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 	}
 	
 	@Override
-	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        final Date expirationDate) {
+	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
+	        final Date consultationDate) {
 		
-		return drugOrder.getOrderReason() != null ? PrescriptionItemStatus.INTERRUPTED
-		        : this.isOrderExpired(drugOrder, expirationDate) ? PrescriptionItemStatus.EXPIRED
+		return item.getDrugOrder().getOrderReason() != null ? PrescriptionItemStatus.INTERRUPTED
+		        : this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
 		                : PrescriptionItemStatus.FINALIZED;
 	}
 }

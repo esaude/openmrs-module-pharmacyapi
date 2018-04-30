@@ -20,44 +20,45 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenerator {
-
+	
 	@Override
 	public PrescriptionItem generate(final DrugOrder drugOrder, final Date creationDate)
-			throws PharmacyBusinessException {
-
+	        throws PharmacyBusinessException {
+		
 		final DrugOrder fetchedDO = this.fetchDrugOrder(drugOrder);
-
+		
 		final PrescriptionItem prescriptionItem = new PrescriptionItem(fetchedDO);
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchedDO, creationDate));
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		prescriptionItem.setDrugPickedUp(0d);
 		prescriptionItem.setDrugToPickUp(fetchedDO.getQuantity());
 		this.setPrescriptionInstructions(prescriptionItem, fetchedDO);
 		this.setArvDataFields(drugOrder, prescriptionItem);
-
+		
 		return prescriptionItem;
 	}
-
+	
 	@Override
-	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-			final Date creationDate) {
-
-		return this.isOrderExpired(drugOrder, creationDate) ? PrescriptionItemStatus.EXPIRED
-				: PrescriptionItemStatus.NEW;
+	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
+	        final Date consultationDate) {
+		
+		return this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
+		        : PrescriptionItemStatus.NEW;
 	}
-
+	
+	@Override
 	public boolean isOrderExpired(final PrescriptionItem item, final Date consultationDate) {
-
+		
 		consultationDate.after(item.getExpirationDate());
-
+		
 		final Date expirationDate = item.getExpirationDate();
-
+		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(expirationDate);
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
-
+		
 		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-				|| (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-
+		        || (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		return consultationDate.after(calendar.getTime());
