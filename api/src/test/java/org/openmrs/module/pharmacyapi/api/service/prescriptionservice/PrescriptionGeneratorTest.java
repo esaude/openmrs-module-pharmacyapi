@@ -59,7 +59,7 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 11);
-		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		calendar.set(Calendar.DAY_OF_MONTH, 2);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
@@ -82,7 +82,7 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 8);
+		calendar.set(Calendar.DAY_OF_MONTH, 17);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
@@ -126,9 +126,9 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		this.executeDataSet("prescriptionservice/shouldGenerateArvPrescriptionWithActiveStatus-dataset.xml");
 		
 		final Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 8);
+		calendar.set(Calendar.YEAR, 2008);
+		calendar.set(Calendar.MONTH, 7);
+		calendar.set(Calendar.DAY_OF_MONTH, 18);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
