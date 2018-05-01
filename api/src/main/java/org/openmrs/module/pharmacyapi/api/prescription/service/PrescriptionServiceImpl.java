@@ -188,7 +188,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 					    order.getOrderer(), order.getEncounter());
 				}
 				catch (final Exception e) {
-					throw new APIException(e);
+					throw new APIException(e.getMessage());
 				}
 			} else if (Action.DISCONTINUE.equals(order.getAction())) {
 				this.pharmacyHeuristicService.updateOrder(order, discountinueReason);

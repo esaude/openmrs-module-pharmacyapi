@@ -101,7 +101,7 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
 		
-		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
+		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs(false);
 		final Concept regime = Context.getConceptService()
 		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 		
@@ -134,7 +134,6 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 				quantity += observation.getValueNumeric();
 			}
 		}
-		
 		return quantity;
 	}
 	
@@ -169,6 +168,11 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(nextPickUpDate);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		
 		calendar.add(Calendar.DAY_OF_MONTH, drugToPickUp.intValue());
 		
 		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)

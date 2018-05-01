@@ -33,7 +33,7 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 		prescriptionItem.setDrugToPickUp(fetchedDO.getQuantity());
 		this.setPrescriptionInstructions(prescriptionItem, fetchedDO);
 		this.setArvDataFields(drugOrder, prescriptionItem);
-		prescriptionItem.setExpectedNextPickUpDate(this.getExpirationDateMinus2Days(prescriptionItem));
+		prescriptionItem.setExpectedNextPickUpDate(fetchedDO.getDateCreated());
 		
 		return prescriptionItem;
 	}
@@ -56,6 +56,10 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(item.getDrugOrder().getEncounter().getDateCreated());
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.add(Calendar.DAY_OF_MONTH, 10);
 		
 		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)

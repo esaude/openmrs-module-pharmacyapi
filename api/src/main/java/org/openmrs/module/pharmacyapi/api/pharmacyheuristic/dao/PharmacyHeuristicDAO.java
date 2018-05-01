@@ -42,4 +42,6 @@ public interface PharmacyHeuristicDAO {
 	List<Obs> findObservationsByOrder(final Order order, boolean voided);
 	
 	void updateOrder(Order order, Concept orderReason);
+	
+	Order findOrderByPreviousOrder(Order previousOrder);
 }
