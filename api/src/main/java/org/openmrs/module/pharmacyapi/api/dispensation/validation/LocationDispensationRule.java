@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
+import java.util.Date;
+
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class LocationDispensationRule implements IDispensationRuleValidation {
 	
 	@Override
-	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			throw new PharmacyBusinessException(" Invalid Dispensation argument");

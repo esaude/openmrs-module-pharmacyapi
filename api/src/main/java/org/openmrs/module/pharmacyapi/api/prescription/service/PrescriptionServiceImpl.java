@@ -153,7 +153,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	@Override
 	public Prescription createPrescription(final Prescription prescription) throws PharmacyBusinessException {
 		
-		this.prescriptionValidator.validateCreation(prescription);
+		this.prescriptionValidator.validateCreation(prescription, prescription.getPrescriptionDate());
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
 		final Provider provider = Context.getProviderService().getProviderByUuid(prescription.getProvider().getUuid());
