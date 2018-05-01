@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.util;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.openmrs.DrugOrder;
@@ -27,20 +28,46 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 		final DrugOrder fetchedDO = this.fetchDrugOrder(drugOrder);
 		
 		final PrescriptionItem prescriptionItem = new PrescriptionItem(fetchedDO);
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchedDO, creationDate));
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		prescriptionItem.setDrugPickedUp(0d);
 		prescriptionItem.setDrugToPickUp(fetchedDO.getQuantity());
 		this.setPrescriptionInstructions(prescriptionItem, fetchedDO);
 		this.setArvDataFields(drugOrder, prescriptionItem);
+		prescriptionItem.setExpectedNextPickUpDate(fetchedDO.getDateCreated());
 		
 		return prescriptionItem;
 	}
 	
 	@Override
-	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        final Date creationDate) {
+	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
+	        final Date consultationDate) {
 		
-		return this.isOrderExpired(drugOrder, creationDate) ? PrescriptionItemStatus.EXPIRED
+		return this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
 		        : PrescriptionItemStatus.NEW;
+	}
+	
+	@Override
+	public boolean isOrderExpired(final PrescriptionItem item, final Date consultationDate) {
+		
+		return consultationDate.after(this.getExpirationDateMinus2Days(item));
+	}
+	
+	private Date getExpirationDateMinus2Days(final PrescriptionItem item) {
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(item.getDrugOrder().getEncounter().getDateCreated());
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.add(Calendar.DAY_OF_MONTH, 10);
+		
+		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+		        || (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		
+		return calendar.getTime();
 	}
 }

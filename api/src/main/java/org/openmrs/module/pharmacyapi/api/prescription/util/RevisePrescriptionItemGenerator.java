@@ -32,7 +32,7 @@ public class RevisePrescriptionItemGenerator extends AbstractPrescriptionItemGen
 		prescriptionItem
 		        .setDrugToPickUp(prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
 		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(fetchDO));
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchDO, creationDate));
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		this.setPrescriptionInstructions(prescriptionItem, fetchDO);
 		this.setArvDataFields(drugOrder, prescriptionItem);
 		
@@ -40,12 +40,12 @@ public class RevisePrescriptionItemGenerator extends AbstractPrescriptionItemGen
 	}
 	
 	@Override
-	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        final Date creationDate) {
+	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
+	        final Date consultationDate) {
 		
-		final PrescriptionItemStatus status = Action.DISCONTINUE.equals(drugOrder.getAction())
+		final PrescriptionItemStatus status = Action.DISCONTINUE.equals(item.getDrugOrder().getAction())
 		        ? PrescriptionItemStatus.FINALIZED : PrescriptionItemStatus.ACTIVE;
 		
-		return this.isOrderExpired(drugOrder, creationDate) ? PrescriptionItemStatus.EXPIRED : status;
+		return this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED : status;
 	}
 }

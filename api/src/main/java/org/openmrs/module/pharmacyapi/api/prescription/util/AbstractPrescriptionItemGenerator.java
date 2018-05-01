@@ -13,6 +13,7 @@
 package org.openmrs.module.pharmacyapi.api.prescription.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,6 @@ import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -57,8 +57,8 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		}
 	}
 	
-	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        Date expirationDate);
+	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(PrescriptionItem item,
+	        Date consultationDate);
 	
 	private Concept findArvPlan(final DrugOrder drugOrder) {
 		DrugOrder tempDrugOrder = drugOrder;
@@ -101,7 +101,7 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
 		}
 		
-		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
+		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs(false);
 		final Concept regime = Context.getConceptService()
 		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 		
@@ -122,7 +122,8 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		while (tempOrder.getPreviousOrder() != null) {
 			
 			if ((tempOrder.getOrderReason() == null) && !tempOrder.getVoided()) {
-				observations.addAll(tempOrder.getEncounter().getObs());
+				
+				observations.addAll(Context.getObsService().getObservations(tempOrder.getEncounter()));
 			}
 			tempOrder = (DrugOrder) tempOrder.getPreviousOrder();
 		}
@@ -133,7 +134,6 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 				quantity += observation.getValueNumeric();
 			}
 		}
-		
 		return quantity;
 	}
 	
@@ -160,13 +160,26 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		        && order.getDrug().getUuid().equals(obsDrug.getUuid());
 	}
 	
-	public boolean isOrderExpired(final Order order, final Date creationDate) {
+	public boolean isOrderExpired(final PrescriptionItem item, final Date creationDate) {
 		
-		Order tempDrugOrder = order;
-		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-			tempDrugOrder = tempDrugOrder.getPreviousOrder();
+		final Double drugToPickUp = item.getDrugToPickUp();
+		
+		final Date nextPickUpDate = this.getNextPickUpDate(item.getDrugOrder());
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(nextPickUpDate);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		
+		calendar.add(Calendar.DAY_OF_MONTH, drugToPickUp.intValue());
+		
+		while ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+		        || (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
 		}
-		return creationDate.after(tempDrugOrder.getAutoExpireDate());
+		
+		return creationDate.after(calendar.getTime());
 	}
-	
 }

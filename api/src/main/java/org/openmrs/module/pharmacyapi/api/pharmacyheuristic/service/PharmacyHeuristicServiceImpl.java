@@ -101,4 +101,9 @@ public class PharmacyHeuristicServiceImpl extends BaseOpenmrsService implements 
 	public void updateOrder(final Order order, final Concept orderReason) {
 		this.pharmacyHeuristicDAO.updateOrder(order, orderReason);
 	}
+	
+	@Override
+	public Order findOrderByPreviousOrder(final Order previousOrder) {
+		return this.pharmacyHeuristicDAO.findOrderByPreviousOrder(previousOrder);
+	}
 }

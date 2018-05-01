@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.common.validation;
 
+import java.util.Date;
+
 import org.openmrs.OpenmrsObject;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 
@@ -20,6 +22,6 @@ import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessExcep
  */
 public interface IValidationRule<T extends OpenmrsObject> {
 	
-	public void validate(T t) throws PharmacyBusinessException;
+	public void validate(T t, Date date) throws PharmacyBusinessException;
 	
 }

@@ -88,6 +88,8 @@
   <concept concept_id="63" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d717849-10e8-11e5-9009-0242ac110012"/>
   <concept concept_id="64" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d71d41e-10e8-11e5-9009-0242ac110012"/>
   
+  <concept concept_id="65" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d6f51fb-10e8-11e5-9009-0242ac110012"/>
+  
   <concept_answer concept_answer_id="1" concept_id="21" answer_concept="7" creator="1" date_created="2008-08-18 12:34:26.0" uuid="b1230431-2fe5-49fc-b535-ae42bc849747"/>
   <concept_answer concept_answer_id="2" concept_id="21" answer_concept="8" creator="1" date_created="2008-08-18 12:34:26.0" uuid="f67e537b-d9f9-45c4-846b-79ed1ba88778"/>
   <concept_answer concept_answer_id="3" concept_id="21" answer_concept="22" creator="1" date_created="2008-08-18 12:34:58.0" uuid="11e15f3b-3237-40e9-9c24-cb7916a4868b"/>
@@ -146,7 +148,12 @@
   <concept_reference_term concept_reference_term_id="10" concept_source_id="1" code="454545" name="no term name3" description="" retired="0" creator="1" date_created="2004-08-12 00:00:00.0" uuid="SSTRM-454545"/>
   <concept_reference_term concept_reference_term_id="11" concept_source_id="1" code="retired code" name="retired name" description="test duplicate term that is retired" retired="1" retired_by="1" retire_reason="test reason" date_retired="2004-08-12 12:00:00" creator="1" date_created="2004-08-12 00:00:00.0" uuid="SSTRM-retired code"/>
 
-<concept_reference_term concept_reference_term_id="30" concept_source_id="2" code="258705008" name="weight term2" description="A person's weight in kilograms" retired="0" creator="1" date_created="2004-08-12 00:00:00.0" uuid="SNOMED CT-258705008"/>
+
+  <concept_reference_term concept_reference_term_id="30" concept_source_id="2" code="258705008" name="weight term2" description="A person's weight in kilograms" retired="0" creator="1" date_created="2004-08-12 00:00:00.0" uuid="SNOMED CT-258705008"/>
+
+
+
+  <concept_reference_term concept_reference_term_id="31" concept_source_id="2" code="258703001" name="Day(s)" description="Duration in Day(s)" retired="0"  creator="1" date_created="2004-08-12 00:00:00.0" uuid="9d8ea7ef-10e8-11e5-9009-0242ac110012"/>
 
   <concept_map_type concept_map_type_id="1" name="is a" is_hidden="0" retired="0" creator="1" date_created="2004-08-12 00:00:00.0" uuid="1ce7a784-7d8f-11e1-909d-c80aa9edcf4e"/>
   <concept_map_type concept_map_type_id="2" name="same-as" description="Indicates similarity" is_hidden="0" retired="0" creator="1" date_created="2004-08-12 00:00:00.0" uuid="35543629-7d8c-11e1-909d-c80aa9edcf4e"/>
@@ -168,6 +175,8 @@
   <concept_reference_map concept_map_id="10" concept_id="24" concept_reference_term_id="10" concept_map_type_id="6" creator="1" date_created="2004-08-12 00:00:00.0" uuid="beafba1e-49d8-11e0-8fed-18a905e044dc"/>
   <concept_reference_map concept_map_id="11" concept_id="61" concept_reference_term_id="30" concept_map_type_id="2" creator="1" date_created="2004-08-12 00:00:00.0" uuid="beafba1e-49d8-11e0-8fed-18a905eCRM1"/>
   <concept_reference_map concept_map_id="12" concept_id="62" concept_reference_term_id="3" concept_map_type_id="2" creator="1" date_created="2004-08-12 00:00:00.0" uuid="460fb053-1c30-41a3-9a02-12c8f93077b3"/>
+  
+   <concept_reference_map concept_map_id="13" concept_id="65" concept_reference_term_id="31" concept_map_type_id="2" creator="1" date_created="2004-08-12 00:00:00.0" uuid="43c79b60-f493-4007-bbae-c28459f1238f"/>
   
   <concept_reference_term_map concept_reference_term_map_id="1" term_a_id="1" term_b_id="2" a_is_to_b_id="4" creator="1" date_created="2004-08-12 00:00:00.0" uuid="dff198e4-562d-11e0-b169-18a905e044dc"/>
   <concept_reference_term_map concept_reference_term_map_id="2" term_a_id="1" term_b_id="4" a_is_to_b_id="2" creator="1" date_created="2004-08-12 00:00:00.0" uuid="f7edaa46-562d-11e0-b169-18a905e044dc"/>
@@ -218,6 +227,9 @@
   <concept_name concept_id="113" name="1/day x 7 days/week" concept_name_id="1131" locale="en_GB" creator="1" date_created="2008-08-15 13:52:53.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="83f24a00-7869-11e3-981f-0800200c9a66"/>
   <concept_name concept_id="60" name="hepatosplenomegaly" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="2179" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="ef7ac468-3683-443c-b11f-4617aa535673"/>
   <concept_name concept_id="60" name="HSM" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="2139" concept_name_type="SHORT" locale_preferred="0" voided="false" uuid="ef7ac658-3136-443c-b11f-4617aa535673"/>
+  
+  <concept_name concept_id="65" name="Day(s)" locale="en_GB" creator="1" date_created="2015-01-16 13:52:53.0" concept_name_id="2140" concept_name_type="FULLY_SPECIFIED" locale_preferred="0" voided="false" uuid="9d6f5b6b-10e8-11e5-9009-0242ac110012"/>
+  
   <concept_name_tag concept_name_tag_id="1" tag="default" description="name to use when nothing else is available" creator="1" date_created="2007-05-01 00:00:00.0" voided="false" uuid="9e9df183-2328-4117-acd8-fb9bf400911d"/>
   <concept_name_tag concept_name_tag_id="2" tag="short" description="preferred short name for a concept" creator="1" date_created="2007-05-01 00:00:00.0" voided="false" uuid="57396ec9-fb90-44b2-b59a-21bc5631bf3d"/>
   <concept_name_tag concept_name_tag_id="3" tag="synonym" description="a different word with similar meaning" creator="1" date_created="2007-05-01 00:00:00.0" voided="false" uuid="cb6bc7cf-d5d3-4d51-a05b-5ea656c7413a"/>
@@ -475,11 +487,7 @@
    
  <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
  <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
-
- <concept concept_id="982" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/> 
- <concept_name concept_id="982" name="poc Date of Next Pickup" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="982" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1e2efd8-1d5f-11e0-b929-000c29ad1d07"/>    
-   
-   
+ 
  <concept concept_id="997" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
  <concept_name concept_id="997" name="terapeutic plan" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="997" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="fdff0637-b36f-4dce-90c7-fe9f1ec586f0"/> 
 
@@ -501,10 +509,7 @@
  <concept concept_id="1003" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
  <concept_name concept_id="1003" name="first line" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
  
- <concept concept_id="1003" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
- <concept_name concept_id="1003" name="first line" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe"/> 
- 
  <concept concept_id="1004" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
- <concept_name concept_id="1004" name="start drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1003" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
- 	
+ <concept_name concept_id="1004" name="start drugs" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1004" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d9ef28-1d5f-11e0-b929-000c29ad1d07"/> 
+ 
 </dataset>

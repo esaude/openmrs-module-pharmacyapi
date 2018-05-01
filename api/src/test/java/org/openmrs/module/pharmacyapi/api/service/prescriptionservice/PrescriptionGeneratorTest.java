@@ -59,7 +59,7 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 11);
-		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		calendar.set(Calendar.DAY_OF_MONTH, 7);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
@@ -76,49 +76,47 @@ public class PrescriptionGeneratorTest extends BaseTest {
 	}
 	
 	@Test
-	public void shouldGenerateNonArvPrescriptionWithFinalizedStatus() throws Exception {
-		this.executeDataSet("prescriptionservice/shouldGenerateNonArvPrescriptionWithFinalizedStatus-dataset.xml");
+	public void shouldGenerateArvPrescriptionWithFinalizedStatus() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldGenerateArvPrescriptionWithFinalizedStatus-dataset.xml");
 		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
 		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 8);
+		calendar.set(Calendar.DAY_OF_MONTH, 9);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
 		drugOrders.add((DrugOrder) Context.getOrderService().getOrder(101));
-		drugOrders.add((DrugOrder) Context.getOrderService().getOrder(103));
 		
 		final List<Prescription> prescriptions = this.prescriptionGenerator.generatePrescriptions(drugOrders, date);
 		
 		Assert.assertEquals(1, prescriptions.size());
 		final Prescription prescription = prescriptions.get(0);
 		Assert.assertEquals(PrescriptionStatus.FINALIZED, prescription.getPrescriptionStatus());
-		Assert.assertFalse(prescription.isArv());
-		Assert.assertEquals(2, prescription.getPrescriptionItems().size());
+		Assert.assertTrue(prescription.isArv());
+		Assert.assertEquals(1, prescription.getPrescriptionItems().size());
 	}
 	
 	@Test
-	public void shouldGenerateNonArvPrescriptionWithExpiredByFinalizedStatus() throws Exception {
-		this.executeDataSet("prescriptionservice/shouldGenerateNonArvPrescriptionWithFinalizedStatus-dataset.xml");
+	public void shouldGenerateArvPrescriptionWithExpiredByFinalizedStatus() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldGenerateArvPrescriptionWithFinalizedStatus-dataset.xml");
 		
 		final Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 11);
-		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		calendar.set(Calendar.MONTH, 10);
+		calendar.set(Calendar.DAY_OF_MONTH, 11);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();
 		drugOrders.add((DrugOrder) Context.getOrderService().getOrder(101));
-		drugOrders.add((DrugOrder) Context.getOrderService().getOrder(103));
 		
 		final List<Prescription> prescriptions = this.prescriptionGenerator.generatePrescriptions(drugOrders, date);
 		
 		Assert.assertEquals(1, prescriptions.size());
 		final Prescription prescription = prescriptions.get(0);
 		Assert.assertEquals(PrescriptionStatus.EXPIRED, prescription.getPrescriptionStatus());
-		Assert.assertFalse(prescription.isArv());
-		Assert.assertEquals(2, prescription.getPrescriptionItems().size());
+		Assert.assertTrue(prescription.isArv());
+		Assert.assertEquals(1, prescription.getPrescriptionItems().size());
 	}
 	
 	@Test
@@ -126,9 +124,9 @@ public class PrescriptionGeneratorTest extends BaseTest {
 		this.executeDataSet("prescriptionservice/shouldGenerateArvPrescriptionWithActiveStatus-dataset.xml");
 		
 		final Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 8);
+		calendar.set(Calendar.YEAR, 2008);
+		calendar.set(Calendar.MONTH, 7);
+		calendar.set(Calendar.DAY_OF_MONTH, 18);
 		final Date date = calendar.getTime();
 		
 		final List<DrugOrder> drugOrders = new ArrayList<>();

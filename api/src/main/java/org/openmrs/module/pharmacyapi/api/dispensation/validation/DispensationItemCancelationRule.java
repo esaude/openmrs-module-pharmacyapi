@@ -12,18 +12,31 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
+import java.util.Arrays;
+import java.util.Date;
+
 import org.openmrs.DrugOrder;
+import org.openmrs.Order;
+import org.openmrs.Order.Action;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
+import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
+import org.openmrs.module.pharmacyapi.api.prescription.util.PrescriptionGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DispensationItemCancelationRule implements IDispensationRuleValidation {
 	
+	@Autowired
+	private PrescriptionGenerator prescriptionGenerator;
+	
 	@Override
-	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			
@@ -37,13 +50,39 @@ public class DispensationItemCancelationRule implements IDispensationRuleValidat
 		
 		for (final DispensationItem dispensationItem : dispensation.getDispensationItems()) {
 			
-			final DrugOrder order = (DrugOrder) Context.getOrderService().getOrderByUuid(dispensationItem.getOrderUuid());
+			final DrugOrder order = (DrugOrder) Context.getOrderService()
+			        .getOrderByUuid(dispensationItem.getOrderUuid());
 			
 			if (order == null) {
-				
 				throw new PharmacyBusinessException(
 				        "No Order found for given uuid: " + dispensationItem.getOrderUuid());
 			}
+			
+			this.validateForInterruptedReason(order);
+			this.validateForExpirationReason(order, date);
 		}
 	}
+	
+	private void validateForInterruptedReason(final DrugOrder order) {
+		
+		Order childOrder = null;
+		if (Action.REVISE.equals(order.getAction())) {
+			childOrder = Context.getService(PharmacyHeuristicService.class).findOrderByPreviousOrder(order);
+		}
+		if ((order.getOrderReason() != null) || ((childOrder != null) && (childOrder.getOrderReason() != null))) {
+			throw new APIException("Medicamento " + order.getDrug().getDisplayName()
+			        + " não pode ser cancelado pois foi interrompido");
+		}
+	}
+	
+	private void validateForExpirationReason(final DrugOrder order, final Date date) throws PharmacyBusinessException {
+		
+		final Prescription prescription = this.prescriptionGenerator.generatePrescriptions(Arrays.asList(order), date)
+		        .iterator().next();
+		if (Prescription.PrescriptionStatus.EXPIRED.equals(prescription.getPrescriptionStatus())) {
+			throw new APIException(
+			        "Medicamento " + order.getDrug().getDisplayName() + " não pode ser cancelado pois está expirado");
+		}
+	}
+	
 }

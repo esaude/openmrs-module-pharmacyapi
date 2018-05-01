@@ -60,6 +60,7 @@ public class PrescriptionItemFactory {
 		if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
 			return this.dIscountinuePrescriptionItemGenerator.generate(drugOrder, creationDate);
 		}
-		throw new IllegalArgumentException("REMOVE THIS EXCEPTION AND PUT A BUSINESS EXCEPTION");
+		throw new IllegalArgumentException("failed to parse drugOrder with order action " + drugOrder.getAction()
+		        + " and uuid " + drugOrder.getUuid());
 	}
 }

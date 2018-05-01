@@ -125,4 +125,12 @@ public class PharmacyHeuristicDAOImpl implements PharmacyHeuristicDAO {
 		sqlQuery.setParameter("orderId", order.getOrderId());
 		sqlQuery.executeUpdate();
 	}
+	
+	@Override
+	public Order findOrderByPreviousOrder(final Order previousOrder) {
+		final Criteria searchCriteria = this.sessionFactory.getCurrentSession().createCriteria(Order.class, "order");
+		searchCriteria.add(Restrictions.eq("order.previousOrder", previousOrder));
+		
+		return (Order) searchCriteria.uniqueResult();
+	}
 }
