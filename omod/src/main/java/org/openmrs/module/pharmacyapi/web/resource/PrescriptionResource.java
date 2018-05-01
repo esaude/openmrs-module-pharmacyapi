@@ -62,7 +62,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("arvPlan", Representation.REF);
 			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason");
-			description.addProperty("interruptionReason");
 			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			return description;
@@ -79,7 +78,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("arvPlan", Representation.REF);
 			description.addProperty("therapeuticLine", Representation.REF);
 			description.addProperty("changeReason");
-			description.addProperty("interruptionReason");
 			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -97,7 +95,6 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 			description.addProperty("arvPlan");
 			description.addProperty("therapeuticLine");
 			description.addProperty("changeReason");
-			description.addProperty("interruptionReason");
 			description.addProperty("prescriptionStatus");
 			description.addSelfLink();
 			return description;
@@ -115,7 +112,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	public Prescription save(final Prescription delegate) {
 		
 		try {
-			Context.getService(PrescriptionService.class).createPrescription(delegate, new Date());
+			Context.getService(PrescriptionService.class).createPrescription(delegate);
 		}
 		catch (final PharmacyBusinessException e) {
 			

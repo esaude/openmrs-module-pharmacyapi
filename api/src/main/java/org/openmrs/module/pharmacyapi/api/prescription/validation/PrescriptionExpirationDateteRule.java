@@ -12,7 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
-import java.util.Date;
 import java.util.List;
 
 import org.openmrs.api.context.Context;
@@ -25,12 +24,12 @@ import org.springframework.stereotype.Component;
 public class PrescriptionExpirationDateteRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription) throws PharmacyBusinessException {
 		
 		if (prescription.isArv()) {
 			
 			final List<Prescription> arvNotExpiredPrescriptions = Context.getService(PrescriptionService.class)
-			        .findNotExpiredArvPrescriptions(prescription.getPatient(), date);
+			        .findNotExpiredArvPrescriptions(prescription.getPatient(), prescription.getPrescriptionDate());
 			if (!arvNotExpiredPrescriptions.isEmpty()) {
 				throw new PharmacyBusinessException(
 				        "pharmacyapi.prescription.cannot.be.created.due.exisiting.active.arv.prescription");

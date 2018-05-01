@@ -12,8 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
-import java.util.Date;
-
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Order.Action;
@@ -27,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class DispensationItemCreationRule implements IDispensationRuleValidation {
 	
 	@Override
-	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			

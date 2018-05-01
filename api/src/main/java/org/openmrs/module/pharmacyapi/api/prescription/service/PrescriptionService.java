@@ -35,7 +35,7 @@ public interface PrescriptionService extends OpenmrsService {
 	
 	void setPharmacyHeuristicService(PharmacyHeuristicService pharmacyHeuristicService);
 	
-	Prescription createPrescription(Prescription prescription, final Date date) throws PharmacyBusinessException;
+	Prescription createPrescription(Prescription prescription) throws PharmacyBusinessException;
 	
 	List<Prescription> findAllPrescriptionsByPatient(final Patient patient, Date actualDate)
 	        throws PharmacyBusinessException;
