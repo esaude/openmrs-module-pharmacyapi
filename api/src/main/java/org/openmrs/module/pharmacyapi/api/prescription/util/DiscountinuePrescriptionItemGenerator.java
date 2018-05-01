@@ -34,7 +34,7 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(prescriptionItem.getDrugOrder()));
 		this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
 		
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(fetchDO, creationDate));
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
 		this.setArvDataFields(fetchDO, prescriptionItem);
 		prescriptionItem.setInterruptionReason(drugOrder.getOrderReason());
 		return prescriptionItem;
@@ -42,14 +42,17 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 	
 	private DrugOrder cloneDrugOrder(final DrugOrder drugOrder) {
 		
-		DrugOrder tempDrugOrder = drugOrder;
-		while (Action.DISCONTINUE.equals(tempDrugOrder.getAction())) {
-			
-			tempDrugOrder = (DrugOrder) drugOrder.getPreviousOrder();
-		}
 		final DrugOrder clone = new DrugOrder();
+		clone.setId(drugOrder.getId());
+		clone.setPreviousOrder(drugOrder.getPreviousOrder());
+		clone.setOrderReason(drugOrder.getOrderReason());
 		
-		clone.setId(tempDrugOrder.getId());
+		DrugOrder tempDrugOrder = drugOrder;
+		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
+			
+			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
+		}
+		
 		clone.setDose(tempDrugOrder.getDose());
 		clone.setQuantity(tempDrugOrder.getQuantity());
 		clone.setDosingInstructions(tempDrugOrder.getDosingInstructions());
@@ -76,11 +79,11 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 	}
 	
 	@Override
-	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final DrugOrder drugOrder,
-	        final Date expirationDate) {
+	protected PrescriptionItemStatus calculatePrescriptionItemStatus(final PrescriptionItem item,
+	        final Date consultationDate) {
 		
-		return drugOrder.getOrderReason() != null ? PrescriptionItemStatus.INTERRUPTED
-		        : this.isOrderExpired(drugOrder, expirationDate) ? PrescriptionItemStatus.EXPIRED
+		return item.getDrugOrder().getOrderReason() != null ? PrescriptionItemStatus.INTERRUPTED
+		        : this.isOrderExpired(item, consultationDate) ? PrescriptionItemStatus.EXPIRED
 		                : PrescriptionItemStatus.FINALIZED;
 	}
 }

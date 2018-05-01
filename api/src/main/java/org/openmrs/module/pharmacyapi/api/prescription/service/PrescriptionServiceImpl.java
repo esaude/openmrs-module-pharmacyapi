@@ -153,7 +153,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	@Override
 	public Prescription createPrescription(final Prescription prescription) throws PharmacyBusinessException {
 		
-		this.prescriptionValidator.validateCreation(prescription);
+		this.prescriptionValidator.validateCreation(prescription, prescription.getPrescriptionDate());
 		
 		final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
 		final Provider provider = Context.getProviderService().getProviderByUuid(prescription.getProvider().getUuid());
@@ -187,7 +187,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 					    order.getOrderer(), order.getEncounter());
 				}
 				catch (final Exception e) {
-					throw new APIException(e);
+					throw new APIException(e.getMessage());
 				}
 			} else if (Action.DISCONTINUE.equals(order.getAction())) {
 				this.pharmacyHeuristicService.updateOrder(order, discountinueReason);

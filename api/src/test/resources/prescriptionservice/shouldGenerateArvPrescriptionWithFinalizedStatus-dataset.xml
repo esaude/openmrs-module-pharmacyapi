@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+
+<encounter encounter_id="1000" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2017-11-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul0"/>
+<encounter encounter_id="1001" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2017-11-15 00:00:00.0" creator="1" date_created="2008-08-18 14:22:17.0" voided="false" uuid="eec646cb-c847-4ss-enc-who-adul1"/>
+ 	
+ <orders order_id="100" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="NEW" concept_id="88" orderer="1" instructions="2x daily" date_stopped="2017-11-08 00:00:00.0" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-0001" care_setting="1" encounter_id="1000" />
+ <orders order_id="101" order_type_id="1" order_number="1" urgency="ROUTINE" order_action="DISCONTINUE" previous_order_id ="100" concept_id="88" orderer="1" instructions="2x daily" date_activated="2017-11-08 00:00:00.0" creator="1" date_created="2017-11-08 00:00:00.0" auto_expire_date="2017-12-30 00:00:00.0" voided="false" patient_id="7" uuid="921de0a3-05c4-444a-be03-discnt1" care_setting="1" encounter_id="1001" /> 
+ 
+ <drug_order order_id="100" drug_inventory_id="2" dose="325.0" dose_units="50" as_needed="false" frequency="2" dosing_type="org.openmrs.SimpleDosingInstructions" dosing_instructions="9d74899a-10e8-11e5-9009-0242ac110012" route="22" quantity="5.0" quantity_units="51" num_refills="0" dispense_as_written="0" duration="5" duration_units="65" />
+ <drug_order order_id="101" drug_inventory_id="2" dose_units="50" as_needed="false" frequency="2" dosing_type="org.openmrs.SimpleDosingInstructions"  quantity_units="51" num_refills="0" dispense_as_written="1" />
+ 
+<phm_prescription_dispensation prescription_dispensation_id="1" patient_id ="7" prescription_id="1000" dispensation_id ="1001" uuid="9c67d35a-b86c-43db-9f24-24f7e466ac30" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" />
+
+<phm_drug_items drug_id ="2" fnm_code ="15F04" uuid ="97740a66-c9fa-4aaa-8dea-6e2f0264c2fe" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" />
+
+<phm_drug_regime drug_regime_id ="1" drug_item_id="2" regime_id="1002" uuid="8fe85975-90f0-4288-ba51-a0030def7aa0" creator="1" date_created="2008-08-18 14:22:17.0" retired="false"/>
+
+<obs obs_id="900" person_id="7" concept_id="999" encounter_id="1000" order_id ="100" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="1002" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854x1"/>
+<obs obs_id="901" person_id="7" concept_id="980" encounter_id="1000" order_id ="100" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="[NULL]" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854x2"/>
+<obs obs_id="902" person_id="7" concept_id="982" encounter_id="1000" order_id ="100" obs_group_id="901" obs_datetime="2017-11-08 00:00:00.0" location_id="1" value_datetime="2017-11-08 00:00:00.0" value_coded="[NULL]" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854x3"/>
+<obs obs_id="903" person_id="7" concept_id="998" encounter_id="1000" order_id ="100" obs_group_id="901" obs_datetime="2017-11-08 00:00:00.0" location_id="1" value_coded="1004" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854x4"/>
+<obs obs_id="904" person_id="7" concept_id="997" encounter_id="1000" order_id ="100" obs_group_id="901" obs_datetime="2017-11-08 00:00:00.0" location_id="1" value_coded="1003" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854x5"/>
+
+<obs obs_id="1010" person_id="7" concept_id="999" encounter_id="1001" order_id ="101" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="1002" comments="" creator="1" date_created="2017-11-08 00:00:00.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="6998904d-32c1-4809-a706-061aecc854bf"/>
+<obs obs_id="1011" person_id="7" concept_id="980" encounter_id="1001" order_id ="101" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="[NULL]" comments="" creator="1" date_created="2017-11-08 00:00:00.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="206bf7c5-be19-4af2-80e0-772a31911b84"/>
+<obs obs_id="1012" person_id="7" concept_id="982" encounter_id="1001" order_id ="101" obs_group_id="1011" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="[NULL]" comments="" creator="1" date_created="2017-11-08 00:00:00.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]" value_datetime="2017-11-10 00:00:00.0" value_drug="[NULL]" uuid="91f46056-23fa-416d-b442-0f0207669903"/>
+<obs obs_id="1013" person_id="7" concept_id="981" encounter_id="1001" order_id ="101" obs_group_id="1011" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_coded="[NULL]" value_numeric="5" comments="" creator="1" date_created="2017-11-08 00:00:00.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]"  value_drug="[NULL]" uuid="3af2a7ec-00fe-43c2-8e06-c580adfdba75"/>
+
+</dataset> 

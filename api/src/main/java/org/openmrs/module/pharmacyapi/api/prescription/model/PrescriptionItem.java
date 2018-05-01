@@ -10,6 +10,7 @@
 package org.openmrs.module.pharmacyapi.api.prescription.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,6 +18,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
+import org.openmrs.Order;
+import org.openmrs.Order.Action;
+import org.openmrs.SimpleDosingInstructions;
 
 /**
  *
@@ -168,6 +172,33 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setExpectedNextPickUpDate(final Date expectedNextPickUpDate) {
 		this.expectedNextPickUpDate = expectedNextPickUpDate;
+	}
+	
+	public Date getExpirationDate() {
+		
+		final SimpleDosingInstructions simpleDosingInstructions = new SimpleDosingInstructions();
+		
+		Order tempOrder = this.getDrugOrder();
+		while (!Action.NEW.equals(tempOrder.getAction())) {
+			tempOrder = tempOrder.getPreviousOrder();
+		}
+		final DrugOrder tempDrugOrder = (DrugOrder) tempOrder;
+		
+		final DrugOrder copy = new DrugOrder();
+		copy.setDuration(tempDrugOrder.getDuration());
+		copy.setDurationUnits(tempDrugOrder.getDurationUnits());
+		copy.setNumRefills(tempDrugOrder.getNumRefills());
+		copy.setFrequency(tempDrugOrder.getFrequency());
+		copy.setDateActivated(tempDrugOrder.getEncounter().getEncounterDatetime());
+		
+		final Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		final Date autoExpireDate = simpleDosingInstructions.getAutoExpireDate(copy);
+		return (autoExpireDate != null) ? autoExpireDate : cal.getTime();
 	}
 	
 	@Override

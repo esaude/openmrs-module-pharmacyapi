@@ -47,4 +47,6 @@ public interface PharmacyHeuristicService extends OpenmrsService {
 	List<Obs> findObservationsByOrder(Order order);
 	
 	void updateOrder(Order order, Concept orderReason);
+	
+	Order findOrderByPreviousOrder(Order previousOrder);
 }
