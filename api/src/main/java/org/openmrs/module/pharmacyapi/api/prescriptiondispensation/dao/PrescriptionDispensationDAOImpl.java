@@ -82,8 +82,7 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		final Query query = this.sessionFactory.getCurrentSession()
 		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByFila).setParameter("fila", fila);
 		
-		final PrescriptionDispensation uniqueResult = (org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation) query
-		        .uniqueResult();
+		final PrescriptionDispensation uniqueResult = (PrescriptionDispensation) query.uniqueResult();
 		
 		if (uniqueResult == null) {
 			throw new PharmacyBusinessException(
@@ -91,5 +90,4 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		}
 		return uniqueResult;
 	}
-	
 }

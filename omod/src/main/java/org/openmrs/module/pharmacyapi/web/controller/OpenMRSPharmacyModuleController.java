@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class OpenMRSPharmacyModuleController {
 	
 	/** Logger for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	@Autowired
 	UserService userService;
@@ -48,7 +48,7 @@ public class OpenMRSPharmacyModuleController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String onGet() {
-		return VIEW;
+		return this.VIEW;
 	}
 	
 	/**
@@ -60,14 +60,9 @@ public class OpenMRSPharmacyModuleController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String onPost(HttpSession httpSession, @ModelAttribute("anyRequestObject") Object anyRequestObject,
-	        BindingResult errors) {
-		
-		if (errors.hasErrors()) {
-			// return error view
-		}
-		
-		return VIEW;
+	public String onPost(final HttpSession httpSession,
+	        @ModelAttribute("anyRequestObject") final Object anyRequestObject, final BindingResult errors) {
+		return this.VIEW;
 	}
 	
 	/**
@@ -77,9 +72,10 @@ public class OpenMRSPharmacyModuleController {
 	 */
 	@ModelAttribute("users")
 	protected List<User> getUsers() throws Exception {
-		List<User> users = userService.getAllUsers();
+		final List<User> users = this.userService.getAllUsers();
 		
-		// this object will be made available to the jsp page under the variable name
+		// this object will be made available to the jsp page under the variable
+		// name
 		// that is defined in the @ModuleAttribute tag
 		return users;
 	}

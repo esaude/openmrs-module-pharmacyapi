@@ -41,5 +41,6 @@ public class LocationPrescriptionRule implements IPrescriptionValidationRule {
 			
 			throw new PharmacyBusinessException("pharmacyapi.location.not.found", prescription.getLocation().getUuid());
 		}
+		prescription.setLocation(found);
 	}
 }

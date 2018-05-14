@@ -114,18 +114,18 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 		final Concept regime = prescription.getRegime();
 		if (regime != null) {
 			
-			final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
 			final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
 			
 			final List<Prescription> existingsPrescriptions = prescriptionService
-			        .findActivePrescriptionsByPatient(patient, prescription.getPrescriptionDate());
+			        .findActivePrescriptionsByPatient(prescription.getPatient(), prescription.getPrescriptionDate());
 			
 			for (final Prescription existingPrescription : existingsPrescriptions) {
 				
 				if (existingPrescription.getRegime() != null) {
 					
 					throw new PharmacyBusinessException("Cannot create a new ARV Prescription for Patient "
-					        + this.getFormattedPatientToDisplay(patient) + " while exist Active ARV prescription "
+					        + this.getFormattedPatientToDisplay(prescription.getPatient())
+					        + " while exist Active ARV prescription "
 					        + StringUtils.join(existingsPrescriptions, "|"));
 					
 				}

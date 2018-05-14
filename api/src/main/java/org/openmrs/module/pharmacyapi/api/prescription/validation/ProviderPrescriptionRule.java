@@ -44,5 +44,6 @@ public class ProviderPrescriptionRule implements IPrescriptionValidationRule {
 		if (providerFound == null) {
 			throw new PharmacyBusinessException("Provider not found for given uuid " + provider.getUuid());
 		}
+		prescription.setProvider(providerFound);
 	}
 }

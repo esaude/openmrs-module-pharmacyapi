@@ -24,14 +24,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.Dispensation;
 import org.openmrs.module.pharmacyapi.api.dispensation.model.DispensationItem;
 import org.openmrs.module.pharmacyapi.api.dispensation.service.DispensationService;
-import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.templates.LocationTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PatientTemplate;
-import org.openmrs.module.pharmacyapi.api.templates.PrescriptionItemTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.ProviderTemplate;
 import org.openmrs.module.pharmacyapi.api.util.BaseTest;
-
-import br.com.six2six.fixturefactory.Fixture;
 
 /**
  * @author Stélio Moiane
@@ -50,16 +46,12 @@ public class DispensationServiceTest extends BaseTest {
 		calendar.set(Calendar.YEAR, 2005);
 		calendar.set(Calendar.MONTH, 0);
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		final Date date = calendar.getTime();
 		
 		final Dispensation dispensation = new Dispensation();
 		
 		dispensation.setPatientUuid(PatientTemplate.MR_HORATIO);
 		dispensation.setLocationUuid(LocationTemplate.XANADU);
 		dispensation.setProviderUuid(ProviderTemplate.TEST);
-		
-		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
-		        .gimme(PrescriptionItemTemplate.VALID_01);
 		
 		final DispensationItem item1 = new DispensationItem();
 		item1.setDrugOrder((DrugOrder) Context.getOrderService().getOrderByUuid(drugOrderUuid1));

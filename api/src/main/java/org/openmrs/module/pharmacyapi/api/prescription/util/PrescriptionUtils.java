@@ -156,13 +156,10 @@ public class PrescriptionUtils {
 	
 	public Encounter preparePrescriptionEncounter(final Prescription prescription) throws PharmacyBusinessException {
 		
-		final Location location = Context.getLocationService().getLocationByUuid(prescription.getLocation().getUuid());
-		
-		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
-		
-		final Encounter encounter = this.generateEncounterDuePrescriptionRules(prescription, location);
-		
-		encounter.setForm(pharmacyHeuristicService.getFormByPatientAge(prescription.getPatient()));
+		final Encounter encounter = this.generateEncounterDuePrescriptionRules(prescription,
+		    prescription.getLocation());
+		encounter.setForm(
+		        Context.getService(PharmacyHeuristicService.class).getFormByPatientAge(prescription.getPatient()));
 		
 		return encounter;
 	}

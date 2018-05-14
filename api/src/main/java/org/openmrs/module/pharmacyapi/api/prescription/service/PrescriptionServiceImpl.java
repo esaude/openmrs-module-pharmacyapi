@@ -23,7 +23,6 @@ import org.openmrs.EncounterType;
 import org.openmrs.Order;
 import org.openmrs.Order.Action;
 import org.openmrs.Patient;
-import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
@@ -154,11 +153,6 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	public Prescription createPrescription(final Prescription prescription) throws PharmacyBusinessException {
 		
 		this.prescriptionValidator.validateCreation(prescription, prescription.getPrescriptionDate());
-		
-		final Patient patient = Context.getPatientService().getPatientByUuid(prescription.getPatient().getUuid());
-		final Provider provider = Context.getProviderService().getProviderByUuid(prescription.getProvider().getUuid());
-		prescription.setPatient(patient);
-		prescription.setProvider(provider);
 		
 		final Encounter encounter = this.prescriptionUtils.preparePrescriptionEncounter(prescription);
 		this.prescriptionUtils.prepareObservations(prescription, encounter);

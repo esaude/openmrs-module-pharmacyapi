@@ -48,12 +48,6 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	
 	private PrescriptionStatus prescriptionStatus = PrescriptionStatus.ACTIVE;
 	
-	private Concept regime;
-	
-	private Concept arvPlan;
-	
-	private Concept therapeuticLine;
-	
 	private Concept changeReason;
 	
 	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
@@ -123,7 +117,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 		for (final PrescriptionItem item : this.prescriptionItems) {
 			
 			if (item.getRegime() != null) {
-				return this.regime = item.getRegime();
+				return item.getRegime();
 			}
 		}
 		return null;
@@ -135,7 +129,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 			
 			if (prescriptionItem.getArvPlan() != null) {
 				
-				return this.arvPlan = prescriptionItem.getArvPlan();
+				return prescriptionItem.getArvPlan();
 			}
 		}
 		return null;
@@ -145,7 +139,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 		
 		for (final PrescriptionItem prescriptionItem : this.prescriptionItems) {
 			if (prescriptionItem.getTherapeuticLine() != null) {
-				return this.therapeuticLine = prescriptionItem.getTherapeuticLine();
+				return prescriptionItem.getTherapeuticLine();
 			}
 		}
 		return null;
@@ -224,10 +218,10 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	}
 	
 	public Concept getChangeReason() {
-		return changeReason;
+		return this.changeReason;
 	}
 	
-	public void setChangeReason(Concept changeReason) {
+	public void setChangeReason(final Concept changeReason) {
 		this.changeReason = changeReason;
 	}
 }

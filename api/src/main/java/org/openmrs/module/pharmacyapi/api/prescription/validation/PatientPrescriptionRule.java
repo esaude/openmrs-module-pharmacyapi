@@ -41,5 +41,6 @@ public class PatientPrescriptionRule implements IPrescriptionValidationRule {
 		if (found == null) {
 			throw new PharmacyBusinessException("Patient not found for given uuid " + patient.getUuid());
 		}
+		prescription.setPatient(found);
 	}
 }

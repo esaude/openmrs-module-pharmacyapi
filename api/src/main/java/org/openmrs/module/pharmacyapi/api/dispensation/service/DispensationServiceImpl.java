@@ -110,8 +110,8 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			
 			this.dispensationValidator.validateCreation(dispensation, new Date());
 			
-			final Person person = Context.getPersonService().getPersonByUuid(dispensation.getProviderUuid());
-			final Provider provider = Context.getProviderService().getProvidersByPerson(person).iterator().next();
+			final Person person = this.personService.getPersonByUuid(dispensation.getProviderUuid());
+			final Provider provider = this.providerService.getProvidersByPerson(person).iterator().next();
 			final Patient patient = this.patientService.getPatientByUuid(dispensation.getPatientUuid());
 			
 			final EncounterRole encounterRole = this.encounterService

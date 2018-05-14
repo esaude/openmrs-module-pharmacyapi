@@ -122,7 +122,9 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 		
 		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		final Form childForm = pharmacyHeuristicService.getFormByPatientAge(new Patient(6));
+		final Patient patient = Context.getPatientService().getPatient(6);
+		
+		final Form childForm = pharmacyHeuristicService.getFormByPatientAge(patient);
 		
 		Assert.assertNotNull(childForm);
 		
@@ -134,7 +136,9 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 		
 		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
-		final Form adultForm = pharmacyHeuristicService.getFormByPatientAge(new Patient(7));
+		final Patient patient = Context.getPatientService().getPatient(7);
+		
+		final Form adultForm = pharmacyHeuristicService.getFormByPatientAge(patient);
 		
 		Assert.assertNotNull(adultForm);
 		
@@ -151,7 +155,7 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	}
 	
 	@Test
-	public void ShouldFindfindLastVisitByPatient() throws Exception {
+	public void shouldFindfindLastVisitByPatient() throws Exception {
 		
 		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		
@@ -168,7 +172,7 @@ public class PharmacyHeuristicServiceTest extends BaseTest {
 	}
 	
 	@Test(expected = PharmacyBusinessException.class)
-	public void ShouldThrowExceptionOnFindingLastVisitByForNonExistPatient() throws Exception {
+	public void shouldThrowExceptionOnFindingLastVisitByForNonExistPatient() throws Exception {
 		
 		final PharmacyHeuristicService pharmacyHeuristicService = Context.getService(PharmacyHeuristicService.class);
 		pharmacyHeuristicService.findLastVisitByPatientAndEncounterDate(new Patient(200), new Date());
