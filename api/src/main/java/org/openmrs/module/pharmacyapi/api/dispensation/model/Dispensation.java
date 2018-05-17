@@ -14,6 +14,7 @@ package org.openmrs.module.pharmacyapi.api.dispensation.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
@@ -32,6 +33,8 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	private String patientUuid;
 	
 	private String locationUuid;
+	
+	private Date dispensationDate;
 	
 	private List<DispensationItem> dispensationItems;
 	
@@ -87,6 +90,14 @@ public class Dispensation extends BaseOpenmrsData implements Serializable {
 	
 	public String getLocationUuid() {
 		return this.locationUuid;
+	}
+	
+	public Date getDispensationDate() {
+		return this.dispensationDate;
+	}
+	
+	public void setDispensationDate(final Date dispensationDate) {
+		this.dispensationDate = dispensationDate;
 	}
 	
 }

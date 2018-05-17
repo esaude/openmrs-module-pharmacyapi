@@ -12,7 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -34,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class PrescriptionItemRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription) throws PharmacyBusinessException {
 		
 		if (prescription == null) {
 			throw new PharmacyBusinessException("Invalid Prescription Argument");
@@ -125,8 +124,7 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 					
 					throw new PharmacyBusinessException("Cannot create a new ARV Prescription for Patient "
 					        + this.getFormattedPatientToDisplay(prescription.getPatient())
-					        + " while exist Active ARV prescription "
-					        + StringUtils.join(existingsPrescriptions, "|"));
+					        + " while exist Active ARV prescription " + StringUtils.join(existingsPrescriptions, "|"));
 					
 				}
 			}

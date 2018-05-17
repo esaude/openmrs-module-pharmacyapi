@@ -88,7 +88,7 @@
   <concept concept_id="63" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d717849-10e8-11e5-9009-0242ac110012"/>
   <concept concept_id="64" retired="false" datatype_id="4" class_id="19" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d71d41e-10e8-11e5-9009-0242ac110012"/>
   
-  <concept concept_id="65" retired="false" datatype_id="4" class_id="11" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d6f51fb-10e8-11e5-9009-0242ac110012"/>
+  <concept concept_id="65" retired="false" datatype_id="4" class_id="20" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="9d6f51fb-10e8-11e5-9009-0242ac110012"/>
   
   <concept_answer concept_answer_id="1" concept_id="21" answer_concept="7" creator="1" date_created="2008-08-18 12:34:26.0" uuid="b1230431-2fe5-49fc-b535-ae42bc849747"/>
   <concept_answer concept_answer_id="2" concept_id="21" answer_concept="8" creator="1" date_created="2008-08-18 12:34:26.0" uuid="f67e537b-d9f9-45c4-846b-79ed1ba88778"/>
@@ -257,6 +257,7 @@
   <concept_set concept_set_id="108" concept_id="22" concept_set="29" sort_weight="0.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="2a111827-639f-4cb5-961f-1e025bf88d90"/>
   <concept_set concept_set_id="109" concept_id="22" concept_set="30" sort_weight="0.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="3a111827-639f-4cb5-961f-1e025bf88d91"/>
   <concept_set concept_set_id="110" concept_id="61" concept_set="27" sort_weight="1.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="90893230-d9e7-11e3-9c1a-0800200c9XX0"/>
+  <concept_set concept_set_id="111" concept_id="65" concept_set="27" sort_weight="1.0" creator="1" date_created="2008-08-18 12:38:58.0" uuid="90893230-d9e7-11e3-9c1a-0800200cXXX3"/>
   
   <location location_id="1" name="Unknown Location" description="The default location used when limited information is known" address1="" address2="" city_village="" state_province="" postal_code="" country="" creator="1" date_created="2005-09-22 00:00:00.0" retired="false" uuid="8d6c993e-c2cc-11de-8d13-0010c6dffd0f"/>
   <location location_id="2" name="Xanadu" description="A metaphor for opulence, most famously in the English Romantic Samuel Taylor Coleridge&apos;s poem Kubla Khan." address1="800 Boylston Street" address2="" city_village="Boston" state_province="MA" postal_code="02115" country="USA" latitude="" longitude="" creator="1" date_created="2008-08-15 13:46:50.0" retired="false" uuid="9356400c-a5a2-4532-8f2b-2361b3446eb8"/>
@@ -342,8 +343,9 @@
   <encounter_type encounter_type_id="1" name="Scheduled" description="Scheduled Visit" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="61ae96f4-6afe-4351-b6f8-cd4fc383cce1"/>
   <encounter_type encounter_type_id="2" name="Emergency" description="Emergency visit" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="07000be2-26b6-4cce-8b40-866d8435b613"/>
   <encounter_type encounter_type_id="5" name="general" description="general encounter" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="9d0c3be0-10e8-11e5-9009-0242ac110012"/>
-  
   <encounter_type encounter_type_id="6" name="Laboratory" description="Visit to the laboratory" creator="1" date_created="2008-08-15 15:39:55.0" retired="true" retired_by="1" date_retired="2008-08-15 00:00:00.0" retire_reason="for testing" uuid="02c533ab-b74b-4ee4-b6e5-ffb6d09a0ac8"/>
+  <encounter_type encounter_type_id="7" name="fila" description="encounter for arv prescriptions" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="e279133c-1d5f-11e0-b929-000c29ad1d07"/>
+  
   <provider provider_id="1" person_id="1" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
   <encounter encounter_id="3" encounter_type="2" patient_id="7" location_id="1" form_id="1" encounter_datetime="2008-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6519d653-393b-4118-9c83-a3715b82d4ac"/>
   <encounter_provider encounter_provider_id="1" encounter_id="3" provider_id="1" encounter_role_id="1" creator="1" date_created="2006-03-11 15:57:35.0" voided="false" uuid="19e0aae8-20ee-46b7-ade6-9e68f897b7a9" />
@@ -519,5 +521,11 @@
  
  <concept concept_id="1006" retired="false" datatype_id="4" class_id="3" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1dd2f44-1d5f-11e0-b929-000c29ad1d07"/> 
  <concept_name concept_id="1006" name="NEVIRAPINA" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1006" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1dd2f44-1d5f-11e0-b929-000c29ad1d07"/> 
+ 
+ <concept concept_id="1007" retired="false" datatype_id="4" class_id="3" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1de28ae-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="1007" name="POSOLOGY" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1007" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1de28ae-1d5f-11e0-b929-000c29ad1d07"/> 
+ 
+ <concept concept_id="1008" retired="false" datatype_id="4" class_id="3" is_set="false" creator="1" date_created="2007-01-16 15:51:57.0" version="" uuid="e1d83e4e-1d5f-11e0-b929-000c29ad1d07"/> 
+ <concept_name concept_id="1008" name="REGIMEN" locale="en_GB" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_id="1008" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="e1d83e4e-1d5f-11e0-b929-000c29ad1d07"/> 
   
 </dataset>

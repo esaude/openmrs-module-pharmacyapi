@@ -194,7 +194,8 @@ public class PrescriptionUtils {
 		encounter.setPatient(prescription.getPatient());
 		encounter.addProvider(encounterRole, prescription.getProvider());
 		encounter.setLocation(location);
-		encounter.setEncounterDatetime(prescription.getPrescriptionDate());
+		encounter.setEncounterDatetime(
+		        prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate() : new Date());
 		
 		return encounter;
 	}

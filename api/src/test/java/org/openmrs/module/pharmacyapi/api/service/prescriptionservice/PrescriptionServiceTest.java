@@ -60,7 +60,7 @@ public class PrescriptionServiceTest extends BaseTest {
 		prescription.setPrescriptionDate(date);
 		
 		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
-		        .gimme(PrescriptionItemTemplate.VALID_01);
+		        .gimme(PrescriptionItemTemplate.VALID_PROFLAXIA_TRIOMUNE30);
 		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));
 		
 		final Prescription createdPrescription = prescriptionService.createPrescription(prescription);
@@ -106,7 +106,7 @@ public class PrescriptionServiceTest extends BaseTest {
 		prescription.setPrescriptionDate(date);
 		
 		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
-		        .gimme(PrescriptionItemTemplate.VALID_ARV_ITEM_01);
+		        .gimme(PrescriptionItemTemplate.VALID_ARV_NEVIRAPINA);
 		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));
 		
 		final Prescription createdPrescription = prescriptionService.createPrescription(prescription);
@@ -173,4 +173,26 @@ public class PrescriptionServiceTest extends BaseTest {
 		Assert.assertEquals(drugOrder.getUuid(), discontinueOrder.getPreviousOrder().getUuid());
 	}
 	
+	@Test
+	public void shouldCancelNonArvActivePrescriptionItem() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldCancelNonArvActivePrescriptionItem-dataset.xml");
+		
+		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
+		final String orderUuid = "921de0a3-05c4-444a-be03-0001";
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, 11);
+		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		
+		final Order order = Context.getOrderService().getOrderByUuid(orderUuid);
+		Assert.assertFalse(order.isVoided());
+		
+		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
+		        .gimme(PrescriptionItemTemplate.VALID_PROFLAXIA_ASPIRIN);
+		prescriptionItem.getDrugOrder().setUuid(orderUuid);
+		
+		prescriptionService.cancelPrescriptionItem(prescriptionItem, "web service call");
+		Assert.assertTrue(order.isVoided());
+	}
 }

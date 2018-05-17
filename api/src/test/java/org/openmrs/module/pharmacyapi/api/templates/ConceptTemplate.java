@@ -79,7 +79,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 	
 	public final static String NEVIRAPINA = "e1dd2f44-1d5f-11e0-b929-000c29ad1d07";
 	
-	public static final String FREQUENCY_ONCE_A_DAY = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab"; // "9d7127f9-10e8-11e5-9009-0242ac110012";
+	public static final String FREQUENCY_ONCE_A_DAY = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab";
 	
 	public static final String FREQUENCY_TWICE_A_DAY = "9d717849-10e8-11e5-9009-0242ac110012";
 	

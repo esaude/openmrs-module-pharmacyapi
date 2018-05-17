@@ -12,8 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
-import java.util.Date;
-
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class PatientPrescriptionRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription) throws PharmacyBusinessException {
 		
 		if (prescription == null) {
 			throw new PharmacyBusinessException(" Invalid prescriprion argument");

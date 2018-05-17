@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
@@ -89,5 +91,13 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 			        "Entity PrescriptionDispensation not found for parameter fila = " + fila);
 		}
 		return uniqueResult;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PrescriptionDispensation> findByPrescription(final Encounter prescription, final boolean retired) {
+		return this.sessionFactory.getCurrentSession()
+		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByPrescription)
+		        .setParameter("prescription", prescription).setParameter("retired", retired).list();
 	}
 }
