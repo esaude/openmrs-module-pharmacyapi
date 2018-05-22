@@ -43,72 +43,121 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 		
 		for (final PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
 			
-			if (prescriptionItem.getDrugOrder() == null) {
-				
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem without drugOrder " + prescriptionItem);
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getDrug() == null)
-			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDrug().getUuid())) {
-				
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem without Drug " + prescriptionItem);
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getDose() == null) || prescriptionItem.getDrugOrder().getDose().isNaN()
-			        || (prescriptionItem.getDrugOrder().getDose().doubleValue() <= 0)) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Dose "
-				                + prescriptionItem.getDrugOrder().getDose());
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getDoseUnits() == null)
-			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDoseUnits().getUuid())) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid dose Units "
-				                + prescriptionItem.getDrugOrder().getDoseUnits());
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getDuration() == null)
-			        || (prescriptionItem.getDrugOrder().getDuration().intValue() <= 0)) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration "
-				                + prescriptionItem.getDrugOrder().getDuration());
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getDurationUnits() == null)
-			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDurationUnits().getUuid())) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration Units "
-				                + prescriptionItem.getDrugOrder().getDurationUnits());
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getFrequency() == null)
-			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getFrequency().getUuid())) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Frequency "
-				                + prescriptionItem.getDrugOrder().getFrequency());
-			}
-			
-			if ((prescriptionItem.getDrugOrder().getQuantityUnits() == null)
-			        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getQuantityUnits().getUuid())) {
-				throw new PharmacyBusinessException(
-				        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Quantity Units "
-				                + prescriptionItem.getDrugOrder().getQuantityUnits());
-			}
+			this.checkPrescriptionItemDrugOrder(prescriptionItem);
+			this.checkPrescriptionItemDrug(prescriptionItem);
+			this.checkPrescriptionItemDose(prescriptionItem);
+			this.checkPrescriptionItemDoseUnits(prescriptionItem);
+			this.checkPrescriptionItemDuration(prescriptionItem);
+			this.checkPrescriptionItemDurationUnits(prescriptionItem);
+			this.checkPrescriptionItemFrequency(prescriptionItem);
+			this.checkPrescriptionItemQuantityUnits(prescriptionItem);
 			
 			if ((prescriptionItem.getRegime() != null)
 			        && StringUtils.isNotBlank(prescriptionItem.getRegime().getUuid())) {
 				regimesUuid.add(prescriptionItem.getRegime().getUuid());
 			}
 		}
+		this.checkAllArvItemHaveUniqueRegimen(prescription, regimesUuid);
+		this.checkPatientHasPreviousActiveArvPrescriptions(prescription);
+		
+	}
+	
+	private void checkPrescriptionItemDrugOrder(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if (prescriptionItem.getDrugOrder() == null) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem without drugOrder " + prescriptionItem);
+		}
+	}
+	
+	private void checkPrescriptionItemDrug(final PrescriptionItem prescriptionItem) throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getDrug() == null)
+		        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDrug().getUuid())) {
+			
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem without Drug " + prescriptionItem);
+		}
+	}
+	
+	private void checkPrescriptionItemDose(final PrescriptionItem prescriptionItem) throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getDose() == null) || prescriptionItem.getDrugOrder().getDose().isNaN()
+		        || (prescriptionItem.getDrugOrder().getDose().doubleValue() <= 0)) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Dose "
+			                + prescriptionItem.getDrugOrder().getDose());
+		}
+	}
+	
+	private void checkPrescriptionItemDoseUnits(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getDoseUnits() == null)
+		        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDoseUnits().getUuid())) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid dose Units "
+			                + prescriptionItem.getDrugOrder().getDoseUnits());
+		}
+	}
+	
+	private void checkPrescriptionItemDuration(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getDuration() == null)
+		        || (prescriptionItem.getDrugOrder().getDuration().intValue() <= 0)) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration "
+			                + prescriptionItem.getDrugOrder().getDuration());
+		}
+	}
+	
+	private void checkPrescriptionItemDurationUnits(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getDurationUnits() == null)
+		        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getDurationUnits().getUuid())) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Duration Units "
+			                + prescriptionItem.getDrugOrder().getDurationUnits());
+		}
+	}
+	
+	private void checkPrescriptionItemFrequency(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getFrequency() == null)
+		        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getFrequency().getUuid())) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Frequency "
+			                + prescriptionItem.getDrugOrder().getFrequency());
+		}
+	}
+	
+	private void checkPrescriptionItemQuantityUnits(final PrescriptionItem prescriptionItem)
+	        throws PharmacyBusinessException {
+		
+		if ((prescriptionItem.getDrugOrder().getQuantityUnits() == null)
+		        || StringUtils.isBlank(prescriptionItem.getDrugOrder().getQuantityUnits().getUuid())) {
+			throw new PharmacyBusinessException(
+			        "Cannot create Prescription for prescriptionItem with Invalid DrugOrder Quantity Units "
+			                + prescriptionItem.getDrugOrder().getQuantityUnits());
+		}
+	}
+	
+	private void checkAllArvItemHaveUniqueRegimen(final Prescription prescription, final Set<String> regimesUuid)
+	        throws PharmacyBusinessException {
 		
 		if (regimesUuid.size() > 1) {
 			
 			throw new PharmacyBusinessException("Cannot Create a Prescription for Arv Drugs having different regimes "
 			        + StringUtils.join(prescription.getPrescriptionItems(), "|"));
 		}
+	}
+	
+	private void checkPatientHasPreviousActiveArvPrescriptions(final Prescription prescription)
+	        throws PharmacyBusinessException {
 		
 		final Concept regime = prescription.getRegime();
 		if (regime != null) {
@@ -129,7 +178,6 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 				}
 			}
 		}
-		
 	}
 	
 	private String getFormattedPatientToDisplay(final Patient patient) {
