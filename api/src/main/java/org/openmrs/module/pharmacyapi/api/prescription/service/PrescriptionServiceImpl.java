@@ -152,6 +152,10 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	@Override
 	public Prescription createPrescription(final Prescription prescription) throws PharmacyBusinessException {
 		
+		if (prescription.getPrescriptionDate() == null) {
+			prescription.setPrescriptionDate(new Date());
+		}
+		
 		this.prescriptionValidator.validateCreation(prescription);
 		
 		final Encounter encounter = this.prescriptionUtils.preparePrescriptionEncounter(prescription);
