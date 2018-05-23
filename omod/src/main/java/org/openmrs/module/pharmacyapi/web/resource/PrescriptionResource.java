@@ -112,6 +112,7 @@ public class PrescriptionResource extends DataDelegatingCrudResource<Prescriptio
 	public Prescription save(final Prescription delegate) {
 		
 		try {
+			delegate.setPrescriptionDate(new Date());
 			Context.getService(PrescriptionService.class).createPrescription(delegate);
 		}
 		catch (final PharmacyBusinessException e) {
