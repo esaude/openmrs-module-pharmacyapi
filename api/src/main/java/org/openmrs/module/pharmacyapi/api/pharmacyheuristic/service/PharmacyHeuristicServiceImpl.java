@@ -76,11 +76,8 @@ public class PharmacyHeuristicServiceImpl extends BaseOpenmrsService implements 
 	public Form getFormByPatientAge(final Patient patient) throws PharmacyBusinessException {
 		
 		if (patient != null) {
-			
-			final Patient patientWithAge = Context.getPatientService().getPatient(patient.getId());
 			return Context.getFormService().getFormByUuid(
-			    patientWithAge.getAge() < 15 ? MappedForms.PEDIATRICS_FOLLOW_UP : MappedForms.ADULT_FOLLOW_UP);
-			
+			    patient.getAge() < 15 ? MappedForms.PEDIATRICS_FOLLOW_UP : MappedForms.ADULT_FOLLOW_UP);
 		}
 		throw new PharmacyBusinessException("Cannot find Form for non given patient");
 	}

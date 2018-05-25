@@ -12,8 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
-import java.util.Date;
-
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class LocationPrescriptionRule implements IPrescriptionValidationRule {
 	
 	@Override
-	public void validate(final Prescription prescription, final Date date) throws PharmacyBusinessException {
+	public void validate(final Prescription prescription) throws PharmacyBusinessException {
 		
 		if (prescription == null) {
 			throw new PharmacyBusinessException("pharmacyapi.invalid.prescription");
@@ -41,5 +39,6 @@ public class LocationPrescriptionRule implements IPrescriptionValidationRule {
 			
 			throw new PharmacyBusinessException("pharmacyapi.location.not.found", prescription.getLocation().getUuid());
 		}
+		prescription.setLocation(found);
 	}
 }

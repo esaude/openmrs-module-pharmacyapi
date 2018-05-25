@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service;
 
+import java.util.List;
+
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
@@ -42,6 +44,9 @@ public interface PrescriptionDispensationService extends OpenmrsService {
 	public boolean isArvDrug(final DrugOrder drugOrder) throws PharmacyBusinessException;
 	
 	PrescriptionDispensation findPrescriptionDispensationByDispensation(Encounter dispensation)
+	        throws PharmacyBusinessException;
+	
+	List<PrescriptionDispensation> findPrescriptionDispensationByPrescription(Encounter dispensation)
 	        throws PharmacyBusinessException;
 	
 	PrescriptionDispensation findPrescriptionDispensationByFila(Encounter fila) throws PharmacyBusinessException;

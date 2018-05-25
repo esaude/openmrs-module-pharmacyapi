@@ -13,7 +13,6 @@
 package org.openmrs.module.pharmacyapi.api.prescription.validation;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -38,9 +37,6 @@ public class PrescriptionValidator {
 	private LocationPrescriptionRule locationRule;
 	
 	@Autowired
-	private PrescriptionDateRule prescriptionDateRule;
-	
-	@Autowired
 	private PrescriptionItemRule prescriptionItemRule;
 	
 	@Autowired
@@ -52,16 +48,15 @@ public class PrescriptionValidator {
 		this.rulesForCreatingPrescription.add(this.patientRule);
 		this.rulesForCreatingPrescription.add(this.ProviderRule);
 		this.rulesForCreatingPrescription.add(this.locationRule);
-		this.rulesForCreatingPrescription.add(this.prescriptionDateRule);
 		this.rulesForCreatingPrescription.add(this.prescriptionItemRule);
 		this.rulesForCreatingPrescription.add(this.prescriptionExpirationDateteRule);
 	}
 	
-	public void validateCreation(final Prescription prescription, final Date date) throws PharmacyBusinessException {
+	public void validateCreation(final Prescription prescription) throws PharmacyBusinessException {
 		
 		for (final IPrescriptionValidationRule rule : this.rulesForCreatingPrescription) {
 			
-			rule.validate(prescription, date);
+			rule.validate(prescription);
 		}
 	}
 }

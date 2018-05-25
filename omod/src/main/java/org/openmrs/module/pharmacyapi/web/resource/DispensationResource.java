@@ -89,6 +89,7 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 		try {
 			final DispensationService dispensationService = Context.getService(DispensationService.class);
 			
+			dispensation.setDispensationDate(new Date());
 			dispensationService.dispense(dispensation);
 			
 		}

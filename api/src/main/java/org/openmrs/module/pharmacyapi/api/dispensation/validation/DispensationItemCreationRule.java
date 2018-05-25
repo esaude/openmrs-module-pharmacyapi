@@ -12,8 +12,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.dispensation.validation;
 
-import java.util.Date;
-
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Order.Action;
@@ -27,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class DispensationItemCreationRule implements IDispensationRuleValidation {
 	
 	@Override
-	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			
@@ -44,46 +42,74 @@ public class DispensationItemCreationRule implements IDispensationRuleValidation
 			final DrugOrder order = (DrugOrder) Context.getOrderService()
 			        .getOrderByUuid(dispensationItem.getOrderUuid());
 			
-			if (order == null) {
-				
-				throw new PharmacyBusinessException(
-				        "No Order found for given uuid: " + dispensationItem.getOrderUuid());
-			}
+			this.checkIfOrderIsVoided(order);
+			this.checkDrugOrderIfNull(dispensationItem, order);
+			this.checkQuantityToDispense(dispensationItem, order);
+			this.checkIfOrderActionIsDiscontinue(dispensationItem, order);
+			this.checkQuantityAmountIfLessOrEqualThanOrderQuantity(dispensationItem, order);
+			this.checkIfPrescriptionEncounterExist(dispensationItem, order);
+		}
+	}
+	
+	private void checkIfOrderIsVoided(final DrugOrder order) throws PharmacyBusinessException {
+		
+		if (order.isVoided()) {
+			throw new PharmacyBusinessException("Cannot Dispense A voided Item" + order);
+		}
+	}
+	
+	private void checkIfPrescriptionEncounterExist(final DispensationItem dispensationItem, final DrugOrder order)
+	        throws PharmacyBusinessException {
+		
+		final Encounter prescriptionEncounter = Context.getEncounterService()
+		        .getEncounterByUuid(dispensationItem.getPrescriptionUuid());
+		
+		if (prescriptionEncounter == null) {
 			
-			if ((dispensationItem.getQuantityToDispense() == null)
-			        || (dispensationItem.getQuantityToDispense().doubleValue() <= 0)) {
-				
-				throw new PharmacyBusinessException(
-				        "The Order to be Dispensed must have valid quantity to Dispense. Order : " + order
-				                + " Quantity passed: " + dispensationItem.getQuantityToDispense());
-			}
+			throw new PharmacyBusinessException("Encounter of Prescription not Found for Dispensation Item " + order);
+		}
+	}
+	
+	private void checkDrugOrderIfNull(final DispensationItem dispensationItem, final DrugOrder order)
+	        throws PharmacyBusinessException {
+		
+		if (order == null) {
 			
-			if (Action.DISCONTINUE.equals(order.getAction())) {
-				
-				throw new PharmacyBusinessException(
-				        "The Order to be Dispensed must have Order Action in 'NEW' or 'REVISE'. order uuid: "
-				                + dispensationItem.getOrderUuid());
-			}
+			throw new PharmacyBusinessException("No Order found for given uuid: " + dispensationItem.getOrderUuid());
+		}
+	}
+	
+	private void checkQuantityToDispense(final DispensationItem dispensationItem, final DrugOrder order)
+	        throws PharmacyBusinessException {
+		
+		if ((dispensationItem.getQuantityToDispense() == null)
+		        || (dispensationItem.getQuantityToDispense().doubleValue() <= 0)) {
 			
-			if (dispensationItem.getQuantityToDispense().doubleValue() > order.getQuantity().doubleValue()) {
-				
-				throw new PharmacyBusinessException(
-				        "The quantity to Be Dispensed must be less or equals the Order  Quantity : " + order
-				                + " Quantity passed: " + dispensationItem.getQuantityToDispense());
-			}
+			throw new PharmacyBusinessException(
+			        "The Order to be Dispensed must have valid quantity to Dispense. Order : " + order
+			                + " Quantity passed: " + dispensationItem.getQuantityToDispense());
+		}
+	}
+	
+	private void checkIfOrderActionIsDiscontinue(final DispensationItem dispensationItem, final DrugOrder order)
+	        throws PharmacyBusinessException {
+		
+		if (Action.DISCONTINUE.equals(order.getAction())) {
 			
-			if (order.isVoided()) {
-				throw new PharmacyBusinessException("Cannot Dispense A voided Item" + order);
-			}
+			throw new PharmacyBusinessException(
+			        "The Order to be Dispensed must have Order Action in 'NEW' or 'REVISE'. order uuid: "
+			                + dispensationItem.getOrderUuid());
+		}
+	}
+	
+	private void checkQuantityAmountIfLessOrEqualThanOrderQuantity(final DispensationItem dispensationItem,
+	        final DrugOrder order) throws PharmacyBusinessException {
+		
+		if (dispensationItem.getQuantityToDispense().doubleValue() > order.getQuantity().doubleValue()) {
 			
-			final Encounter prescriptionEncounter = Context.getEncounterService()
-			        .getEncounterByUuid(dispensationItem.getPrescriptionUuid());
-			
-			if (prescriptionEncounter == null) {
-				
-				throw new PharmacyBusinessException(
-				        "Encounter of Prescription not Found for Dispensation Item " + order);
-			}
+			throw new PharmacyBusinessException(
+			        "The quantity to Be Dispensed must be less or equals the Order  Quantity : " + order
+			                + " Quantity passed: " + dispensationItem.getQuantityToDispense());
 		}
 	}
 }

@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
@@ -82,8 +84,7 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		final Query query = this.sessionFactory.getCurrentSession()
 		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByFila).setParameter("fila", fila);
 		
-		final PrescriptionDispensation uniqueResult = (org.openmrs.module.pharmacyapi.api.prescriptiondispensation.model.PrescriptionDispensation) query
-		        .uniqueResult();
+		final PrescriptionDispensation uniqueResult = (PrescriptionDispensation) query.uniqueResult();
 		
 		if (uniqueResult == null) {
 			throw new PharmacyBusinessException(
@@ -92,4 +93,11 @@ public class PrescriptionDispensationDAOImpl implements PrescriptionDispensation
 		return uniqueResult;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PrescriptionDispensation> findByPrescription(final Encounter prescription, final boolean retired) {
+		return this.sessionFactory.getCurrentSession()
+		        .getNamedQuery(PrescriptionDispensationDAO.QUERY_NAME.findByPrescription)
+		        .setParameter("prescription", prescription).setParameter("retired", retired).list();
+	}
 }

@@ -63,11 +63,11 @@ public class DispensationValidator {
 		
 	}
 	
-	public void validateCreation(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
+	public void validateCreation(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		for (final IDispensationRuleValidation rule : this.rulesForCreateDispensation) {
 			
-			rule.validate(dispensation, date);
+			rule.validate(dispensation);
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class DispensationValidator {
 		
 		for (final IDispensationRuleValidation rule : this.rulesForCancellationDispensation) {
 			
-			rule.validate(dispensation, date);
+			rule.validate(dispensation);
 		}
 	}
 }

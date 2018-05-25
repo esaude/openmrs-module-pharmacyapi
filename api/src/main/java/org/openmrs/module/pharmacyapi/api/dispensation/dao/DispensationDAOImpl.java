@@ -64,7 +64,7 @@ public class DispensationDAOImpl implements DispensationDAO {
 		final String hql = "select distinct o from DrugOrder o where o.patient = :patient and o.voided is false "
 		        + " and o.orderId = ( select max(dispensationDrugOrder.orderId) "
 		        + "	from PrescriptionDispensation pd "
-		        + " join pd.dispensation dispensation, DrugOrder dispensationDrugOrder where dispensationDrugOrder.encounter = dispensation and dispensationDrugOrder.drug = o.drug and pd.retired is false and dispensationDrugOrder.voided is false) ";
+		        + " join pd.dispensation dispensation, DrugOrder dispensationDrugOrder where dispensationDrugOrder.encounter = dispensation and dispensationDrugOrder.drug = o.drug and pd.retired is false and dispensationDrugOrder.voided is false  and pd.patient = :patient) ";
 		
 		final Query query = this.sessionFactory.getCurrentSession().createQuery(hql);
 		

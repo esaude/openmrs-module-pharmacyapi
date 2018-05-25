@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.pharmacyapi.api.templates;
 
+import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 
@@ -18,15 +19,38 @@ import br.com.six2six.fixturefactory.loader.TemplateLoader;
 
 public class PrescriptionItemTemplate implements TemplateLoader {
 	
-	public static final String VALID_01 = "VALID_01";
+	public static final String VALID_PROFLAXIA_TRIOMUNE30 = DrugOrderTemplate.VALID_PROFLAXIA_TRIOMUNE30;
+	
+	public static final String VALID_PROFLAXIA_ASPIRIN = DrugOrderTemplate.VALID_PROFLAXIA_ASPIRIN;
+	
+	public static final String VALID_ARV_NEVIRAPINA = DrugOrderTemplate.VALID_ARV_NEVIRAPINA;
 	
 	@Override
 	public void load() {
 		
-		Fixture.of(PrescriptionItem.class).addTemplate(VALID_01, new Rule() {
+		Fixture.of(PrescriptionItem.class).addTemplate(PrescriptionItemTemplate.VALID_PROFLAXIA_TRIOMUNE30, new Rule() {
 			
 			{
-				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_PROFLAXIA_01));
+				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_PROFLAXIA_TRIOMUNE30));
+				
+			}
+		});
+		
+		Fixture.of(PrescriptionItem.class).addTemplate(PrescriptionItemTemplate.VALID_PROFLAXIA_ASPIRIN, new Rule() {
+			
+			{
+				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_PROFLAXIA_ASPIRIN));
+				
+			}
+		});
+		
+		Fixture.of(PrescriptionItem.class).addTemplate(PrescriptionItemTemplate.VALID_ARV_NEVIRAPINA, new Rule() {
+			
+			{
+				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_ARV_NEVIRAPINA));
+				this.add("regime", this.one(Concept.class, ConceptTemplate.AZT_3TC_NVP));
+				this.add("therapeuticLine", this.one(Concept.class, ConceptTemplate.ARV_FIRST_LINE_PLAN));
+				this.add("arvPlan", this.one(Concept.class, ConceptTemplate.START_DRUGS_ARV_PLAN));
 				
 			}
 		});

@@ -65,15 +65,21 @@ public class ConceptTemplate implements BaseTemplateLoader {
 	
 	public static final String MEDICATION_QUANTITY = "MEDICATION_QUANTITY";
 	
-	public static final String AZT_3TC_NVP = "AZT_3TC_NVP";
-	
 	public static final String TRIOMUNE30 = "d144d24f-6913-4b63-9660-a9108c2bebef";
 	
 	public static final String ASPIRIN = "15f83cd6-64e9-4e06-a5f9-364d3b14a43d";
 	
 	public static final String NYQUIL = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab";
 	
-	public static final String FREQUENCY_ONCE_A_DAY = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab"; // "9d7127f9-10e8-11e5-9009-0242ac110012";
+	public static final String AZT_3TC_NVP = "e1dd2f44-1d5f-11e0-b929-000c29ad1d07";
+	
+	public static final String ARV_FIRST_LINE_PLAN = "a6bbe1ac-5243-40e4-98cb-7d4a1467dfbe";
+	
+	public static final String START_DRUGS_ARV_PLAN = "e1d9ef28-1d5f-11e0-b929-000c29ad1d07";
+	
+	public final static String NEVIRAPINA = "e1dd2f44-1d5f-11e0-b929-000c29ad1d07";
+	
+	public static final String FREQUENCY_ONCE_A_DAY = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab";
 	
 	public static final String FREQUENCY_TWICE_A_DAY = "9d717849-10e8-11e5-9009-0242ac110012";
 	
@@ -88,79 +94,79 @@ public class ConceptTemplate implements BaseTemplateLoader {
 	@Override
 	public void load() {
 		
-		Fixture.of(Concept.class).addTemplate(TREATMENT_PRESCRIBED_SET, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.TREATMENT_PRESCRIBED_SET, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", TREATMENT_PRESCRIBED_SET);
+				this.add("uuid", ConceptTemplate.TREATMENT_PRESCRIBED_SET);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(TREATMENT_PRESCRIBED, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.TREATMENT_PRESCRIBED, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", TREATMENT_PRESCRIBED);
+				this.add("uuid", ConceptTemplate.TREATMENT_PRESCRIBED);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(ARV_DOSAGE_AMOUNT, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ARV_DOSAGE_AMOUNT, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", ARV_DOSAGE_AMOUNT);
+				this.add("uuid", ConceptTemplate.ARV_DOSAGE_AMOUNT);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(PREVIOUS_ANTIRETROVIRAL_DRUGS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.PREVIOUS_ANTIRETROVIRAL_DRUGS, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", PREVIOUS_ANTIRETROVIRAL_DRUGS);
+				this.add("uuid", ConceptTemplate.PREVIOUS_ANTIRETROVIRAL_DRUGS);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(ARV_PLAN, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ARV_PLAN, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", ARV_PLAN);
+				this.add("uuid", ConceptTemplate.ARV_PLAN);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(ARV_THERAPEUTIC_LINE, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ARV_THERAPEUTIC_LINE, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", ARV_THERAPEUTIC_LINE);
+				this.add("uuid", ConceptTemplate.ARV_THERAPEUTIC_LINE);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(REASON_ANTIRETROVIRALS_STOPPED, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.REASON_ANTIRETROVIRALS_STOPPED, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", REASON_ANTIRETROVIRALS_STOPPED);
+				this.add("uuid", ConceptTemplate.REASON_ANTIRETROVIRALS_STOPPED);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(JUSTIFICATION_TO_CHANGE_ARV_TREATMENT, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", JUSTIFICATION_TO_CHANGE_ARV_TREATMENT);
+				this.add("uuid", ConceptTemplate.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DOSING_UNITS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DOSING_UNITS, new Rule() {
 			
 			{
 				this.add("conceptId", 6390);
@@ -168,7 +174,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DOSAGE_FREQUENCY, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DOSAGE_FREQUENCY, new Rule() {
 			
 			{
 				this.add("conceptId", 6338);
@@ -176,7 +182,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DRUG_ROUTES, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DRUG_ROUTES, new Rule() {
 			
 			{
 				this.add("conceptId", 6398);
@@ -184,7 +190,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DURATION, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DURATION, new Rule() {
 			
 			{
 				this.add("conceptId", 1710);
@@ -192,7 +198,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DURATION_UNITS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DURATION_UNITS, new Rule() {
 			
 			{
 				this.add("conceptId", 6408);
@@ -200,7 +206,7 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DOSING_INSTRUCTIONS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DOSING_INSTRUCTIONS, new Rule() {
 			
 			{
 				this.add("conceptId", 6414);
@@ -208,16 +214,16 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(POC_MAPPING_PRESCRIPTION_DATE, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.POC_MAPPING_PRESCRIPTION_DATE, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", POC_MAPPING_PRESCRIPTION_DATE);
+				this.add("uuid", ConceptTemplate.POC_MAPPING_PRESCRIPTION_DATE);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(BEFORE_MEALS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.BEFORE_MEALS, new Rule() {
 			
 			{
 				this.add("conceptId", 6415);
@@ -226,36 +232,36 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DURATION_WEEKS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DURATION_WEEKS, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", DURATION_WEEKS);
+				this.add("uuid", ConceptTemplate.DURATION_WEEKS);
 				// this.add("conceptMappings", this.has(1).of(ConceptMap.class,
 				// ConceptMapTemplate.VALID));
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DURATION_MONTHS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DURATION_MONTHS, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", DURATION_MONTHS);
+				this.add("uuid", ConceptTemplate.DURATION_MONTHS);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(DURATION_DAYS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.DURATION_DAYS, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", DURATION_DAYS);
+				this.add("uuid", ConceptTemplate.DURATION_DAYS);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(MEDICATION_QUANTITY, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.MEDICATION_QUANTITY, new Rule() {
 			
 			{
 				this.add("conceptId", 1715);
@@ -263,92 +269,120 @@ public class ConceptTemplate implements BaseTemplateLoader {
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(AZT_3TC_NVP, new Rule() {
-			
-			{
-				this.add("conceptId", 1651);
-				this.add("uuid", "e1dd2f44-1d5f-11e0-b929-000c29ad1d07");
-			}
-		});
-		
-		Fixture.of(Concept.class).addTemplate(TRIOMUNE30, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.NEVIRAPINA, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", TRIOMUNE30);
+				this.add("uuid", ConceptTemplate.NEVIRAPINA);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(ASPIRIN, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ARV_FIRST_LINE_PLAN, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", ASPIRIN);
+				this.add("uuid", ConceptTemplate.ARV_FIRST_LINE_PLAN);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(NYQUIL, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.START_DRUGS_ARV_PLAN, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", NYQUIL);
+				this.add("uuid", ConceptTemplate.START_DRUGS_ARV_PLAN);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(FREQUENCY_ONCE_A_DAY, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.AZT_3TC_NVP, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", FREQUENCY_ONCE_A_DAY);
+				this.add("uuid", ConceptTemplate.AZT_3TC_NVP);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(FREQUENCY_TWICE_A_DAY, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.TRIOMUNE30, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", FREQUENCY_TWICE_A_DAY);
+				this.add("uuid", ConceptTemplate.TRIOMUNE30);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(FREQUENCY_THRICE_A_DAY, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ASPIRIN, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", FREQUENCY_THRICE_A_DAY);
+				this.add("uuid", ConceptTemplate.ASPIRIN);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(ROUTE_UNKNOWN, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.NYQUIL, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", ROUTE_UNKNOWN);
+				this.add("uuid", ConceptTemplate.NYQUIL);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(TABS_QUANTITY_UNITS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.FREQUENCY_ONCE_A_DAY, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", TABS_QUANTITY_UNITS);
+				this.add("uuid", ConceptTemplate.FREQUENCY_ONCE_A_DAY);
 			}
 		});
 		
-		Fixture.of(Concept.class).addTemplate(MG_DOSE_UNITS, new Rule() {
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.FREQUENCY_TWICE_A_DAY, new Rule() {
 			
 			{
 				this.add("dateCreated", this.instant("now"));
 				this.add("retired", false);
-				this.add("uuid", MG_DOSE_UNITS);
+				this.add("uuid", ConceptTemplate.FREQUENCY_TWICE_A_DAY);
+			}
+		});
+		
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.FREQUENCY_THRICE_A_DAY, new Rule() {
+			
+			{
+				this.add("dateCreated", this.instant("now"));
+				this.add("retired", false);
+				this.add("uuid", ConceptTemplate.FREQUENCY_THRICE_A_DAY);
+			}
+		});
+		
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.ROUTE_UNKNOWN, new Rule() {
+			
+			{
+				this.add("dateCreated", this.instant("now"));
+				this.add("retired", false);
+				this.add("uuid", ConceptTemplate.ROUTE_UNKNOWN);
+			}
+		});
+		
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.TABS_QUANTITY_UNITS, new Rule() {
+			
+			{
+				this.add("dateCreated", this.instant("now"));
+				this.add("retired", false);
+				this.add("uuid", ConceptTemplate.TABS_QUANTITY_UNITS);
+			}
+		});
+		
+		Fixture.of(Concept.class).addTemplate(ConceptTemplate.MG_DOSE_UNITS, new Rule() {
+			
+			{
+				this.add("dateCreated", this.instant("now"));
+				this.add("retired", false);
+				this.add("uuid", ConceptTemplate.MG_DOSE_UNITS);
 			}
 		});
 	}

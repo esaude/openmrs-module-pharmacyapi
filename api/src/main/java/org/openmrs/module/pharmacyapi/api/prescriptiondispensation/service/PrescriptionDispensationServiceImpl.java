@@ -13,6 +13,7 @@
 package org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.Concept;
@@ -160,6 +161,12 @@ public class PrescriptionDispensationServiceImpl extends BaseOpenmrsService impl
 	        throws PharmacyBusinessException {
 		
 		return this.prescriptionDispensationDAO.findByFila(fila);
+	}
+	
+	@Override
+	public List<PrescriptionDispensation> findPrescriptionDispensationByPrescription(final Encounter prescription)
+	        throws PharmacyBusinessException {
+		return this.prescriptionDispensationDAO.findByPrescription(prescription, false);
 	}
 	
 }

@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
@@ -44,7 +43,6 @@ public class PrescriptionServiceTest extends BaseTest {
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
 	public void shouldCreateNonArvPrescription() throws Exception {
 		
 		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
@@ -62,7 +60,7 @@ public class PrescriptionServiceTest extends BaseTest {
 		prescription.setPrescriptionDate(date);
 		
 		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
-		        .gimme(PrescriptionItemTemplate.VALID_01);
+		        .gimme(PrescriptionItemTemplate.VALID_PROFLAXIA_TRIOMUNE30);
 		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));
 		
 		final Prescription createdPrescription = prescriptionService.createPrescription(prescription);
@@ -88,6 +86,53 @@ public class PrescriptionServiceTest extends BaseTest {
 		Assert.assertEquals(durationInDays, ((DrugOrder) createdOrder).getQuantity());
 		Assert.assertEquals(prescriptionItem.getDrugOrder().getDrug().getUuid(),
 		    ((DrugOrder) createdOrder).getDrug().getUuid());
+	}
+	
+	@Test
+	public void shouldCreateArvPrescription() throws Exception {
+		
+		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, 11);
+		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		final Date date = calendar.getTime();
+		
+		final Prescription prescription = new Prescription();
+		prescription.setPatient((Patient) Fixture.from(Patient.class).gimme(PatientTemplate.MR_HORATIO));
+		prescription.setProvider((Provider) Fixture.from(Provider.class).gimme(ProviderTemplate.TEST));
+		prescription.setLocation((Location) Fixture.from(Location.class).gimme(LocationTemplate.XANADU));
+		prescription.setPrescriptionDate(date);
+		
+		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
+		        .gimme(PrescriptionItemTemplate.VALID_ARV_NEVIRAPINA);
+		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));
+		
+		final Prescription createdPrescription = prescriptionService.createPrescription(prescription);
+		
+		Assert.assertNotNull(createdPrescription);
+		
+		final Encounter createdEncounter = Context.getEncounterService()
+		        .getEncounter(prescription.getPrescriptionEncounter().getEncounterId());
+		
+		Assert.assertNotNull(createdEncounter);
+		Assert.assertEquals(MappedEncounters.ARV_FOLLOW_UP_ADULT, createdEncounter.getEncounterType().getUuid());
+		
+		final Set<Order> allOrders = createdEncounter.getOrders();
+		
+		Assert.assertEquals(1, allOrders.size());
+		
+		final Order createdOrder = allOrders.iterator().next();
+		
+		final Double durationInDays = 42d; // 7(durationUnits)x2(dose)x3(duration)
+		
+		Assert.assertEquals(Action.NEW, createdOrder.getAction());
+		Assert.assertEquals(prescription.getPatient().getUuid(), createdOrder.getPatient().getUuid());
+		Assert.assertEquals(durationInDays, ((DrugOrder) createdOrder).getQuantity());
+		Assert.assertEquals(prescriptionItem.getDrugOrder().getDrug().getUuid(),
+		    ((DrugOrder) createdOrder).getDrug().getUuid());
+		
 	}
 	
 	@Test
@@ -128,4 +173,26 @@ public class PrescriptionServiceTest extends BaseTest {
 		Assert.assertEquals(drugOrder.getUuid(), discontinueOrder.getPreviousOrder().getUuid());
 	}
 	
+	@Test
+	public void shouldCancelNonArvActivePrescriptionItem() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldCancelNonArvActivePrescriptionItem-dataset.xml");
+		
+		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
+		final String orderUuid = "921de0a3-05c4-444a-be03-0001";
+		
+		final Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, 2017);
+		calendar.set(Calendar.MONTH, 11);
+		calendar.set(Calendar.DAY_OF_MONTH, 31);
+		
+		final Order order = Context.getOrderService().getOrderByUuid(orderUuid);
+		Assert.assertFalse(order.isVoided());
+		
+		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
+		        .gimme(PrescriptionItemTemplate.VALID_PROFLAXIA_ASPIRIN);
+		prescriptionItem.getDrugOrder().setUuid(orderUuid);
+		
+		prescriptionService.cancelPrescriptionItem(prescriptionItem, "web service call");
+		Assert.assertTrue(order.isVoided());
+	}
 }

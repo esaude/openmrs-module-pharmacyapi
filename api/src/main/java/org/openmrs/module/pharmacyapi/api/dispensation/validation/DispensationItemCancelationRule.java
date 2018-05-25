@@ -36,7 +36,7 @@ public class DispensationItemCancelationRule implements IDispensationRuleValidat
 	private PrescriptionGenerator prescriptionGenerator;
 	
 	@Override
-	public void validate(final Dispensation dispensation, final Date date) throws PharmacyBusinessException {
+	public void validate(final Dispensation dispensation) throws PharmacyBusinessException {
 		
 		if (dispensation == null) {
 			
@@ -59,7 +59,7 @@ public class DispensationItemCancelationRule implements IDispensationRuleValidat
 			}
 			
 			this.validateForInterruptedReason(order);
-			this.validateForExpirationReason(order, date);
+			this.validateForExpirationReason(order, dispensation.getDispensationDate());
 		}
 	}
 	
