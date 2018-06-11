@@ -105,9 +105,9 @@ public class DispensationServiceTest extends BaseTest {
 		this.executeDataSet("dispensationservice/shouldDispenseOrdersForArvPrescription-dataset.xml");
 		
 		final Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, 2017);
-		calendar.set(Calendar.MONTH, 10);
-		calendar.set(Calendar.DAY_OF_MONTH, 8);
+		calendar.set(Calendar.YEAR, 2005);
+		calendar.set(Calendar.MONTH, 0);
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		
 		final Dispensation dispensation = new Dispensation();
 		dispensation.setPatientUuid("5946f880-b197-400b-9caa-a3c661d23041");
