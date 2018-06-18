@@ -187,6 +187,7 @@ public class DispensationResource extends DataDelegatingCrudResource<Dispensatio
 	        throws ResponseException {
 		
 		try {
+			dispensation.setDispensationDate(new Date());
 			Context.getService(DispensationService.class).cancelDispensationItems(dispensation, reason);
 		}
 		catch (final Exception e) {

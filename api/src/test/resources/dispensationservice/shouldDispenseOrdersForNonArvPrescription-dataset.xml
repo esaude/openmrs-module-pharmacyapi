@@ -11,4 +11,11 @@
  <obs obs_id="1000" person_id="7" concept_id="1005" encounter_id="1000" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_numeric="[NULL]" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded="88"  value_complex="[NULL]" value_text="[NULL]" value_datetime="[NULL]" value_drug="[NULL]" uuid="39fb7f47-e80a-4056-9285-bd798be11112"/>
  <obs obs_id="1001" person_id="7" concept_id="1001" encounter_id="1000" obs_datetime="2008-07-01 00:00:00.0" location_id="1" value_numeric="[NULL]" comments="" creator="1" date_created="2008-08-18 14:09:35.0" voided="false" value_coded_name_id="[NULL]" value_complex="[NULL]" value_text="[NULL]" value_datetime="2017-12-31 00:00:00.0" value_drug="[NULL]" uuid="39fb7f47-e80a-4056-9285-bd798be11xx1"/>
 
+<!--  -->
+
+<phm_drug_items drug_id ="3" fnm_code="1234AA" pharmaceutical_form_id="60" therapeutic_group_id="60" therapeutic_class_id="60" uuid="6041ccfd-b871-4fda-847b-97f5d64450a3" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" />
+<pocinv_drug_package drug_package_id="1" barcode="1234AA" drug_id="3" uuid="6041ccfd-b871-4fda-847b-97f5d64450a3" creator="1" date_created="2005-01-01 00:00:00.0" retired="false"/>
+
+<pocinv_batch batch_id="1" drug_package_id="1" location_id="1" expire_date="2005-02-01 00:00:00.0" package_quantity="1" package_quantity_units="10" remain_package_quantity_units="10" unbalanced_units_quantity="0"  uuid="6041ccfd-b871-4fda-847b-97f5d64450a3" creator="1" date_created="2004-01-01 00:00:00.0" retired="false"/>
+
 </dataset> 

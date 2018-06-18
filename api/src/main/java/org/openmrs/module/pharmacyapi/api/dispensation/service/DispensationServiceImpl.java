@@ -163,6 +163,14 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 		this.batchService = batchService;
 	}
 	
+	public DispensationValidator getDispensationValidator() {
+		return this.dispensationValidator;
+	}
+	
+	public void setDispensationValidator(final DispensationValidator dispensationValidator) {
+		this.dispensationValidator = dispensationValidator;
+	}
+	
 	@Override
 	public Dispensation dispense(final Dispensation dispensation) throws PharmacyBusinessException {
 		
@@ -170,7 +178,6 @@ public class DispensationServiceImpl extends BaseOpenmrsService implements Dispe
 			
 			// workaround to controll the hibernate sessions commits
 			this.dbSessionManager.setManualFlushMode();
-			
 			this.dispensationValidator.validateCreation(dispensation);
 			
 			final Person person = this.personService.getPersonByUuid(dispensation.getProviderUuid());

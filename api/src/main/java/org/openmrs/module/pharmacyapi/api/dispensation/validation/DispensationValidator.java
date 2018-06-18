@@ -48,6 +48,9 @@ public class DispensationValidator {
 	@Autowired
 	private DispensationItemCancelationRule dispensationItemCancelationRule;
 	
+	@Autowired
+	private DispensationDrugAvailabilityRule dispensationDrugAvailability;
+	
 	@PostConstruct
 	private void initializeRules() {
 		
@@ -55,6 +58,7 @@ public class DispensationValidator {
 		this.rulesForCreateDispensation.add(this.locationRule);
 		this.rulesForCreateDispensation.add(this.providerRule);
 		this.rulesForCreateDispensation.add(this.dispensationItemCreationRule);
+		this.rulesForCreateDispensation.add(this.dispensationDrugAvailability);
 		
 		this.rulesForCancellationDispensation.add(this.patientRule);
 		this.rulesForCancellationDispensation.add(this.providerRule);
