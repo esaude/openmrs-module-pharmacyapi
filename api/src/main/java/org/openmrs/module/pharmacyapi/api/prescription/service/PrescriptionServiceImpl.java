@@ -113,10 +113,8 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		final List<Prescription> prescriptions = this.findAllPrescriptionsByPatient(patient, actualDate);
 		final List<Prescription> result = new ArrayList<>();
 		for (final Prescription prescription : prescriptions) {
-			if (prescription.isArv()) {
-				if (this.hasActivePrescriptionItems(prescription)) {
-					result.add(prescription);
-				}
+			if (prescription.isArv() && this.hasActivePrescriptionItems(prescription)) {
+				result.add(prescription);
 			}
 		}
 		return result;

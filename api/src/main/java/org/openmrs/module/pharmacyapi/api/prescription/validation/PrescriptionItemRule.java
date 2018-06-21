@@ -150,33 +150,42 @@ public class PrescriptionItemRule implements IPrescriptionValidationRule {
 	        throws PharmacyBusinessException {
 		
 		final String regimUuid = prescription.getRegime() != null ? prescription.getRegime().getUuid() : null;
-		final String arvPlanUuid = prescription.getArvPlan() != null ? prescription.getArvPlan().getUuid() : null;
-		final String therapeuticLineUuid = prescription.getTherapeuticLine() != null
-		        ? prescription.getTherapeuticLine().getUuid() : null;
 		
 		if (regimUuid != null) {
 			
 			final Concept regime = Context.getConceptService().getConceptByUuid(regimUuid);
-			final Concept arvPlan = Context.getConceptService().getConceptByUuid(arvPlanUuid);
-			final Concept therapeutiLine = Context.getConceptService().getConceptByUuid(therapeuticLineUuid);
 			
 			if (regime == null) {
 				throw new PharmacyBusinessException("Nao foi encontrado regime para a referencia " + regimUuid);
 			}
-			
-			if (arvPlan == null) {
-				throw new PharmacyBusinessException("Nao foi encontrado plano terapeutico para o regime "
-				        + regime.getDisplayString() + " e referencia " + arvPlanUuid);
-			}
-			if (therapeutiLine == null) {
-				throw new PharmacyBusinessException("Nao foi encontrada linha terapeutica para o regime "
-				        + regime.getDisplayString() + " e referencia " + therapeuticLineUuid);
-			}
-			
+			this.validateArvPlan(prescription.getArvPlan(), prescription, regime);
+			this.validateTherapeuticLine(prescription.getTherapeuticLine(), prescription, regime);
 			prescription.setRegime(regime);
-			prescription.setArvPlan(arvPlan);
-			prescription.setTherapeuticLine(therapeutiLine);
 		}
+	}
+	
+	private void validateArvPlan(final Concept arvPlan, final Prescription prescription, final Concept regime)
+	        throws PharmacyBusinessException {
+		
+		final String arvPlanUuid = arvPlan != null ? arvPlan.getUuid() : null;
+		final Concept arvPlanFound = Context.getConceptService().getConceptByUuid(arvPlanUuid);
+		if (arvPlan == null) {
+			throw new PharmacyBusinessException("Nao foi encontrado plano terapeutico para o regime "
+			        + regime.getDisplayString() + " e referencia " + arvPlanUuid);
+		}
+		prescription.setArvPlan(arvPlanFound);
+	}
+	
+	private void validateTherapeuticLine(final Concept therapeuticLine, final Prescription prescription,
+	        final Concept regime) throws PharmacyBusinessException {
+		
+		final String therapeuticLineUuid = therapeuticLine != null ? therapeuticLine.getUuid() : null;
+		final Concept therapeutiLineFound = Context.getConceptService().getConceptByUuid(therapeuticLineUuid);
+		if (therapeutiLineFound == null) {
+			throw new PharmacyBusinessException("Nao foi encontrada linha terapeutica para o regime "
+			        + regime.getDisplayString() + " e referencia " + therapeuticLineUuid);
+		}
+		prescription.setTherapeuticLine(therapeutiLineFound);
 	}
 	
 	@SuppressWarnings("unchecked")

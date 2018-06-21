@@ -47,13 +47,6 @@ public class PrescriptionItemTemplate implements TemplateLoader {
 			
 			{
 				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_ARV_NEVIRAPINA));
-				// this.add("regime", this.one(Concept.class,
-				// ConceptTemplate.AZT_3TC_NVP));
-				// this.add("therapeuticLine", this.one(Concept.class,
-				// ConceptTemplate.ARV_FIRST_LINE_PLAN));
-				// this.add("arvPlan", this.one(Concept.class,
-				// ConceptTemplate.START_DRUGS_ARV_PLAN));
-				
 			}
 		});
 	}
