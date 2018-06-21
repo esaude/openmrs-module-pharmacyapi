@@ -16,7 +16,6 @@ import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 import org.openmrs.Order;
 import org.openmrs.Order.Action;
@@ -43,16 +42,6 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	private String dosingInstructions;
 	
 	private Prescription prescription;
-	
-	private Concept arvPlan;
-	
-	private Concept regime;
-	
-	private Concept therapeuticLine;
-	
-	private Concept changeReason;
-	
-	private Concept interruptionReason;
 	
 	private Date expectedNextPickUpDate;
 	
@@ -93,14 +82,6 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 		this.drugPickedUp = drugPickedUp;
 	}
 	
-	public Concept getRegime() {
-		return this.regime;
-	}
-	
-	public void setRegime(final Concept regime) {
-		this.regime = regime;
-	}
-	
 	public String getDosingInstructions() {
 		return this.dosingInstructions;
 	}
@@ -115,38 +96,6 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setPrescription(final Prescription prescription) {
 		this.prescription = prescription;
-	}
-	
-	public Concept getArvPlan() {
-		return this.arvPlan;
-	}
-	
-	public void setArvPlan(final Concept arvPlan) {
-		this.arvPlan = arvPlan;
-	}
-	
-	public Concept getChangeReason() {
-		return this.changeReason;
-	}
-	
-	public void setChangeReason(final Concept changeReason) {
-		this.changeReason = changeReason;
-	}
-	
-	public Concept getTherapeuticLine() {
-		return this.therapeuticLine;
-	}
-	
-	public void setTherapeuticLine(final Concept therapeuticLine) {
-		this.therapeuticLine = therapeuticLine;
-	}
-	
-	public Concept getInterruptionReason() {
-		return this.interruptionReason;
-	}
-	
-	public void setInterruptionReason(final Concept interruptionReason) {
-		this.interruptionReason = interruptionReason;
 	}
 	
 	public PrescriptionItemStatus getStatus() {
@@ -205,6 +154,6 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString())
 		        .append("uuid", this.getUuid()).append("status", this.getStatus())
-		        .append("drugOrder", this.getDrugOrder()).append("regime", this.getRegime()).toString();
+		        .append("drugOrder", this.getDrugOrder()).toString();
 	}
 }

@@ -39,26 +39,27 @@ public class PrescriptionItemFactory {
 		final List<PrescriptionItem> items = new ArrayList<>();
 		
 		for (final DrugOrder drugOrder : drugOrders) {
-			final PrescriptionItem item = this.generatePrescriptionItem(drugOrder, creationDate);
+			final PrescriptionItem item = this.generatePrescriptionItem(prescription, drugOrder, creationDate);
 			item.setPrescription(prescription);
 			items.add(item);
 		}
 		return items;
 	}
 	
-	private PrescriptionItem generatePrescriptionItem(final DrugOrder drugOrder, final Date creationDate)
+	private PrescriptionItem generatePrescriptionItem(final Prescription prescription, final DrugOrder drugOrder,
+	        final Date creationDate)
 	        throws PharmacyBusinessException {
 		
 		if (Action.NEW.equals(drugOrder.getAction())) {
-			return this.newPrescriptionItemGenerator.generate(drugOrder, creationDate);
+			return this.newPrescriptionItemGenerator.generate(prescription, drugOrder, creationDate);
 		}
 		
 		if (Action.REVISE.equals(drugOrder.getAction())) {
-			return this.revisePrescriptionItemGenerator.generate(drugOrder, creationDate);
+			return this.revisePrescriptionItemGenerator.generate(prescription, drugOrder, creationDate);
 		}
 		
 		if (Action.DISCONTINUE.equals(drugOrder.getAction())) {
-			return this.dIscountinuePrescriptionItemGenerator.generate(drugOrder, creationDate);
+			return this.dIscountinuePrescriptionItemGenerator.generate(prescription, drugOrder, creationDate);
 		}
 		throw new IllegalArgumentException("failed to parse drugOrder with order action " + drugOrder.getAction()
 		        + " and uuid " + drugOrder.getUuid());

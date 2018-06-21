@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.pharmacyapi.api.templates;
 
-import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 
@@ -48,9 +47,12 @@ public class PrescriptionItemTemplate implements TemplateLoader {
 			
 			{
 				this.add("drugOrder", this.one(DrugOrder.class, DrugOrderTemplate.VALID_ARV_NEVIRAPINA));
-				this.add("regime", this.one(Concept.class, ConceptTemplate.AZT_3TC_NVP));
-				this.add("therapeuticLine", this.one(Concept.class, ConceptTemplate.ARV_FIRST_LINE_PLAN));
-				this.add("arvPlan", this.one(Concept.class, ConceptTemplate.START_DRUGS_ARV_PLAN));
+				// this.add("regime", this.one(Concept.class,
+				// ConceptTemplate.AZT_3TC_NVP));
+				// this.add("therapeuticLine", this.one(Concept.class,
+				// ConceptTemplate.ARV_FIRST_LINE_PLAN));
+				// this.add("arvPlan", this.one(Concept.class,
+				// ConceptTemplate.START_DRUGS_ARV_PLAN));
 				
 			}
 		});

@@ -31,6 +31,7 @@ import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionServi
 import org.openmrs.module.pharmacyapi.api.templates.LocationTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PatientTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PrescriptionItemTemplate;
+import org.openmrs.module.pharmacyapi.api.templates.PrescriptionTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.ProviderTemplate;
 import org.openmrs.module.pharmacyapi.api.util.BaseTest;
 
@@ -90,6 +91,7 @@ public class PrescriptionServiceTest extends BaseTest {
 	
 	@Test
 	public void shouldCreateArvPrescription() throws Exception {
+		this.executeDataSet("prescriptionservice/shouldCreateArvPrescription-dataset.xml");
 		
 		final PrescriptionService prescriptionService = Context.getService(PrescriptionService.class);
 		
@@ -99,12 +101,12 @@ public class PrescriptionServiceTest extends BaseTest {
 		calendar.set(Calendar.DAY_OF_MONTH, 31);
 		final Date date = calendar.getTime();
 		
-		final Prescription prescription = new Prescription();
+		final Prescription prescription = Fixture.from(Prescription.class)
+		        .gimme(PrescriptionTemplate.VALID_ARV_NEVIRAPINA);
 		prescription.setPatient((Patient) Fixture.from(Patient.class).gimme(PatientTemplate.MR_HORATIO));
 		prescription.setProvider((Provider) Fixture.from(Provider.class).gimme(ProviderTemplate.TEST));
 		prescription.setLocation((Location) Fixture.from(Location.class).gimme(LocationTemplate.XANADU));
 		prescription.setPrescriptionDate(date);
-		
 		final PrescriptionItem prescriptionItem = Fixture.from(PrescriptionItem.class)
 		        .gimme(PrescriptionItemTemplate.VALID_ARV_NEVIRAPINA);
 		prescription.setPrescriptionItems(Arrays.asList(prescriptionItem));

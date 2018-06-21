@@ -46,9 +46,17 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	
 	private Encounter prescriptionEncounter;
 	
-	private PrescriptionStatus prescriptionStatus = PrescriptionStatus.ACTIVE;
+	private Concept arvPlan;
+	
+	private Concept regime;
+	
+	private Concept therapeuticLine;
 	
 	private Concept changeReason;
+	
+	private Concept interruptionReason;
+	
+	private PrescriptionStatus prescriptionStatus = PrescriptionStatus.ACTIVE;
 	
 	private List<PrescriptionItem> prescriptionItems = new ArrayList<>();
 	
@@ -113,36 +121,15 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	}
 	
 	public Concept getRegime() {
-		
-		for (final PrescriptionItem item : this.prescriptionItems) {
-			
-			if (item.getRegime() != null) {
-				return item.getRegime();
-			}
-		}
-		return null;
+		return this.regime;
 	}
 	
 	public Concept getArvPlan() {
-		
-		for (final PrescriptionItem prescriptionItem : this.prescriptionItems) {
-			
-			if (prescriptionItem.getArvPlan() != null) {
-				
-				return prescriptionItem.getArvPlan();
-			}
-		}
-		return null;
+		return this.arvPlan;
 	}
 	
 	public Concept getTherapeuticLine() {
-		
-		for (final PrescriptionItem prescriptionItem : this.prescriptionItems) {
-			if (prescriptionItem.getTherapeuticLine() != null) {
-				return prescriptionItem.getTherapeuticLine();
-			}
-		}
-		return null;
+		return this.therapeuticLine;
 	}
 	
 	@Override
@@ -186,14 +173,7 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	}
 	
 	public boolean isArv() {
-		
-		for (final PrescriptionItem prescriptionItem : this.prescriptionItems) {
-			
-			if (prescriptionItem.getRegime() != null) {
-				return true;
-			}
-		}
-		return false;
+		return this.getRegime() != null;
 	}
 	
 	public boolean isActive() {
@@ -224,4 +204,25 @@ public class Prescription extends BaseOpenmrsData implements Serializable, Compa
 	public void setChangeReason(final Concept changeReason) {
 		this.changeReason = changeReason;
 	}
+	
+	public Concept getInterruptionReason() {
+		return this.interruptionReason;
+	}
+	
+	public void setInterruptionReason(final Concept interruptionReason) {
+		this.interruptionReason = interruptionReason;
+	}
+	
+	public void setArvPlan(final Concept arvPlan) {
+		this.arvPlan = arvPlan;
+	}
+	
+	public void setRegime(final Concept regime) {
+		this.regime = regime;
+	}
+	
+	public void setTherapeuticLine(final Concept therapeuticLine) {
+		this.therapeuticLine = therapeuticLine;
+	}
+	
 }

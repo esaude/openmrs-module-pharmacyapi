@@ -14,6 +14,7 @@ import java.util.Date;
 
 import org.openmrs.DrugOrder;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem.PrescriptionItemStatus;
 import org.springframework.stereotype.Component;
@@ -22,8 +23,8 @@ import org.springframework.stereotype.Component;
 public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenerator {
 	
 	@Override
-	public PrescriptionItem generate(final DrugOrder drugOrder, final Date creationDate)
-	        throws PharmacyBusinessException {
+	public PrescriptionItem generate(final Prescription prescription, final DrugOrder drugOrder,
+	        final Date creationDate) throws PharmacyBusinessException {
 		
 		final DrugOrder fetchedDO = this.fetchDrugOrder(drugOrder);
 		
@@ -32,7 +33,6 @@ public class NewPrescriptionItemGenerator extends AbstractPrescriptionItemGenera
 		prescriptionItem.setDrugPickedUp(0d);
 		prescriptionItem.setDrugToPickUp(fetchedDO.getQuantity());
 		this.setPrescriptionInstructions(prescriptionItem, fetchedDO);
-		this.setArvDataFields(drugOrder, prescriptionItem);
 		prescriptionItem.setExpectedNextPickUpDate(fetchedDO.getDateCreated());
 		
 		return prescriptionItem;
