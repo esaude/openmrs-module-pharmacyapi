@@ -13,10 +13,12 @@ import java.util.Date;
 
 import org.openmrs.DrugOrder;
 import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 
 public interface PrescriptionItemGenerator {
 	
-	PrescriptionItem generate(DrugOrder drugOrder, Date creationDate) throws PharmacyBusinessException;
+	PrescriptionItem generate(Prescription prescription, DrugOrder drugOrder, Date creationDate)
+	        throws PharmacyBusinessException;
 	
 }

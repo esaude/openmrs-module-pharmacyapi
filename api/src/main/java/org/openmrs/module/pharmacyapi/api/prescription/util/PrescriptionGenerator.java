@@ -53,24 +53,98 @@ public class PrescriptionGenerator {
 		final Map<Encounter, List<DrugOrder>> drugOrdersByEncounter = this.groupDrugOrdersByEncounter(drugOrders);
 		
 		for (final Entry<Encounter, List<DrugOrder>> ordersByEncounter : drugOrdersByEncounter.entrySet()) {
-			Encounter encounter = ordersByEncounter.getKey();
+			final Encounter encounter = ordersByEncounter.getKey();
 			final Prescription prescription = this.preparePrescription(encounter);
-			List<DrugOrder> orders = ordersByEncounter.getValue();
+			final List<DrugOrder> orders = ordersByEncounter.getValue();
 			final List<PrescriptionItem> prescriptionItems = this.prescriptionItemFactory
 			        .generatePrescriptionItems(prescription, creationDate, orders);
 			prescription.setPrescriptionItems(prescriptionItems);
 			prescription.setPrescriptionStatus(this.calculatePrescriptioStatus(prescriptionItems));
-			prescription.setChangeReason(getChangeReason(encounter));
+			this.setArvDataFields(prescription);
+			prescription.setChangeReason(this.getChangeReason(encounter));
 			result.add(prescription);
 		}
 		
 		return result;
 	}
 	
-	private Concept getChangeReason(Encounter encounter) {
+	protected void setArvDataFields(final Prescription prescription) throws PharmacyBusinessException {
+		
+		final PrescriptionDispensationService prescriptionDispensationService = Context
+		        .getService(PrescriptionDispensationService.class);
+		
+		for (final PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
+			
+			if (prescription.getRegime() != null) {
+				break;
+			}
+			final DrugOrder drugOrder = prescriptionItem.getDrugOrder();
+			if (prescriptionDispensationService.isArvDrug(drugOrder)) {
+				prescription.setRegime(this.findRegime(drugOrder));
+				prescription.setArvPlan(this.findArvPlan(drugOrder));
+				prescription.setTherapeuticLine(this.findArvTherapeuticPlan(drugOrder));
+				prescription.setInterruptionReason(drugOrder.getOrderReason());
+			}
+		}
+	}
+	
+	private Concept findArvPlan(final DrugOrder drugOrder) {
+		DrugOrder tempDrugOrder = drugOrder;
+		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
+			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
+		}
+		
+		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
+		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_PLAN);
+		
+		for (final Obs obs : allObs) {
+			if (arvPlan.equals(obs.getConcept())) {
+				return obs.getValueCoded();
+			}
+		}
+		throw new IllegalArgumentException("No ARV plan found for drugOrder with uuid " + drugOrder.getUuid());
+	}
+	
+	private Concept findArvTherapeuticPlan(final DrugOrder drugOrder) {
+		DrugOrder tempDrugOrder = drugOrder;
+		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
+			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
+		}
+		
+		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
+		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_THERAPEUTIC_LINE);
+		
+		for (final Obs obs : allObs) {
+			if (arvPlan.equals(obs.getConcept())) {
+				return obs.getValueCoded();
+			}
+		}
+		throw new IllegalArgumentException(
+		        "No ARV Therapeutic Line found for drugOrder with uuid " + drugOrder.getUuid());
+	}
+	
+	private Concept findRegime(final DrugOrder drugOrder) {
+		DrugOrder tempDrugOrder = drugOrder;
+		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
+			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
+		}
+		
+		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs(false);
+		final Concept regime = Context.getConceptService()
+		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
+		
+		for (final Obs obs : allObs) {
+			if (regime.equals(obs.getConcept())) {
+				return obs.getValueCoded();
+			}
+		}
+		throw new IllegalArgumentException("No Regime found for drugOrder with uuid " + drugOrder.getUuid());
+	}
+	
+	private Concept getChangeReason(final Encounter encounter) {
 		Concept changeReason = null;
-		for (Obs obs : encounter.getObs()) {
-			Concept concept = obs.getConcept();
+		for (final Obs obs : encounter.getObs()) {
+			final Concept concept = obs.getConcept();
 			if (concept.getUuid().equals(MappedConcepts.JUSTIFICATION_TO_CHANGE_ARV_TREATMENT)) {
 				changeReason = obs.getValueCoded();
 				break;

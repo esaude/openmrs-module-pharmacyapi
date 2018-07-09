@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<dataset>
+	<!-- -->  
+	<phm_drug_items drug_id="13" fnm_code ="15F04" uuid ="97740a66-c9fa-4aaa-8dea-6e2f0264c2fe" creator="1" date_created="2008-08-18 14:22:17.0" retired="false" />
+	<phm_drug_regime drug_regime_id ="1" drug_item_id="13" regime_id="1006" uuid="8fe85975-90f0-4288-ba51-a0030def7aa0" creator="1" date_created="2008-08-18 14:22:17.0" retired="false"/>
+ <!--   -->
+</dataset> 

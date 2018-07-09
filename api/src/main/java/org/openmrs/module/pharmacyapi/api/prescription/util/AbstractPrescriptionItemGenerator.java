@@ -16,20 +16,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Obs;
-import org.openmrs.Order.Action;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem.PrescriptionItemStatus;
-import org.openmrs.module.pharmacyapi.api.prescriptiondispensation.service.PrescriptionDispensationService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,74 +40,8 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 		return (DrugOrder) Context.getOrderService().getOrderByUuid(drugOrder.getUuid());
 	}
 	
-	protected void setArvDataFields(final DrugOrder drugOrder, final PrescriptionItem prescriptionItem)
-	        throws PharmacyBusinessException {
-		
-		final PrescriptionDispensationService prescriptionDispensationService = Context
-		        .getService(PrescriptionDispensationService.class);
-		
-		if (prescriptionDispensationService.isArvDrug(drugOrder)) {
-			prescriptionItem.setRegime(this.findRegime(drugOrder));
-			prescriptionItem.setArvPlan(this.findArvPlan(drugOrder));
-			prescriptionItem.setTherapeuticLine(this.findArvTherapeuticPlan(drugOrder));
-		}
-	}
-	
 	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(PrescriptionItem item,
 	        Date consultationDate);
-	
-	private Concept findArvPlan(final DrugOrder drugOrder) {
-		DrugOrder tempDrugOrder = drugOrder;
-		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
-		}
-		
-		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
-		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_PLAN);
-		
-		for (final Obs obs : allObs) {
-			if (arvPlan.equals(obs.getConcept())) {
-				return obs.getValueCoded();
-			}
-		}
-		throw new IllegalArgumentException("No ARV plan found for drugOrder with uuid " + drugOrder.getUuid());
-	}
-	
-	private Concept findArvTherapeuticPlan(final DrugOrder drugOrder) {
-		DrugOrder tempDrugOrder = drugOrder;
-		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
-		}
-		
-		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs();
-		final Concept arvPlan = Context.getConceptService().getConceptByUuid(MappedConcepts.ARV_THERAPEUTIC_LINE);
-		
-		for (final Obs obs : allObs) {
-			if (arvPlan.equals(obs.getConcept())) {
-				return obs.getValueCoded();
-			}
-		}
-		throw new IllegalArgumentException(
-		        "No ARV Therapeutic Line found for drugOrder with uuid " + drugOrder.getUuid());
-	}
-	
-	private Concept findRegime(final DrugOrder drugOrder) {
-		DrugOrder tempDrugOrder = drugOrder;
-		while (!Action.NEW.equals(tempDrugOrder.getAction())) {
-			tempDrugOrder = (DrugOrder) tempDrugOrder.getPreviousOrder();
-		}
-		
-		final Set<Obs> allObs = tempDrugOrder.getEncounter().getAllObs(false);
-		final Concept regime = Context.getConceptService()
-		        .getConceptByUuid(MappedConcepts.PREVIOUS_ANTIRETROVIRAL_DRUGS);
-		
-		for (final Obs obs : allObs) {
-			if (regime.equals(obs.getConcept())) {
-				return obs.getValueCoded();
-			}
-		}
-		throw new IllegalArgumentException("No Regime found for drugOrder with uuid " + drugOrder.getUuid());
-	}
 	
 	protected Double calculateDrugPikckedUp(final DrugOrder order) {
 		

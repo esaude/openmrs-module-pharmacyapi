@@ -49,11 +49,6 @@ public class PrescriptionItemResource
 			description.addProperty("drugPickedUp");
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
-			description.addProperty("regime", Representation.REF);
-			description.addProperty("arvPlan", Representation.REF);
-			description.addProperty("therapeuticLine", Representation.REF);
-			description.addProperty("changeReason", Representation.REF);
-			description.addProperty("interruptionReason", Representation.REF);
 			description.addProperty("status");
 			description.addProperty("expectedNextPickUpDate");
 			description.addSelfLink();
@@ -66,11 +61,6 @@ public class PrescriptionItemResource
 			description.addProperty("drugPickedUp");
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
-			description.addProperty("regime");
-			description.addProperty("arvPlan");
-			description.addProperty("therapeuticLine");
-			description.addProperty("changeReason");
-			description.addProperty("interruptionReason");
 			description.addProperty("status");
 			description.addProperty("expectedNextPickUpDate");
 			return description;

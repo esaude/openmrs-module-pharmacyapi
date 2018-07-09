@@ -113,7 +113,7 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 		final List<Prescription> prescriptions = this.findAllPrescriptionsByPatient(patient, actualDate);
 		final List<Prescription> result = new ArrayList<>();
 		for (final Prescription prescription : prescriptions) {
-			if (this.hasActivePrescriptionItems(prescription)) {
+			if (prescription.isArv() && this.hasActivePrescriptionItems(prescription)) {
 				result.add(prescription);
 			}
 		}
@@ -136,14 +136,13 @@ public class PrescriptionServiceImpl extends BaseOpenmrsService implements Presc
 	
 	private boolean hasActivePrescriptionItems(final Prescription prescription) {
 		for (final PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
-			if (prescriptionItem.getRegime() != null) {
-				if (PrescriptionItemStatus.NEW.equals(prescriptionItem.getStatus())
-				        || PrescriptionItemStatus.ACTIVE.equals(prescriptionItem.getStatus())) {
-					return true;
-				} else if (PrescriptionItemStatus.FINALIZED.equals(prescriptionItem.getStatus())
-				        && (prescriptionItem.getDrugOrder().getOrderReason() == null)) {
-					return true;
-				}
+			
+			if (PrescriptionItemStatus.NEW.equals(prescriptionItem.getStatus())
+			        || PrescriptionItemStatus.ACTIVE.equals(prescriptionItem.getStatus())) {
+				return true;
+			} else if (PrescriptionItemStatus.FINALIZED.equals(prescriptionItem.getStatus())
+			        && (prescriptionItem.getDrugOrder().getOrderReason() == null)) {
+				return true;
 			}
 		}
 		return false;

@@ -50,7 +50,7 @@ public class PrescriptionUtils {
 		obsPrescriptionDate.setValueDatetime(prescription.getPrescriptionDate());
 		encounter.addObs(obsPrescriptionDate);
 		
-		if (prescription.getRegime() != null) {
+		if (prescription.isArv()) {
 			
 			final Obs obsRegime = new Obs();
 			obsRegime.setConcept(
@@ -201,14 +201,7 @@ public class PrescriptionUtils {
 	}
 	
 	private boolean prescriptionHasARVDrugs(final Prescription prescription) {
-		
-		for (final PrescriptionItem prescriptionItem : prescription.getPrescriptionItems()) {
-			
-			if (prescriptionItem.getRegime() != null) {
-				return true;
-			}
-		}
-		return false;
+		return prescription.isArv();
 	}
 	
 	public Concept getArvRegimeByPrescriptionRegimeUuid(final Prescription prescription)
