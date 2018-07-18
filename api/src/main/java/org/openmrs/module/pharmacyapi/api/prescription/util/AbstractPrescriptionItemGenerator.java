@@ -22,14 +22,32 @@ import org.openmrs.Drug;
 import org.openmrs.DrugOrder;
 import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.pharmacyapi.api.common.exception.PharmacyBusinessException;
 import org.openmrs.module.pharmacyapi.api.common.util.MappedConcepts;
+import org.openmrs.module.pharmacyapi.api.drugregime.model.DrugRegime;
+import org.openmrs.module.pharmacyapi.api.drugregime.service.DrugRegimeService;
 import org.openmrs.module.pharmacyapi.api.pharmacyheuristic.service.PharmacyHeuristicService;
+import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem.PrescriptionItemStatus;
 import org.springframework.stereotype.Component;
 
 @Component
 public abstract class AbstractPrescriptionItemGenerator implements PrescriptionItemGenerator {
+	
+	@Override
+	public PrescriptionItem generate(final Prescription prescription, final DrugOrder drugOrder,
+	        final Date creationDate) throws PharmacyBusinessException {
+		
+		final DrugOrder fetchDrugOrder = this.fetchDrugOrder(drugOrder);
+		final PrescriptionItem prescriptionItem = new PrescriptionItem(fetchDrugOrder);
+		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
+		this.setPrescriptionInstructions(prescriptionItem, fetchDrugOrder);
+		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(fetchDrugOrder));
+		this.setArvFlag(prescriptionItem);
+		
+		return prescriptionItem;
+	}
 	
 	protected void setPrescriptionInstructions(final PrescriptionItem prescriptionItem, final DrugOrder drugOrder) {
 		final Concept concept = Context.getConceptService().getConceptByUuid(drugOrder.getDosingInstructions());
@@ -42,6 +60,16 @@ public abstract class AbstractPrescriptionItemGenerator implements PrescriptionI
 	
 	protected abstract PrescriptionItemStatus calculatePrescriptionItemStatus(PrescriptionItem item,
 	        Date consultationDate);
+	
+	protected void setArvFlag(final PrescriptionItem item) {
+		
+		if (item.getDrugOrder() != null) {
+			
+			final List<DrugRegime> drugRegimes = Context.getService(DrugRegimeService.class)
+			        .findDrugRegimeByDrugUuid(item.getDrugOrder().getDrug().getUuid());
+			item.setArv(!drugRegimes.isEmpty());
+		}
+	}
 	
 	protected Double calculateDrugPikckedUp(final DrugOrder order) {
 		
