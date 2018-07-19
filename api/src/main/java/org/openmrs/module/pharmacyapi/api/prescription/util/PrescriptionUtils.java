@@ -12,6 +12,8 @@
  */
 package org.openmrs.module.pharmacyapi.api.prescription.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -223,10 +225,10 @@ public class PrescriptionUtils {
 	}
 	
 	public Double calculateDrugQuantity(final DrugOrder drugOrder) {
-		
 		final int durationUnitsDays = MappedDurationUnits.getDurationDays(drugOrder.getDurationUnits().getUuid());
-		return drugOrder.getDose() * drugOrder.getDuration() * durationUnitsDays
+		double quantity = drugOrder.getDose() * drugOrder.getDuration() * durationUnitsDays
 		        * drugOrder.getFrequency().getFrequencyPerDay();
+		return BigDecimal.valueOf(quantity).setScale(0, RoundingMode.CEILING).doubleValue();
 	}
 	
 	private Concept getArvPlanByPrescriptionArvPlanUuid(final Prescription prescription)

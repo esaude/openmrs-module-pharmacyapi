@@ -16,11 +16,13 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.Concept;
 import org.openmrs.DrugOrder;
 import org.openmrs.Encounter;
 import org.openmrs.Location;
 import org.openmrs.Order;
 import org.openmrs.Order.Action;
+import org.openmrs.OrderFrequency;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
@@ -28,6 +30,7 @@ import org.openmrs.module.pharmacyapi.api.common.util.MappedEncounters;
 import org.openmrs.module.pharmacyapi.api.prescription.model.Prescription;
 import org.openmrs.module.pharmacyapi.api.prescription.model.PrescriptionItem;
 import org.openmrs.module.pharmacyapi.api.prescription.service.PrescriptionService;
+import org.openmrs.module.pharmacyapi.api.prescription.util.PrescriptionUtils;
 import org.openmrs.module.pharmacyapi.api.templates.LocationTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PatientTemplate;
 import org.openmrs.module.pharmacyapi.api.templates.PrescriptionItemTemplate;
@@ -196,5 +199,20 @@ public class PrescriptionServiceTest extends BaseTest {
 		
 		prescriptionService.cancelPrescriptionItem(prescriptionItem, "web service call");
 		Assert.assertTrue(order.isVoided());
+	}
+	
+	@Test
+	public void testCalculateDrugQuantityShouldRound() throws Exception {
+		Concept monthDurationUnits = new Concept();
+		monthDurationUnits.setUuid("9d96d012-10e8-11e5-9009-0242ac110012");
+		OrderFrequency orderFrequency = new OrderFrequency();
+		orderFrequency.setFrequencyPerDay(0.14286);
+		DrugOrder drugOrder = new DrugOrder();
+		drugOrder.setDurationUnits(monthDurationUnits);
+		drugOrder.setDose(2.0);
+		drugOrder.setDuration(1);
+		drugOrder.setFrequency(orderFrequency);
+		Double quantity = new PrescriptionUtils().calculateDrugQuantity(drugOrder);
+		Assert.assertEquals(Double.valueOf(9.0), quantity);
 	}
 }
