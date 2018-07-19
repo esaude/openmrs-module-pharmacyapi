@@ -47,6 +47,8 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	private PrescriptionItemStatus status = PrescriptionItemStatus.NEW;
 	
+	private Boolean arv = Boolean.FALSE;
+	
 	public PrescriptionItem() {
 		this.drugPickedUp = 0.0;
 		this.drugToPickUp = 0.0;
@@ -121,6 +123,14 @@ public class PrescriptionItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setExpectedNextPickUpDate(final Date expectedNextPickUpDate) {
 		this.expectedNextPickUpDate = expectedNextPickUpDate;
+	}
+	
+	public void setArv(final Boolean arv) {
+		this.arv = arv;
+	}
+	
+	public Boolean getArv() {
+		return this.arv;
 	}
 	
 	public Date getExpirationDate() {

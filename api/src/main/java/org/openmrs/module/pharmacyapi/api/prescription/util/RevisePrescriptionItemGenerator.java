@@ -26,15 +26,11 @@ public class RevisePrescriptionItemGenerator extends AbstractPrescriptionItemGen
 	public PrescriptionItem generate(final Prescription prescription, final DrugOrder drugOrder,
 	        final Date creationDate) throws PharmacyBusinessException {
 		
-		final DrugOrder fetchDO = this.fetchDrugOrder(drugOrder);
-		final PrescriptionItem prescriptionItem = new PrescriptionItem(fetchDO);
-		final Double quantity = this.calculateDrugPikckedUp(fetchDO);
+		final PrescriptionItem prescriptionItem = super.generate(prescription, drugOrder, creationDate);
+		final Double quantity = this.calculateDrugPikckedUp(prescriptionItem.getDrugOrder());
 		prescriptionItem.setDrugPickedUp(quantity);
 		prescriptionItem
 		        .setDrugToPickUp(prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
-		prescriptionItem.setExpectedNextPickUpDate(this.getNextPickUpDate(fetchDO));
-		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
-		this.setPrescriptionInstructions(prescriptionItem, fetchDO);
 		
 		return prescriptionItem;
 	}

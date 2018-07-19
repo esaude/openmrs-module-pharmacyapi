@@ -29,6 +29,7 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		final DrugOrder fetchDO = this.fetchDrugOrder(drugOrder);
 		final PrescriptionItem prescriptionItem = new PrescriptionItem(this.cloneDrugOrder(fetchDO));
 		final Double quantity = this.calculateDrugPikckedUp(fetchDO);
+		
 		prescriptionItem.setDrugPickedUp(quantity);
 		prescriptionItem
 		        .setDrugToPickUp(prescriptionItem.getDrugOrder().getQuantity() - prescriptionItem.getDrugPickedUp());
@@ -36,6 +37,7 @@ public class DiscountinuePrescriptionItemGenerator extends AbstractPrescriptionI
 		this.setPrescriptionInstructions(prescriptionItem, prescriptionItem.getDrugOrder());
 		
 		prescriptionItem.setStatus(this.calculatePrescriptionItemStatus(prescriptionItem, creationDate));
+		this.setArvFlag(prescriptionItem);
 		
 		return prescriptionItem;
 	}

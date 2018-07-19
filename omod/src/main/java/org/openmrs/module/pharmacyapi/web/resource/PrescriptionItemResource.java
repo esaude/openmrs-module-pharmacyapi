@@ -50,6 +50,7 @@ public class PrescriptionItemResource
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
 			description.addProperty("status");
+			description.addProperty("arv");
 			description.addProperty("expectedNextPickUpDate");
 			description.addSelfLink();
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -62,6 +63,7 @@ public class PrescriptionItemResource
 			description.addProperty("drugOrder");
 			description.addProperty("dosingInstructions");
 			description.addProperty("status");
+			description.addProperty("arv");
 			description.addProperty("expectedNextPickUpDate");
 			return description;
 		}
